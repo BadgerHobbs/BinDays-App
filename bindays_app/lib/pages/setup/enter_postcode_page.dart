@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Internal Imports
-import 'package:bindays_app/pages/setup/finding_collector_page.dart';
+import 'package:bindays_app/pages/setup/collectors/finding_collector_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:bindays_app/widgets/text_input.dart';
 

@@ -52,6 +52,7 @@ class WelcomePage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                         color: Color.fromRGBO(68, 68, 68, 0.75),
+                        decoration: TextDecoration.underline,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -61,6 +62,7 @@ class WelcomePage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                         color: Color.fromRGBO(68, 68, 68, 0.75),
+                        decoration: TextDecoration.underline,
                       ),
                       textAlign: TextAlign.center,
                     ),

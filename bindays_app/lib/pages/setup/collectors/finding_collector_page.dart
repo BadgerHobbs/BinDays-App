@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/client/bindays_client.dart';
-import 'package:bindays_app/pages/setup/confirm_collector_page.dart';
-import 'package:bindays_app/pages/setup/collector_not_found_page.dart';
+import 'package:bindays_app/pages/setup/collectors/confirm_collector_page.dart';
+import 'package:bindays_app/pages/setup/collectors/collector_not_found_page.dart';
 import 'package:bindays_app/widgets/animated_ellipsis.dart';
 
 class FindingCollectorPage extends StatefulWidget {
