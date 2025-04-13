@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Internal Imports
-import 'package:bindays_app/pages/how_it_works_page.dart';
+import 'package:bindays_app/pages/setup/how_it_works_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -51,7 +51,7 @@ class WelcomePage extends StatelessWidget {
                       "Privacy Policy",
                       style: TextStyle(
                         fontSize: 15,
-                        color: Color.fromRGBO(68, 68, 68, 0.5),
+                        color: Color.fromRGBO(68, 68, 68, 0.75),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -60,7 +60,7 @@ class WelcomePage extends StatelessWidget {
                       "Terms & Conditions",
                       style: TextStyle(
                         fontSize: 15,
-                        color: Color.fromRGBO(68, 68, 68, 0.5),
+                        color: Color.fromRGBO(68, 68, 68, 0.75),
                       ),
                       textAlign: TextAlign.center,
                     ),

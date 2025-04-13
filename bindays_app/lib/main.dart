@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 // Internal Imports
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/pages/bin_days_page.dart';
-import 'package:bindays_app/pages/welcome_page.dart';
+import 'package:bindays_app/pages/setup/welcome_page.dart';
 
 void main() {
   // Ensure app is initialised
