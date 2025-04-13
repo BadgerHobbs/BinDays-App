@@ -1,7 +1,9 @@
 // External Imports
-import 'package:bindays_app/pages/enter_postcode_page.dart';
-import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
+
+// Internal Imports
+import 'package:bindays_app/pages/how_it_works_page.dart';
+import 'package:bindays_app/widgets/primary_button.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -68,9 +70,9 @@ class WelcomePage extends StatelessWidget {
                 PrimaryButton(
                   text: "Get Started",
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => EnterPostcodePage()),
-                    );
+                    Navigator.of(
+                      context,
+                    ).push(MaterialPageRoute(builder: (_) => HowItWorksPage()));
                   },
                 ),
               ],

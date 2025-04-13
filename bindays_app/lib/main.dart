@@ -11,7 +11,6 @@ void main() {
   // Ensure app is initialised
   WidgetsFlutterBinding.ensureInitialized();
 
-  /*
   // Transparent navigation bar
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent),
@@ -19,7 +18,6 @@ void main() {
 
   // Draw behind navigation bar for lists
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  */
 
   runApp(const App());
 }
