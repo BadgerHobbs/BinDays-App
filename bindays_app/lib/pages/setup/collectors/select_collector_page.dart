@@ -1,11 +1,87 @@
 // External Imports
+import 'package:bindays_client/models/collector.dart';
 import 'package:flutter/material.dart';
 
-class SelectCollectorPage extends StatelessWidget {
-  const SelectCollectorPage({super.key});
+// Internal Imports
+import 'package:bindays_app/pages/setup/addresses/finding_addresses_page.dart';
+import 'package:bindays_app/client/bindays_client.dart';
+import 'package:bindays_app/widgets/primary_button.dart';
+import 'package:bindays_app/widgets/select_collector/select_collector_background.dart';
+import 'package:bindays_app/widgets/select_collector/select_collector_header.dart';
+import 'package:bindays_app/widgets/select_collector/select_collector_list.dart';
+
+class SelectCollectorPage extends StatefulWidget {
+  final String postcode;
+
+  const SelectCollectorPage({super.key, required this.postcode});
+
+  @override
+  State<SelectCollectorPage> createState() => _SelectCollectorPageState();
+}
+
+class _SelectCollectorPageState extends State<SelectCollectorPage> {
+  List<Collector>? collectors;
+  Collector? selectedCollector;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCollectors();
+  }
+
+  Future<void> _getCollectors() async {
+    try {
+      final fetchedCollectors = await binDaysClient.getCollectors();
+      setState(() => collectors = fetchedCollectors);
+    } catch (e) {
+      setState(() => collectors = []);
+    }
+  }
+
+  void _onCollectorSelected(Collector collector) {
+    setState(() {
+      selectedCollector = collector;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('Select Collector Page')));
+    return Scaffold(
+      body: SelectCollectorBackground(
+        child: SafeArea(
+          minimum: const EdgeInsets.all(25),
+          child: Column(
+            children: [
+              const SelectCollectorHeader(),
+              const SizedBox(height: 25),
+              Expanded(
+                child: SelectCollectorList(
+                  collectors: collectors,
+                  selectedCollector: selectedCollector,
+                  onCollectorSelected: _onCollectorSelected,
+                ),
+              ),
+              Visibility(
+                visible: selectedCollector != null,
+                child: PrimaryButton(
+                  text: "Confirm Selection",
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder:
+                            (_) => FindingAddressesPage(
+                              postcode: widget.postcode,
+                              collector: selectedCollector!,
+                            ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

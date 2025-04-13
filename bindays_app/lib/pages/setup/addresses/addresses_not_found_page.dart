@@ -3,19 +3,17 @@ import 'package:bindays_client/models/collector.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
-import 'package:bindays_app/pages/setup/addresses/finding_addresses_page.dart';
-import 'package:bindays_app/pages/setup/collectors/select_collector_page.dart';
-import 'package:bindays_app/widgets/primary_button.dart';
+import 'package:bindays_app/pages/setup/enter_postcode_page.dart';
 import 'package:bindays_app/widgets/secondary_button.dart';
 
-class ConfirmCollectorPage extends StatelessWidget {
-  final Collector collector;
+class AddressesNotFoundPage extends StatelessWidget {
   final String postcode;
+  final Collector collector;
 
-  const ConfirmCollectorPage({
+  const AddressesNotFoundPage({
     super.key,
-    required this.collector,
     required this.postcode,
+    required this.collector,
   });
 
   @override
@@ -31,50 +29,46 @@ class ConfirmCollectorPage extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  collector.name,
-                  style: const TextStyle(
+                  "Uh oh!",
+                  style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Color.fromRGBO(68, 68, 68, 1),
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 Text(
-                  "Your collector was identified as ${collector.name}. If incorrect, please select another supported collector.",
-                  style: const TextStyle(
+                  "We couldn't find any addresses for postcode '${postcode.toUpperCase()}' associated with the collector '${collector.name}'. This might mean the postcode is incorrect, the collector doesn't cover this specific postcode, or there's an issue with the address data. Please try a different postcode or collector.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
                     fontSize: 16,
                     color: Color.fromRGBO(68, 68, 68, 1),
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ],
             ),
             const Spacer(),
             Column(
               children: [
-                PrimaryButton(
-                  text: "Continue",
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder:
-                            (_) => FindingAddressesPage(
-                              postcode: postcode,
-                              collector: collector,
-                            ),
-                      ),
-                    );
-                  },
+                // TODO: Add URL Link on click
+                TextButton(
+                  onPressed: () => {},
+                  child: const Text(
+                    "Send feedback or report an issue.",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color.fromRGBO(68, 68, 68, 0.75),
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 SecondaryButton(
-                  text: "Select Another Collector",
+                  text: "Retry",
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => SelectCollectorPage(postcode: postcode),
-                      ),
+                      MaterialPageRoute(builder: (_) => EnterPostcodePage()),
                     );
                   },
                 ),

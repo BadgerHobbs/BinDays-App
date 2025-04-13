@@ -6,7 +6,9 @@ import 'package:bindays_app/pages/setup/collectors/select_collector_page.dart';
 import 'package:bindays_app/widgets/secondary_button.dart';
 
 class CollectorNotFoundPage extends StatelessWidget {
-  const CollectorNotFoundPage({super.key});
+  final String postcode;
+
+  const CollectorNotFoundPage({super.key, required this.postcode});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,7 @@ class CollectorNotFoundPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => const SelectCollectorPage(),
+                        builder: (_) => SelectCollectorPage(postcode: postcode),
                       ),
                     );
                   },

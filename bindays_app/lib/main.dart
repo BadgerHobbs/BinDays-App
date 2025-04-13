@@ -74,7 +74,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       ),
       themeMode:
           globalStateNotifier.darkMode ? ThemeMode.dark : ThemeMode.light,
-      home: setupRequired ? WelcomePage() : BinDaysPage(),
+      home: WelcomePage(), //setupRequired ? WelcomePage() : BinDaysPage(),
     );
   }
 }

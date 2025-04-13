@@ -1,40 +1,47 @@
 // External Imports
+import 'package:bindays_client/models/collector.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/client/bindays_client.dart';
-import 'package:bindays_app/pages/setup/collectors/confirm_collector_page.dart';
-import 'package:bindays_app/pages/setup/collectors/collector_not_found_page.dart';
+import 'package:bindays_app/pages/setup/addresses/addresses_not_found_page.dart';
+import 'package:bindays_app/pages/setup/addresses/select_address_page.dart';
 import 'package:bindays_app/widgets/animated_ellipsis.dart';
 
-class FindingCollectorPage extends StatefulWidget {
+class FindingAddressesPage extends StatefulWidget {
   final String postcode;
+  final Collector collector;
 
-  const FindingCollectorPage({super.key, required this.postcode});
+  const FindingAddressesPage({
+    super.key,
+    required this.postcode,
+    required this.collector,
+  });
 
   @override
-  State<FindingCollectorPage> createState() => _FindingCollectorPage();
+  State<FindingAddressesPage> createState() => _FindingAddressesPage();
 }
 
-class _FindingCollectorPage extends State<FindingCollectorPage> {
+class _FindingAddressesPage extends State<FindingAddressesPage> {
   @override
   void initState() {
     super.initState();
-    _getCollector(widget.postcode);
+    _getAddresses(widget.postcode, widget.collector);
   }
 
-  Future<void> _getCollector(String postcode) async {
+  Future<void> _getAddresses(String postcode, Collector collector) async {
     try {
-      // Fake processing time so that users can see the loading animation
-      await Future.delayed(const Duration(seconds: 3));
-      final collector = await binDaysClient.getCollector(postcode);
+      final addresses = await binDaysClient.getAddresses(collector, postcode);
 
       if (mounted) {
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             pageBuilder:
-                (context, animation1, animation2) =>
-                    ConfirmCollectorPage(collector: collector, postcode: postcode),
+                (context, animation1, animation2) => SelectAddressPage(
+                  collector: collector,
+                  postcode: postcode,
+                  addresses: addresses,
+                ),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
           ),
@@ -45,7 +52,10 @@ class _FindingCollectorPage extends State<FindingCollectorPage> {
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             pageBuilder:
-                (context, animation1, animation2) => CollectorNotFoundPage(postcode: postcode),
+                (context, animation1, animation2) => AddressesNotFoundPage(
+                  postcode: postcode,
+                  collector: collector,
+                ),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
           ),
@@ -71,7 +81,7 @@ class _FindingCollectorPage extends State<FindingCollectorPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Finding Your Collector",
+                      "Finding Addresss",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 30,
@@ -90,7 +100,7 @@ class _FindingCollectorPage extends State<FindingCollectorPage> {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  "Please wait while we check which bin collector serves your area. This may take a few seconds.",
+                  "Please wait while we check for addresses under your collector and postcode. This may take a few seconds.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,

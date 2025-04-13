@@ -25,9 +25,7 @@ class _AnimatedEllipsisState extends State<AnimatedEllipsis>
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        setState(() {
-          _dotCount = (_dotCount % 3) + 1;
-        });
+        setState(() => _dotCount = (_dotCount % 3) + 1);
         _controller.reverse();
       } else if (status == AnimationStatus.dismissed) {
         _controller.forward();
