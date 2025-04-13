@@ -8,6 +8,9 @@ import 'package:bindays_app/pages/bin_days_page.dart';
 import 'package:bindays_app/pages/welcome_page.dart';
 
 void main() {
+  // Ensure app is initialised
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Transparent navigation bar
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent),
@@ -20,7 +23,6 @@ void main() {
 }
 
 class App extends StatefulWidget {
-  static GlobalKey<NavigatorState> navKey = GlobalKey();
   const App({super.key});
 
   @override
@@ -58,7 +60,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     final setupRequired = true;
 
     return MaterialApp(
-      navigatorKey: App.navKey,
       debugShowCheckedModeBanner: false,
       title: 'BinDays',
       theme: ThemeData(
