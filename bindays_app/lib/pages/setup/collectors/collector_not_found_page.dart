@@ -31,7 +31,7 @@ class CollectorNotFoundPage extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "We couldn't automatically detect your collector. This might be because your postcode is not yet supported, or there was an issue with our service. Please select your collector manually, or try again later.",
+                  "We couldn't automatically detect your collector. This might be because your collector is not yet supported, or there was an issue with our service. Please select your collector manually, or try again later.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
