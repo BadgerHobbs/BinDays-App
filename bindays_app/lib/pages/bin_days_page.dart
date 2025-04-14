@@ -1,4 +1,6 @@
 // External Imports
+import 'package:bindays_app/widgets/animated_ellipsis.dart';
+import 'package:bindays_app/widgets/bin_days/bin_day_drawer.dart';
 import 'package:bindays_client/models/address.dart';
 import 'package:bindays_client/models/bin_day.dart';
 import 'package:bindays_client/models/collector.dart';
@@ -6,7 +8,6 @@ import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/extensions/address_extension.dart';
-import 'package:bindays_app/extensions/string_extension.dart';
 import 'package:bindays_app/client/bindays_client.dart';
 import 'package:bindays_app/widgets/bin_days/bin_day_groups.dart';
 import 'package:bindays_app/widgets/bin_days/bin_day_header.dart';
@@ -55,15 +56,10 @@ class _BinDaysPageState extends State<BinDaysPage> {
     binDays?.sort((a, b) => a.date.compareTo(b.date));
 
     Widget pageContent;
-
-    if (binDays == null || binDays!.isEmpty) {
+    if (binDays == null) {
+      pageContent = Center(child: AnimatedEllipsis());
+    } else if (binDays!.isEmpty) {
       pageContent = Text("No collections found");
-      return Scaffold(
-        body: SafeArea(
-          minimum: EdgeInsets.all(25),
-          child: Text("No collections found"),
-        ),
-      );
     } else {
       pageContent = Column(
         spacing: 25,
@@ -75,8 +71,9 @@ class _BinDaysPageState extends State<BinDaysPage> {
     }
 
     return Scaffold(
+      drawer: BinDayDrawer(),
       appBar: AppBar(
-        title: Text(widget.address.toFormattedString().capitaliseEveryWord()),
+        title: Text(widget.address.toFormattedString()),
         elevation: 0,
       ),
       body: SafeArea(minimum: EdgeInsets.all(25), child: pageContent),
