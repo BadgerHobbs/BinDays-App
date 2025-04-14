@@ -61,12 +61,20 @@ class _BinDaysPageState extends State<BinDaysPage> {
     } else if (binDays!.isEmpty) {
       pageContent = Text("No collections found");
     } else {
-      pageContent = Column(
-        spacing: 25,
-        children: [
-          BinDayHeader(binDay: binDays!.first),
-          BinDayGroups(binDays: binDays!),
-        ],
+      pageContent = SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children:
+              [
+                    BinDayHeader(binDay: binDays!.first),
+                    BinDayGroups(binDays: binDays!),
+                  ]
+                  .map(
+                    (e) =>
+                        Padding(padding: EdgeInsets.only(bottom: 25), child: e),
+                  )
+                  .toList(),
+        ),
       );
     }
 

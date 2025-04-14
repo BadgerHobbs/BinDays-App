@@ -11,20 +11,31 @@ class BinDayHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 10,
+      spacing: 25,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 60),
-          child: Image.asset("assets/illustrations/Recycling_Two_Color.png"),
+        ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 250),
+          child: Image.asset(
+            "assets/illustrations/Recycling_Two_Color.png",
+            fit: BoxFit.contain,
+          ),
         ),
-        Text(
-          "Next Collection",
-          style: TextStyle(fontSize: 20, color: Colors.grey),
-        ),
-        Text(
-          binDay.date.toLongDateString(),
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Next Collection",
+                style: TextStyle(fontSize: 20, color: Colors.grey),
+              ),
+              Text(
+                binDay.date.toLongDateString(),
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
         ),
       ],
     );

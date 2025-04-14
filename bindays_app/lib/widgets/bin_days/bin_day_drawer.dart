@@ -52,13 +52,17 @@ class BinDayDrawer extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Privacy Policy",
-                    style: TextStyle(decoration: TextDecoration.underline),
+                  Flexible(
+                    child: Text(
+                      "Privacy Policy",
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
                   ),
-                  Text(
-                    "Terms & Conditions",
-                    style: TextStyle(decoration: TextDecoration.underline),
+                  Flexible(
+                    child: Text(
+                      "Terms & Conditions",
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
                   ),
                 ],
               ),

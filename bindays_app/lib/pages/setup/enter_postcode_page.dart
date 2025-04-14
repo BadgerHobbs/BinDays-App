@@ -38,40 +38,40 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
     return Scaffold(
       body: SafeArea(
         minimum: const EdgeInsets.all(25),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 40),
-              Image.asset('assets/illustrations/Map_Two_Color.png'),
-              const SizedBox(height: 50),
-              const Text(
-                "Help us find your collector",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(68, 68, 68, 1),
-                ),
-                textAlign: TextAlign.center,
+        child: Column(
+          children: [
+            const Spacer(flex: 1),
+            Flexible(
+              flex: 2,
+              child: Image.asset('assets/illustrations/Map_Two_Color.png'),
+            ),
+            const SizedBox(height: 50),
+            const Text(
+              "Help us find your collector",
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Color.fromRGBO(68, 68, 68, 1),
               ),
-              const SizedBox(height: 10),
-              const Text(
-                "Please provide your postcode to identify your local bin collector.",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color.fromRGBO(68, 68, 68, 1),
-                ),
-                textAlign: TextAlign.center,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              "Please provide your postcode to identify your local bin collector.",
+              style: TextStyle(
+                fontSize: 16,
+                color: Color.fromRGBO(68, 68, 68, 1),
               ),
-              const SizedBox(height: 60),
-              TextInput(
-                controller: _postcodeController,
-                hintText: 'e.g. SW1A 0AA',
-              ),
-              const SizedBox(height: 30),
-              PrimaryButton(text: "Find Schedule", onPressed: _submitPostcode),
-              const SizedBox(height: 20),
-            ],
-          ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 60),
+            TextInput(
+              controller: _postcodeController,
+              hintText: 'e.g. SW1A 0AA',
+            ),
+            const Spacer(flex: 1),
+            PrimaryButton(text: "Find Schedule", onPressed: _submitPostcode),
+          ],
         ),
       ),
     );
