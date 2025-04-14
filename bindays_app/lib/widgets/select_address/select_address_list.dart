@@ -2,6 +2,9 @@
 import 'package:bindays_client/models/address.dart';
 import 'package:flutter/material.dart';
 
+// Internal Imports
+import 'package:bindays_app/extensions/address_extension.dart';
+
 class SelectAddressList extends StatelessWidget {
   final List<Address>? addresses;
   final Address? selectedAddress;
@@ -13,21 +16,6 @@ class SelectAddressList extends StatelessWidget {
     required this.selectedAddress,
     required this.onAddressSelected,
   });
-
-  String _formatAddress(Address address) {
-    final addressParts = [
-      address.property,
-      address.street,
-      address.town,
-      address.postcode,
-    ];
-
-    final filteredAddressParts = addressParts.where(
-      (part) => part != null && part.trim().isNotEmpty,
-    );
-
-    return filteredAddressParts.join(", ");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +39,7 @@ class SelectAddressList extends StatelessWidget {
                   },
                   contentPadding: EdgeInsets.zero,
                   title: Text(
-                    _formatAddress(address),
+                    address.toFormattedString(),
                     style: TextStyle(
                       fontWeight:
                           isSelectedCollector

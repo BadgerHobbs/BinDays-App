@@ -1,11 +1,85 @@
 // External Imports
+import 'package:bindays_client/models/address.dart';
+import 'package:bindays_client/models/bin_day.dart';
+import 'package:bindays_client/models/collector.dart';
 import 'package:flutter/material.dart';
 
-class BinDaysPage extends StatelessWidget {
-  const BinDaysPage({super.key});
+// Internal Imports
+import 'package:bindays_app/extensions/address_extension.dart';
+import 'package:bindays_app/extensions/string_extension.dart';
+import 'package:bindays_app/client/bindays_client.dart';
+import 'package:bindays_app/widgets/bin_days/bin_day_groups.dart';
+import 'package:bindays_app/widgets/bin_days/bin_day_header.dart';
+
+class BinDaysPage extends StatefulWidget {
+  final String postcode;
+  final Collector collector;
+  final Address address;
+
+  const BinDaysPage({
+    super.key,
+    required this.postcode,
+    required this.collector,
+    required this.address,
+  });
+
+  @override
+  State<BinDaysPage> createState() => _BinDaysPageState();
+}
+
+class _BinDaysPageState extends State<BinDaysPage> {
+  List<BinDay>? binDays;
+
+  @override
+  void initState() {
+    super.initState();
+    _getBinDays();
+  }
+
+  Future<void> _getBinDays() async {
+    try {
+      final binDays = await binDaysClient.getBinDays(
+        widget.collector,
+        widget.address,
+      );
+      setState(() => this.binDays = binDays);
+    } catch (e) {
+      binDays = [];
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('BinDays Page')));
+    // Sort bin days by date asc
+    binDays?.sort((a, b) => a.date.compareTo(b.date));
+
+    Widget pageContent;
+
+    if (binDays == null || binDays!.isEmpty) {
+      pageContent = Text("No collections found");
+      return Scaffold(
+        body: SafeArea(
+          minimum: EdgeInsets.all(25),
+          child: Text("No collections found"),
+        ),
+      );
+    } else {
+      pageContent = Column(
+        spacing: 25,
+        children: [
+          BinDayHeader(binDay: binDays!.first),
+          BinDayGroups(binDays: binDays!),
+        ],
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.address.toFormattedString().capitaliseEveryWord()),
+        elevation: 0,
+      ),
+      body: SafeArea(minimum: EdgeInsets.all(25), child: pageContent),
+    );
   }
 }

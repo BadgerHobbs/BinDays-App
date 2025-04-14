@@ -55,9 +55,16 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
                 child: PrimaryButton(
                   text: "Confirm Selection",
                   onPressed: () {
-                    Navigator.of(
-                      context,
-                    ).push(MaterialPageRoute(builder: (_) => BinDaysPage()));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder:
+                            (_) => BinDaysPage(
+                              postcode: widget.postcode,
+                              collector: widget.collector,
+                              address: selectedAddress!,
+                            ),
+                      ),
+                    );
                   },
                 ),
               ),
