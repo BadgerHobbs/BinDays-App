@@ -65,7 +65,7 @@ class AddressesNotFoundPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 SecondaryButton(
-                  text: "Retry",
+                  text: "Try a different postcode",
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => EnterPostcodePage()),

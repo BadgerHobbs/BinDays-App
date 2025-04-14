@@ -16,7 +16,7 @@ class BinDayDrawerBackground extends StatelessWidget {
             BlendMode.dstATop,
           ),
           image: const AssetImage(
-            'assets/illustrations/City_buildings_Monochromatic_Bg.png',
+            'assets/illustrations/Recycling_Ladder_Monochromatic_Bg.png',
           ),
           fit: BoxFit.fitWidth,
           alignment: Alignment.bottomLeft,
