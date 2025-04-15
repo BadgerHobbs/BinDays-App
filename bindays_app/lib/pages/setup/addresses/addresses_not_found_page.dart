@@ -28,7 +28,7 @@ class AddressesNotFoundPage extends StatelessWidget {
             const SizedBox(height: 50),
             Column(
               children: [
-                Text(
+                const Text(
                   "Uh oh!",
                   style: TextStyle(
                     fontSize: 30,
@@ -37,11 +37,11 @@ class AddressesNotFoundPage extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   "We couldn't find any addresses for postcode '${postcode.toUpperCase()}' associated with the collector '${collector.name}'. This might mean the postcode is incorrect, the collector doesn't cover this specific postcode, or there's an issue with the address data. Please try a different postcode or collector.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Color.fromRGBO(68, 68, 68, 1),
                   ),
@@ -68,7 +68,7 @@ class AddressesNotFoundPage extends StatelessWidget {
                   text: "Try a different postcode",
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => EnterPostcodePage()),
+                      MaterialPageRoute(builder: (_) => const EnterPostcodePage()),
                     );
                   },
                 ),

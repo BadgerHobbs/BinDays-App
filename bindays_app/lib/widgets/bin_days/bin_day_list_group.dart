@@ -20,11 +20,11 @@ class BinDayListGroup extends StatelessWidget {
           children: [
             Text(
               binDay.date.toLongDateString(),
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Text(
               binDay.date.daysUntilString(),
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),

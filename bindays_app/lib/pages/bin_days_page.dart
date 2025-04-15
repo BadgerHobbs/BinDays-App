@@ -57,9 +57,9 @@ class _BinDaysPageState extends State<BinDaysPage> {
 
     Widget pageContent;
     if (binDays == null) {
-      pageContent = Center(child: AnimatedEllipsis());
+      pageContent = const Center(child: AnimatedEllipsis());
     } else if (binDays!.isEmpty) {
-      pageContent = Text("No collections found");
+      pageContent = const Text("No collections found");
     } else {
       pageContent = SingleChildScrollView(
         child: Column(
@@ -71,7 +71,7 @@ class _BinDaysPageState extends State<BinDaysPage> {
                   ]
                   .map(
                     (e) =>
-                        Padding(padding: EdgeInsets.only(bottom: 25), child: e),
+                        Padding(padding: const EdgeInsets.only(bottom: 25), child: e),
                   )
                   .toList(),
         ),
@@ -79,12 +79,12 @@ class _BinDaysPageState extends State<BinDaysPage> {
     }
 
     return Scaffold(
-      drawer: BinDayDrawer(),
+      drawer: const BinDayDrawer(),
       appBar: AppBar(
         title: Text(widget.address.toFormattedString()),
         elevation: 0,
       ),
-      body: SafeArea(minimum: EdgeInsets.all(25), child: pageContent),
+      body: SafeArea(minimum: const EdgeInsets.all(25), child: pageContent),
     );
   }
 }

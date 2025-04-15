@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 // Internal Imports
 import 'package:bindays_app/notifiers/global_notifiers.dart';
-import 'package:bindays_app/pages/bin_days_page.dart';
 import 'package:bindays_app/pages/setup/welcome_page.dart';
 
 void main() {
@@ -57,7 +56,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     // TODO:
     // - Add logic to detect whether use already has collector/address configured
-    final setupRequired = true;
+    const setupRequired = true;
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -65,16 +64,16 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       theme: ThemeData(
         colorScheme: ThemeData.light(
           useMaterial3: true,
-        ).colorScheme.copyWith(primary: Color.fromRGBO(74, 149, 117, 1)),
+        ).colorScheme.copyWith(primary: const Color.fromRGBO(74, 149, 117, 1)),
       ),
       darkTheme: ThemeData(
         colorScheme: ThemeData.dark(
           useMaterial3: true,
-        ).colorScheme.copyWith(primary: Color.fromRGBO(74, 149, 117, 1)),
+        ).colorScheme.copyWith(primary: const Color.fromRGBO(74, 149, 117, 1)),
       ),
       themeMode:
           globalStateNotifier.darkMode ? ThemeMode.dark : ThemeMode.light,
-      home: WelcomePage(), //setupRequired ? WelcomePage() : BinDaysPage(),
+      home: const WelcomePage(), //setupRequired ? WelcomePage() : BinDaysPage(),
     );
   }
 }

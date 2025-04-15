@@ -74,13 +74,13 @@ class _FindingAddressesPage extends State<FindingAddressesPage> {
           children: [
             Image.asset('assets/illustrations/Navigation_Two_Color.png'),
             const SizedBox(height: 50),
-            Column(
+            const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Finding Addresss",
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -92,14 +92,14 @@ class _FindingAddressesPage extends State<FindingAddressesPage> {
                   ],
                 ),
                 AnimatedEllipsis(
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Color.fromRGBO(68, 68, 68, 1),
                   ),
                 ),
-                const SizedBox(height: 10),
-                const Text(
+                SizedBox(height: 10),
+                Text(
                   "Please wait while we check for addresses under your collector and postcode. This may take a few seconds.",
                   textAlign: TextAlign.center,
                   style: TextStyle(

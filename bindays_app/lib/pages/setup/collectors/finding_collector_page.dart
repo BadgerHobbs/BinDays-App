@@ -77,8 +77,8 @@ class _FindingCollectorPage extends State<FindingCollectorPage> {
                   color: Color.fromRGBO(68, 68, 68, 1),
                 ),
               ),
-              AnimatedEllipsis(
-                style: const TextStyle(
+              const AnimatedEllipsis(
+                style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Color.fromRGBO(68, 68, 68, 1),

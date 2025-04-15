@@ -12,7 +12,7 @@ class BinDayDrawer extends StatelessWidget {
     return Drawer(
       child: BinDayDrawerBackground(
         child: Padding(
-          padding: EdgeInsets.only(left: 25, top: 50, bottom: 25, right: 25),
+          padding: const EdgeInsets.only(left: 25, top: 50, bottom: 25, right: 25),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -22,7 +22,7 @@ class BinDayDrawer extends StatelessWidget {
                   Icons.edit_location_alt_rounded,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                title: Text("Change Address"),
+                title: const Text("Change Address"),
               ),
               ListTile(
                 contentPadding: EdgeInsets.zero,
@@ -30,7 +30,7 @@ class BinDayDrawer extends StatelessWidget {
                   Icons.notifications_active_rounded,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                title: Text("Notifications"),
+                title: const Text("Notifications"),
               ),
               ListTile(
                 contentPadding: EdgeInsets.zero,
@@ -38,7 +38,7 @@ class BinDayDrawer extends StatelessWidget {
                   Icons.dark_mode_rounded,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                title: Text("Dark Mode"),
+                title: const Text("Dark Mode"),
               ),
               ListTile(
                 contentPadding: EdgeInsets.zero,
@@ -46,10 +46,10 @@ class BinDayDrawer extends StatelessWidget {
                   Icons.rate_review_rounded,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                title: Text("Send Feedback"),
+                title: const Text("Send Feedback"),
               ),
-              Spacer(),
-              Row(
+              const Spacer(),
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(

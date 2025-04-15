@@ -12,7 +12,7 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        minimum: EdgeInsets.all(25),
+        minimum: const EdgeInsets.all(25),
         child: Column(
           children: [
             const Spacer(flex: 1),
@@ -22,8 +22,8 @@ class WelcomePage extends StatelessWidget {
                 'assets/illustrations/Recycling_Monochromatic.png',
               ),
             ),
-            SizedBox(height: 50),
-            Text(
+            const SizedBox(height: 50),
+            const Text(
               "Welcome to BinDays",
               style: TextStyle(
                 fontSize: 30,
@@ -32,8 +32,8 @@ class WelcomePage extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               "Join our UK community in recieving the latest information on your local bin collection services.",
               style: TextStyle(
                 fontSize: 15,
@@ -44,7 +44,7 @@ class WelcomePage extends StatelessWidget {
             const Spacer(flex: 1),
             Column(
               children: [
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     // TODO: Add URL Link on click
@@ -73,13 +73,13 @@ class WelcomePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 PrimaryButton(
                   text: "Get Started",
                   onPressed: () {
                     Navigator.of(
                       context,
-                    ).push(MaterialPageRoute(builder: (_) => HowItWorksPage()));
+                    ).push(MaterialPageRoute(builder: (_) => const HowItWorksPage()));
                   },
                 ),
               ],

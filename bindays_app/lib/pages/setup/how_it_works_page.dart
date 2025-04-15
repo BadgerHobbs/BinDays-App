@@ -12,7 +12,7 @@ class HowItWorksPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        minimum: EdgeInsets.all(25),
+        minimum: const EdgeInsets.all(25),
         child: Column(
           children: [
             const Spacer(flex: 1),
@@ -22,8 +22,8 @@ class HowItWorksPage extends StatelessWidget {
                 'assets/illustrations/Construction_Worker_Two_Color.png',
               ),
             ),
-            SizedBox(height: 50),
-            Text(
+            const SizedBox(height: 50),
+            const Text(
               "How it works",
               style: TextStyle(
                 fontSize: 30,
@@ -32,8 +32,8 @@ class HowItWorksPage extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               "BinDays provides free bin collection information from your local council's website. We strive for accuracy, but data reliability depends on the council's website content.\n\nThis app is maintained at personal cost. We cannot guarantee continued availability of all council data.\n\nBy proceeding, you acknowledge this disclaimer.",
               style: TextStyle(
                 fontSize: 16,
@@ -47,7 +47,7 @@ class HowItWorksPage extends StatelessWidget {
               onPressed: () {
                 Navigator.of(
                   context,
-                ).push(MaterialPageRoute(builder: (_) => EnterPostcodePage()));
+                ).push(MaterialPageRoute(builder: (_) => const EnterPostcodePage()));
               },
             ),
           ],

@@ -33,7 +33,7 @@ class BinDayListItem extends StatelessWidget {
       visualDensity: VisualDensity.compact,
       contentPadding: EdgeInsets.zero,
       leading: Container(
-        padding: EdgeInsets.all(3),
+        padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: binColours[bin.colour]?.withValues(alpha: 0.75) ?? Colors.grey,
@@ -44,10 +44,10 @@ class BinDayListItem extends StatelessWidget {
           height: 35,
         ),
       ),
-      title: Text(bin.name, style: TextStyle(fontSize: 16)),
+      title: Text(bin.name, style: const TextStyle(fontSize: 16)),
       subtitle: Text(
         _getBinType(),
-        style: TextStyle(fontSize: 15, color: Colors.grey),
+        style: const TextStyle(fontSize: 15, color: Colors.grey),
       ),
     );
   }

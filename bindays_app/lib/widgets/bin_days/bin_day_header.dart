@@ -15,7 +15,7 @@ class BinDayHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 250),
+          constraints: const BoxConstraints(maxWidth: 250),
           child: Image.asset(
             "assets/illustrations/Recycling_Two_Color.png",
             fit: BoxFit.contain,
@@ -26,13 +26,13 @@ class BinDayHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Next Collection",
                 style: TextStyle(fontSize: 20, color: Colors.grey),
               ),
               Text(
                 binDay.date.toLongDateString(),
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
             ],
           ),
