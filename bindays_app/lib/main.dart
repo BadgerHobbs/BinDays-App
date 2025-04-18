@@ -1,8 +1,12 @@
 // External Imports
+import 'dart:io';
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Internal Imports
+import 'package:bindays_app/widgets/debug/desktop_navigation_listener.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/pages/setup/welcome_page.dart';
 
@@ -18,7 +22,13 @@ void main() {
   // Draw behind navigation bar for lists
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-  runApp(const App());
+  // Use the helper method for DevicePreview enabled flag
+  runApp(
+    DevicePreview(
+      enabled: _isDebugAndDesktop(),
+      builder: (context) => const App(),
+    ),
+  );
 }
 
 class App extends StatefulWidget {
@@ -29,6 +39,8 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> with WidgetsBindingObserver {
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   void initState() {
     super.initState();
@@ -51,7 +63,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     // TODO:
@@ -59,6 +70,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     const setupRequired = true;
 
     return MaterialApp(
+      navigatorKey: _navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'BinDays',
       theme: ThemeData(
@@ -73,7 +85,24 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       ),
       themeMode:
           globalStateNotifier.darkMode ? ThemeMode.dark : ThemeMode.light,
-      home: const WelcomePage(), //setupRequired ? WelcomePage() : BinDaysPage(),
+      builder: (BuildContext innerContext, Widget? child) {
+        if (_isDebugAndDesktop()) {
+          return DesktopNavigationListener(
+            navigatorKey: _navigatorKey,
+            child: child!,
+          );
+        } else {
+          return child!;
+        }
+      },
+      home:
+          const WelcomePage(), //setupRequired ? WelcomePage() : BinDaysPage(),
     );
   }
+}
+
+// Helper method to determine the platform and debug mode state
+bool _isDebugAndDesktop() {
+  final isDesktop = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+  return kDebugMode && isDesktop;
 }
