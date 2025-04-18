@@ -83,8 +83,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           useMaterial3: true,
         ).colorScheme.copyWith(primary: const Color.fromRGBO(74, 149, 117, 1)),
       ),
-      themeMode:
-          globalStateNotifier.darkMode ? ThemeMode.dark : ThemeMode.light,
+      // globalStateNotifier.darkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: ThemeMode.light,
       builder: (BuildContext innerContext, Widget? child) {
         if (_isDebugAndDesktop()) {
           return DesktopNavigationListener(
@@ -95,8 +95,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           return child!;
         }
       },
-      home:
-          const WelcomePage(), //setupRequired ? WelcomePage() : BinDaysPage(),
+      //setupRequired ? WelcomePage() : BinDaysPage(),
+      home: const WelcomePage(),
     );
   }
 }
