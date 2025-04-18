@@ -25,8 +25,13 @@ class ConfirmCollectorPage extends StatelessWidget {
         minimum: const EdgeInsets.all(25),
         child: Column(
           children: [
-            const Spacer(),
-            Image.asset('assets/illustrations/Navigation_Two_Color.png'),
+            const Spacer(flex: 1),
+            Flexible(
+              flex: 2,
+              child: Image.asset(
+                'assets/illustrations/Navigation_Two_Color.png',
+              ),
+            ),
             const SizedBox(height: 50),
             Column(
               children: [
@@ -50,7 +55,7 @@ class ConfirmCollectorPage extends StatelessWidget {
                 ),
               ],
             ),
-            const Spacer(),
+            const Spacer(flex: 1),
             Column(
               children: [
                 PrimaryButton(

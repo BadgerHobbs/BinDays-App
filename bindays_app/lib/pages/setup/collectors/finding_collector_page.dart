@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:bindays_app/client/bindays_client.dart';
 import 'package:bindays_app/pages/setup/collectors/confirm_collector_page.dart';
 import 'package:bindays_app/pages/setup/collectors/collector_not_found_page.dart';
-import 'package:bindays_app/widgets/animated_ellipsis.dart';
+import 'package:bindays_app/pages/setup/loading_page.dart';
 
 class FindingCollectorPage extends StatefulWidget {
   final String postcode;
@@ -59,44 +59,10 @@ class _FindingCollectorPage extends State<FindingCollectorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        minimum: const EdgeInsets.all(25),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/illustrations/Navigation_Two_Color.png'),
-              const SizedBox(height: 50),
-              const Text(
-                "Finding Your Collector",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(68, 68, 68, 1),
-                ),
-              ),
-              const AnimatedEllipsis(
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(68, 68, 68, 1),
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Please wait while we check which bin collector serves your area. This may take a few seconds.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color.fromRGBO(68, 68, 68, 1),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    return const LoadingPage(
+      titleText: "Finding Your Collector",
+      descriptionText:
+          "Please wait while we check which bin collector serves your area. This may take a few seconds.",
     );
   }
 }

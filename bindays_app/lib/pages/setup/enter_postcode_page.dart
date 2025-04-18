@@ -67,6 +67,7 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
             const SizedBox(height: 60),
             TextInput(
               controller: _postcodeController,
+              textCapitalization: TextCapitalization.characters,
               hintText: 'e.g. SW1A 0AA',
             ),
             const Spacer(flex: 1),

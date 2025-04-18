@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/pages/setup/enter_postcode_page.dart';
-import 'package:bindays_app/widgets/secondary_button.dart';
+import 'package:bindays_app/pages/setup/not_found_page.dart';
 
 class AddressesNotFoundPage extends StatelessWidget {
   final String postcode;
@@ -18,65 +18,15 @@ class AddressesNotFoundPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        minimum: const EdgeInsets.all(25),
-        child: Column(
-          children: [
-            const Spacer(),
-            Image.asset('assets/illustrations/Navigation_Two_Color.png'),
-            const SizedBox(height: 50),
-            Column(
-              children: [
-                const Text(
-                  "Uh oh!",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromRGBO(68, 68, 68, 1),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "We couldn't find any addresses for postcode '${postcode.toUpperCase()}' associated with the collector '${collector.name}'. This might mean the postcode is incorrect, the collector doesn't cover this specific postcode, or there's an issue with the address data. Please try a different postcode or collector.",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Color.fromRGBO(68, 68, 68, 1),
-                  ),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Column(
-              children: [
-                // TODO: Add URL Link on click
-                TextButton(
-                  onPressed: () => {},
-                  child: const Text(
-                    "Send feedback or report an issue.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Color.fromRGBO(68, 68, 68, 0.75),
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SecondaryButton(
-                  text: "Try a different postcode",
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const EnterPostcodePage()),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+    return NotFoundPage(
+      message:
+          "We couldn't find any addresses for postcode '${postcode.toUpperCase()}' associated with the collector '${collector.name}'. This might mean the postcode is incorrect, the collector doesn't cover this specific postcode, or there's an issue with the address data. Please try a different postcode or collector.",
+      buttonText: "Try a different postcode",
+      buttonOnPressed: () {
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const EnterPostcodePage()));
+      },
     );
   }
 }

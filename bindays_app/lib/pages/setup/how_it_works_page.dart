@@ -34,7 +34,7 @@ class HowItWorksPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             const Text(
-              "BinDays provides free bin collection information from your local council's website. We strive for accuracy, but data reliability depends on the council's website content.\n\nThis app is maintained at personal cost. We cannot guarantee continued availability of all council data.\n\nBy proceeding, you acknowledge this disclaimer.",
+              "BinDays provides free bin collection information from your local council's website. We strive for accuracy, but data reliability depends on the council's website content.\n\nThis app is maintained at cost. We cannot guarantee continued availability of all council data.\n\nBy proceeding, you acknowledge this disclaimer.",
               style: TextStyle(
                 fontSize: 16,
                 color: Color.fromRGBO(68, 68, 68, 1),
@@ -45,9 +45,9 @@ class HowItWorksPage extends StatelessWidget {
             PrimaryButton(
               text: "Continue",
               onPressed: () {
-                Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (_) => const EnterPostcodePage()));
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const EnterPostcodePage()),
+                );
               },
             ),
           ],
