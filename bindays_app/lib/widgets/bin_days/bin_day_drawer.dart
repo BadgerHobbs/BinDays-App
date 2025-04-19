@@ -1,20 +1,33 @@
 // External Imports
-import 'package:bindays_app/notifiers/global_notifiers.dart';
-import 'package:bindays_app/pages/notifications_page.dart';
-import 'package:bindays_client/models/address.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/extensions/address_extension.dart';
+import 'package:bindays_app/notifiers/global_notifiers.dart';
+import 'package:bindays_app/pages/notifications_page.dart';
 import 'package:bindays_app/widgets/bin_days/bin_day_drawer_background.dart';
 
-class BinDayDrawer extends StatelessWidget {
-  final Address address;
+class BinDayDrawer extends StatefulWidget {
+  const BinDayDrawer({super.key});
 
-  const BinDayDrawer({super.key, required this.address});
+  @override
+  State<BinDayDrawer> createState() => _BinDayDrawerState();
+}
+
+class _BinDayDrawerState extends State<BinDayDrawer> {
+  @override
+  void initState() {
+    super.initState();
+    globalStateNotifier.addListener(() {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final address = globalStateNotifier.address!;
+    final isDarkMode = globalStateNotifier.isDarkMode;
+
     return Drawer(
       child: BinDayDrawerBackground(
         child: Padding(
@@ -70,11 +83,13 @@ class BinDayDrawer extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(
-                  Icons.dark_mode_rounded,
+                  isDarkMode
+                      ? Icons.light_mode_rounded
+                      : Icons.dark_mode_rounded,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 title: Text(
-                  "Dark Mode",
+                  isDarkMode ? "Light Mode" : "Dark Mode",
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                   ),

@@ -1,7 +1,9 @@
 // External Imports
-import 'package:bindays_app/extensions/date_time_extension.dart';
 import 'package:bindays_client/models/bin_day.dart';
 import 'package:flutter/material.dart';
+
+// Internal Imports
+import 'package:bindays_app/extensions/date_time_extension.dart';
 
 class BinDayHeader extends StatelessWidget {
   final BinDay binDay;

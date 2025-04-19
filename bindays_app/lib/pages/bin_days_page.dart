@@ -85,7 +85,7 @@ class _BinDaysPageState extends State<BinDaysPage> {
     }
 
     return Scaffold(
-      drawer: BinDayDrawer(address: globalStateNotifier.address!),
+      drawer: const BinDayDrawer(),
       appBar: AppBar(),
       body: SafeBasePage(child: pageContent),
     );
