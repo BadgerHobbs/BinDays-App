@@ -37,8 +37,9 @@ class GlobalStateNotifier extends ChangeNotifier {
   }
 
   /// Set collector in shared preferences.
-  Future<void> setCollector() async {
-    await SharedPreferencesManager.setCollector(_collector!);
+  Future<void> setCollector(Collector collector) async {
+    _collector = collector;
+    await SharedPreferencesManager.setCollector(collector);
     notifyListeners();
   }
 
@@ -52,8 +53,9 @@ class GlobalStateNotifier extends ChangeNotifier {
   }
 
   /// Set address in shared preferences.
-  Future<void> setAddress() async {
-    await SharedPreferencesManager.setAddress(_address!);
+  Future<void> setAddress(Address address) async {
+    _address = address;
+    await SharedPreferencesManager.setAddress(address);
     notifyListeners();
   }
 
@@ -67,8 +69,9 @@ class GlobalStateNotifier extends ChangeNotifier {
   }
 
   /// Set bin days in shared preferences.
-  Future<void> setBinDays() async {
-    await SharedPreferencesManager.setBinDays(_binDays!);
+  Future<void> setBinDays(List<BinDay> binDays) async {
+    _binDays = binDays;
+    await SharedPreferencesManager.setBinDays(binDays);
     notifyListeners();
   }
 
@@ -82,8 +85,11 @@ class GlobalStateNotifier extends ChangeNotifier {
   }
 
   /// Set notifications in shared preferences.
-  Future<void> setNotifications() async {
-    await SharedPreferencesManager.setNotifications(_notifications!);
+  Future<void> setNotifications(
+    List<BinCollectionNotification> notifications,
+  ) async {
+    _notifications = notifications;
+    await SharedPreferencesManager.setNotifications(notifications);
     notifyListeners();
   }
 
@@ -97,8 +103,9 @@ class GlobalStateNotifier extends ChangeNotifier {
   }
 
   /// Set last refresh in shared preferences.
-  Future<void> setLastRefresh() async {
-    await SharedPreferencesManager.setLastRefresh(_lastRefresh!);
+  Future<void> setLastRefresh(DateTime lastRefresh) async {
+    _lastRefresh = lastRefresh;
+    await SharedPreferencesManager.setLastRefresh(lastRefresh);
     notifyListeners();
   }
 
@@ -113,6 +120,7 @@ class GlobalStateNotifier extends ChangeNotifier {
 
   /// Set dark mode in shared preferences.
   Future<void> setIsDarkMode(bool isDarkMode) async {
+    _darkMode = isDarkMode;
     await SharedPreferencesManager.setIsDarkMode(isDarkMode);
     notifyListeners();
   }

@@ -2,8 +2,9 @@
 import 'package:flutter/material.dart';
 
 // Internal Imports
+import 'package:bindays_app/data/setup_manager.dart';
+import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
-import 'package:bindays_app/pages/setup/collectors/finding_collector_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:bindays_app/widgets/text_input.dart';
 
@@ -26,11 +27,8 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
   void _submitPostcode() async {
     final postcode = _postcodeController.text.trim().toUpperCase();
     if (postcode.isNotEmpty) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => FindingCollectorPage(postcode: postcode),
-        ),
-      );
+      setupManager.postcode = postcode;
+      if (mounted) navigateToFindingCollectorPage(context);
     }
   }
 

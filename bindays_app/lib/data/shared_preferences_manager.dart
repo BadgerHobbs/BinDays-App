@@ -19,10 +19,9 @@ class SharedPreferencesManager {
   static const _lastRefreshKey = 'cachedLastRefresh';
   static const _isDarkModeKey = 'cachedIsDarkMode';
 
-  static Future<SharedPreferences> get sharedPreferences async {
-    _sharedPreferences ??= await SharedPreferences.getInstance();
+  static Future<void> loadSharedPreferences() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
     await _migrateLegacyData();
-    return _sharedPreferences!;
   }
 
   /// Migrate data from legacy 1.x version
@@ -36,10 +35,6 @@ class SharedPreferencesManager {
     //   - 'IsDarkMode'
     // - Migrate to new format and save
     // - Remove legacy shared preferences data
-  }
-
-  static Future<void> reload() async {
-    await _sharedPreferences?.reload();
   }
 
   /// Generic method to get and parse shared preferences json

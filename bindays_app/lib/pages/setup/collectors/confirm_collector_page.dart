@@ -1,26 +1,20 @@
 // External Imports
-import 'package:bindays_client/models/collector.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
+import 'package:bindays_app/data/setup_manager.dart';
+import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
-import 'package:bindays_app/pages/setup/addresses/finding_addresses_page.dart';
-import 'package:bindays_app/pages/setup/collectors/select_collector_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:bindays_app/widgets/secondary_button.dart';
 
 class ConfirmCollectorPage extends StatelessWidget {
-  final Collector collector;
-  final String postcode;
-
-  const ConfirmCollectorPage({
-    super.key,
-    required this.collector,
-    required this.postcode,
-  });
+  const ConfirmCollectorPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final collector = setupManager.collector!;
+
     return SafeBasePage(
       child: Column(
         children: [
@@ -57,28 +51,12 @@ class ConfirmCollectorPage extends StatelessWidget {
             children: [
               PrimaryButton(
                 text: "Continue",
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder:
-                          (_) => FindingAddressesPage(
-                            postcode: postcode,
-                            collector: collector,
-                          ),
-                    ),
-                  );
-                },
+                onPressed: () => navigateToFindingAddressesPage(context),
               ),
               const SizedBox(height: 10),
               SecondaryButton(
                 text: "Select Another Collector",
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => SelectCollectorPage(postcode: postcode),
-                    ),
-                  );
-                },
+                onPressed: () => navigateToSelectCollectorPage(context),
               ),
             ],
           ),

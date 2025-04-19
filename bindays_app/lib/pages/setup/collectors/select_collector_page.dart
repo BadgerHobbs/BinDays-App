@@ -3,17 +3,16 @@ import 'package:bindays_client/models/collector.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
-import 'package:bindays_app/pages/setup/addresses/finding_addresses_page.dart';
 import 'package:bindays_app/client/bindays_client.dart';
+import 'package:bindays_app/data/setup_manager.dart';
+import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:bindays_app/widgets/select_collector/select_collector_background.dart';
 import 'package:bindays_app/widgets/select_collector/select_collector_header.dart';
 import 'package:bindays_app/widgets/select_collector/select_collector_list.dart';
 
 class SelectCollectorPage extends StatefulWidget {
-  final String postcode;
-
-  const SelectCollectorPage({super.key, required this.postcode});
+  const SelectCollectorPage({super.key});
 
   @override
   State<SelectCollectorPage> createState() => _SelectCollectorPageState();
@@ -39,9 +38,12 @@ class _SelectCollectorPageState extends State<SelectCollectorPage> {
   }
 
   void _onCollectorSelected(Collector collector) {
-    setState(() {
-      selectedCollector = collector;
-    });
+    setState(() => selectedCollector = collector);
+  }
+
+  void _onConfirmSelection() {
+    setupManager.collector = selectedCollector;
+    navigateToFindingAddressesPage(context);
   }
 
   @override
@@ -65,17 +67,7 @@ class _SelectCollectorPageState extends State<SelectCollectorPage> {
                 visible: selectedCollector != null,
                 child: PrimaryButton(
                   text: "Confirm Selection",
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder:
-                            (_) => FindingAddressesPage(
-                              postcode: widget.postcode,
-                              collector: selectedCollector!,
-                            ),
-                      ),
-                    );
-                  },
+                  onPressed: _onConfirmSelection,
                 ),
               ),
             ],

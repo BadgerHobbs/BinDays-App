@@ -6,13 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Internal Imports
+import 'package:bindays_app/data/shared_preferences_manager.dart';
+import 'package:bindays_app/pages/bin_days_page.dart';
 import 'package:bindays_app/widgets/debug/desktop_navigation_listener.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/pages/setup/welcome_page.dart';
 
-void main() {
+void main() async {
   // Ensure app is initialised
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Load shared preferences
+  await SharedPreferencesManager.loadSharedPreferences();
 
   // Transparent navigation bar
   SystemChrome.setSystemUIOverlayStyle(
@@ -45,6 +50,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    globalStateNotifier.reload();
     globalStateNotifier.addListener(() {
       setState(() {});
     });
@@ -65,9 +71,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    // TODO:
-    // - Add logic to detect whether use already has collector/address configured
-    const setupRequired = true;
+    final setupRequired =
+        globalStateNotifier.collector == null &&
+        globalStateNotifier.address == null;
 
     return MaterialApp(
       navigatorKey: _navigatorKey,
@@ -95,8 +101,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           return child!;
         }
       },
-      //setupRequired ? WelcomePage() : BinDaysPage(),
-      home: const WelcomePage(),
+      home: setupRequired ? const WelcomePage() : const BinDaysPage(),
     );
   }
 }

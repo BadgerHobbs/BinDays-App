@@ -2,15 +2,12 @@
 import 'package:flutter/material.dart';
 
 // Internal Imports
-import 'package:bindays_app/client/bindays_client.dart';
-import 'package:bindays_app/pages/setup/collectors/confirm_collector_page.dart';
-import 'package:bindays_app/pages/setup/collectors/collector_not_found_page.dart';
-import 'package:bindays_app/pages/setup/loading_page.dart';
+import 'package:bindays_app/data/setup_manager.dart';
+import 'package:bindays_app/misc/navigators.dart';
+import 'package:bindays_app/pages/setup/generics/loading_page.dart';
 
 class FindingCollectorPage extends StatefulWidget {
-  final String postcode;
-
-  const FindingCollectorPage({super.key, required this.postcode});
+  const FindingCollectorPage({super.key});
 
   @override
   State<FindingCollectorPage> createState() => _FindingCollectorPage();
@@ -20,39 +17,18 @@ class _FindingCollectorPage extends State<FindingCollectorPage> {
   @override
   void initState() {
     super.initState();
-    _getCollector(widget.postcode);
+    _getCollector();
   }
 
-  Future<void> _getCollector(String postcode) async {
+  Future<void> _getCollector() async {
     try {
-      // Fake processing time so that users can see the loading animation
-      await Future.delayed(const Duration(seconds: 2));
-      final collector = await binDaysClient.getCollector(postcode);
-
+      await setupManager.getCollector();
       if (mounted) {
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-            pageBuilder:
-                (context, animation1, animation2) => ConfirmCollectorPage(
-                  collector: collector,
-                  postcode: postcode,
-                ),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-        );
+        navigateToConfirmCollectorPage(context, pushReplacement: true);
       }
     } catch (e) {
       if (mounted) {
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-            pageBuilder:
-                (context, animation1, animation2) =>
-                    CollectorNotFoundPage(postcode: postcode),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-        );
+        navigateToCollectorNotFoundPage(context, pushReplacement: true);
       }
     }
   }
