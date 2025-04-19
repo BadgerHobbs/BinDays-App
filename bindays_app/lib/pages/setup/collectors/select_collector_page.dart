@@ -63,13 +63,11 @@ class _SelectCollectorPageState extends State<SelectCollectorPage> {
                   onCollectorSelected: _onCollectorSelected,
                 ),
               ),
-              Visibility(
-                visible: selectedCollector != null,
-                child: PrimaryButton(
+              if (selectedCollector != null)
+                PrimaryButton(
                   text: "Confirm Selection",
                   onPressed: _onConfirmSelection,
                 ),
-              ),
             ],
           ),
         ),

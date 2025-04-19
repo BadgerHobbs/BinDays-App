@@ -52,13 +52,11 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
                   onAddressSelected: _onAddressSelected,
                 ),
               ),
-              Visibility(
-                visible: selectedAddress != null,
-                child: PrimaryButton(
+              if (selectedAddress != null)
+                PrimaryButton(
                   text: "Confirm Selection",
                   onPressed: _onConfirmSelection,
                 ),
-              ),
             ],
           ),
         ),

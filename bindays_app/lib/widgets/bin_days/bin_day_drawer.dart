@@ -41,6 +41,7 @@ class _BinDayDrawerState extends State<BinDayDrawer> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 25),
               Text(
                 address.toFormattedString(),
                 style: TextStyle(
