@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Internal Imports
-import 'package:bindays_app/data/setup_manager.dart';
+import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/setup/generics/not_found_page.dart';
 
@@ -11,7 +11,7 @@ class CollectorNotFoundPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final postcode = setupManager.postcode!;
+    final postcode = setupState.postcode!;
 
     return NotFoundPage(
       message:

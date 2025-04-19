@@ -3,7 +3,7 @@ import 'package:bindays_client/models/address.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
-import 'package:bindays_app/data/setup_manager.dart';
+import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
@@ -27,7 +27,7 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
 
   void _onConfirmSelection() {
     // Update global state with the user selected details from setup
-    globalStateNotifier.setCollector(setupManager.collector!);
+    globalStateNotifier.setCollector(setupState.collector!);
     globalStateNotifier.setAddress(selectedAddress!);
 
     navigateToBinDaysPage(context);
@@ -35,7 +35,7 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
 
   @override
   Widget build(BuildContext context) {
-    final addresses = setupManager.addresses!;
+    final addresses = setupState.addresses!;
 
     return Scaffold(
       body: SelectAddressBackground(

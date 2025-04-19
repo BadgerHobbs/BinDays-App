@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/client/bindays_client.dart';
-import 'package:bindays_app/data/setup_manager.dart';
+import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:bindays_app/widgets/select_collector/select_collector_background.dart';
@@ -42,7 +42,7 @@ class _SelectCollectorPageState extends State<SelectCollectorPage> {
   }
 
   void _onConfirmSelection() {
-    setupManager.collector = selectedCollector;
+    setupState.collector = selectedCollector;
     navigateToFindingAddressesPage(context);
   }
 

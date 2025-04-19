@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Internal Imports
-import 'package:bindays_app/data/setup_manager.dart';
+import 'package:bindays_app/client/bindays_client.dart';
+import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/setup/generics/loading_page.dart';
 
@@ -11,7 +12,10 @@ class FindingAddressesPage extends StatelessWidget {
 
   Future<void> _getAddresses(BuildContext context) async {
     try {
-      await setupManager.getAddresses();
+      setupState.addresses = await binDaysClient.getAddresses(
+        setupState.collector!,
+        setupState.postcode!,
+      );
       if (context.mounted) {
         navigateToSelectAdressPage(context, pushReplacement: true);
       }
