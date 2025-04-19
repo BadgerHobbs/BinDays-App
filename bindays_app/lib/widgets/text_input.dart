@@ -27,7 +27,7 @@ class TextInput extends StatelessWidget {
 
     final borderRadius = BorderRadius.circular(borderRadiusValue);
     final borderSide = BorderSide(
-      color: Theme.of(context).primaryColor,
+      color: Theme.of(context).colorScheme.primary,
       width: 2.0,
     );
     final outlineInputBorder = OutlineInputBorder(

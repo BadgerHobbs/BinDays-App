@@ -47,7 +47,7 @@ class _BinDaysPageState extends State<BinDaysPage> {
 
     Widget pageContent;
     if (binDays == null) {
-      pageContent = const Center(
+      pageContent = Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -56,15 +56,18 @@ class _BinDaysPageState extends State<BinDaysPage> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
-                color: Color.fromRGBO(68, 68, 68, 1),
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
-            AnimatedEllipsis(),
+            const AnimatedEllipsis(),
           ],
         ),
       );
     } else if (binDays!.isEmpty) {
-      pageContent = const Text("No collections found");
+      pageContent = Text(
+        "No collections found",
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+      );
     } else {
       pageContent = SingleChildScrollView(
         child: Padding(

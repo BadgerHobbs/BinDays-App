@@ -59,25 +59,28 @@ class _NotificationsPageState extends State<NotificationsPage> {
           children: [
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text(
+              title: Text(
                 "Notifications",
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(68, 68, 68, 1),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               trailing: IconButton(
                 icon: Icon(
                   Icons.add_circle_rounded,
-                  size: 35,
-                  color: Theme.of(context).primaryColor,
+                  size: 30,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 onPressed: () {},
               ),
             ),
-            const Text(
+            Text(
               "Add and manage notifications for future bin collections, long press to delete notifications.",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
             Expanded(
               child: ListView.builder(

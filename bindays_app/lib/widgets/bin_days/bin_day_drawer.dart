@@ -1,4 +1,5 @@
 // External Imports
+import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/pages/notifications_page.dart';
 import 'package:bindays_client/models/address.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,12 @@ class BinDayDrawer extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(address.toFormattedString()),
+              Text(
+                address.toFormattedString(),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
               const SizedBox(height: 25),
               ListTile(
                 contentPadding: EdgeInsets.zero,
@@ -34,7 +40,12 @@ class BinDayDrawer extends StatelessWidget {
                   Icons.edit_location_alt_rounded,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                title: const Text("Change Address"),
+                title: Text(
+                  "Change Address",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
               ),
               ListTile(
                 contentPadding: EdgeInsets.zero,
@@ -42,7 +53,12 @@ class BinDayDrawer extends StatelessWidget {
                   Icons.notifications_active_rounded,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                title: const Text("Notifications"),
+                title: Text(
+                  "Notifications",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -57,7 +73,18 @@ class BinDayDrawer extends StatelessWidget {
                   Icons.dark_mode_rounded,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                title: const Text("Dark Mode"),
+                title: Text(
+                  "Dark Mode",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                onTap:
+                    () => {
+                      globalStateNotifier.setIsDarkMode(
+                        !globalStateNotifier.isDarkMode,
+                      ),
+                    },
               ),
               ListTile(
                 contentPadding: EdgeInsets.zero,
@@ -65,22 +92,33 @@ class BinDayDrawer extends StatelessWidget {
                   Icons.rate_review_rounded,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                title: const Text("Send Feedback"),
+                title: Text(
+                  "Send Feedback",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
               ),
               const Spacer(),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
                     child: Text(
                       "Privacy Policy",
-                      style: TextStyle(decoration: TextDecoration.underline),
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                   Flexible(
                     child: Text(
                       "Terms & Conditions",
-                      style: TextStyle(decoration: TextDecoration.underline),
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ],

@@ -6,7 +6,7 @@ class SelectAddressHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         Text(
           "Addresses",
@@ -14,14 +14,17 @@ class SelectAddressHeader extends StatelessWidget {
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
-            color: Color.fromRGBO(68, 68, 68, 1),
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         SizedBox(height: 10),
         Text(
           "Please select an address to continue.",
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 16, color: Color.fromRGBO(68, 68, 68, 1)),
+          style: TextStyle(
+            fontSize: 16,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );

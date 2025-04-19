@@ -12,7 +12,7 @@ class SelectAddressBackground extends StatelessWidget {
       decoration: BoxDecoration(
         image: DecorationImage(
           colorFilter: ColorFilter.mode(
-            Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
+            Theme.of(context).colorScheme.surface.withValues(alpha: 0.05),
             BlendMode.dstATop,
           ),
           image: const AssetImage(

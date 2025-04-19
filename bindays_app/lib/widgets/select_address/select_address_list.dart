@@ -32,7 +32,7 @@ class SelectAddressList extends StatelessWidget {
               final isSelectedCollector = address == selectedAddress;
 
               return Opacity(
-                opacity: isSelectedCollector ? 1 : 0.75,
+                opacity: isSelectedCollector ? 1 : 0.5,
                 child: ListTile(
                   onTap: () {
                     onAddressSelected(address);
@@ -41,16 +41,14 @@ class SelectAddressList extends StatelessWidget {
                   title: Text(
                     address.toFormattedString(),
                     style: TextStyle(
-                      fontWeight:
-                          isSelectedCollector
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                      fontWeight: FontWeight.normal,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   leading: Icon(
                     Icons.place,
                     size: 25,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   trailing:
                       isSelectedCollector
@@ -59,7 +57,8 @@ class SelectAddressList extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16,
                               fontStyle: FontStyle.italic,
-                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.normal,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           )
                           : null,

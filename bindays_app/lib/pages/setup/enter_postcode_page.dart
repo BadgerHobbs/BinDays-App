@@ -43,21 +43,21 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
             child: Image.asset('assets/illustrations/Map_Two_Color.png'),
           ),
           const SizedBox(height: 50),
-          const Text(
+          Text(
             "Help us find your collector",
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
-              color: Color.fromRGBO(68, 68, 68, 1),
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 10),
-          const Text(
+          Text(
             "Please provide your postcode to identify your local bin collector.",
             style: TextStyle(
               fontSize: 16,
-              color: Color.fromRGBO(68, 68, 68, 1),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.center,
           ),

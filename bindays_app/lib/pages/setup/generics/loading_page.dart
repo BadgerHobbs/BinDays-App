@@ -33,26 +33,26 @@ class LoadingPage extends StatelessWidget {
               Text(
                 titleText,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(68, 68, 68, 1),
-                ),
-              ),
-              const AnimatedEllipsis(
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(68, 68, 68, 1),
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+              AnimatedEllipsis(
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 10),
               Text(
                 descriptionText,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
-                  color: Color.fromRGBO(68, 68, 68, 1),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ],

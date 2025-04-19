@@ -52,7 +52,11 @@ class _AnimatedEllipsisState extends State<AnimatedEllipsis>
       dots,
       style:
           widget.style ??
-          const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
       textAlign: TextAlign.left,
       overflow: TextOverflow.clip,
     );

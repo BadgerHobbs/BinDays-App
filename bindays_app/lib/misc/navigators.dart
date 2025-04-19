@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/pages/bin_days_page.dart';
+import 'package:bindays_app/pages/setup/how_it_works_page.dart';
+import 'package:bindays_app/pages/setup/enter_postcode_page.dart';
 import 'package:bindays_app/pages/setup/addresses/addresses_not_found_page.dart';
 import 'package:bindays_app/pages/setup/collectors/collector_not_found_page.dart';
 import 'package:bindays_app/pages/setup/collectors/confirm_collector_page.dart';
@@ -10,6 +12,16 @@ import 'package:bindays_app/pages/setup/addresses/finding_addresses_page.dart';
 import 'package:bindays_app/pages/setup/addresses/select_address_page.dart';
 import 'package:bindays_app/pages/setup/collectors/finding_collector_page.dart';
 import 'package:bindays_app/pages/setup/collectors/select_collector_page.dart';
+
+/// Navigates to the HowItWorksPage.
+void navigateToHowItWorksPage(BuildContext context) {
+  _navigateToPage(context, const HowItWorksPage());
+}
+
+/// Navigates to the EnterPostcodePage.
+void navigateToEnterPostcodePage(BuildContext context) {
+  _navigateToPage(context, const EnterPostcodePage());
+}
 
 /// Navigates to the FindingCollectorPage.
 void navigateToFindingCollectorPage(BuildContext context) {

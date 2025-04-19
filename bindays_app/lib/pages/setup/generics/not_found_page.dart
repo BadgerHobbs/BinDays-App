@@ -30,12 +30,12 @@ class NotFoundPage extends StatelessWidget {
           const SizedBox(height: 50),
           Column(
             children: [
-              const Text(
+              Text(
                 "Uh oh!",
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(68, 68, 68, 1),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -43,9 +43,9 @@ class NotFoundPage extends StatelessWidget {
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
-                  color: Color.fromRGBO(68, 68, 68, 1),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -54,15 +54,12 @@ class NotFoundPage extends StatelessWidget {
           Column(
             children: [
               // TODO: Add URL Link on click
-              TextButton(
-                onPressed: () => {},
-                child: const Text(
-                  "Send feedback or report an issue.",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Color.fromRGBO(68, 68, 68, 0.75),
-                    decoration: TextDecoration.underline,
-                  ),
+              Text(
+                "Send feedback or report an issue.",
+                style: TextStyle(
+                  fontSize: 14,
+                  decoration: TextDecoration.underline,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 10),

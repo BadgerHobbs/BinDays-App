@@ -80,17 +80,21 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       debugShowCheckedModeBanner: false,
       title: 'BinDays',
       theme: ThemeData(
-        colorScheme: ThemeData.light(
-          useMaterial3: true,
-        ).colorScheme.copyWith(primary: const Color.fromRGBO(74, 149, 117, 1)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromRGBO(74, 149, 117, 1),
+          brightness: Brightness.light,
+          dynamicSchemeVariant: DynamicSchemeVariant.tonalSpot,
+        ),
       ),
       darkTheme: ThemeData(
-        colorScheme: ThemeData.dark(
-          useMaterial3: true,
-        ).colorScheme.copyWith(primary: const Color.fromRGBO(74, 149, 117, 1)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromRGBO(74, 149, 117, 1),
+          brightness: Brightness.dark,
+          dynamicSchemeVariant: DynamicSchemeVariant.tonalSpot,
+        ),
       ),
-      // globalStateNotifier.darkMode ? ThemeMode.dark : ThemeMode.light,
-      themeMode: ThemeMode.light,
+      themeMode:
+          globalStateNotifier.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       builder: (BuildContext innerContext, Widget? child) {
         if (_isDebugAndDesktop()) {
           return DesktopNavigationListener(

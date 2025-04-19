@@ -28,19 +28,19 @@ class ConfirmCollectorPage extends StatelessWidget {
             children: [
               Text(
                 collector.name,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromRGBO(68, 68, 68, 1),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
               Text(
                 "Your collector was identified as ${collector.name}. If incorrect, please select another supported collector.",
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
-                  color: Color.fromRGBO(68, 68, 68, 1),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
                 textAlign: TextAlign.center,
               ),
