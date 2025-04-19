@@ -1,4 +1,5 @@
 // External Imports
+import 'package:bindays_app/pages/notifications_page.dart';
 import 'package:bindays_client/models/address.dart';
 import 'package:flutter/material.dart';
 
@@ -42,6 +43,13 @@ class BinDayDrawer extends StatelessWidget {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 title: const Text("Notifications"),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const NotificationsPage(),
+                    ),
+                  );
+                },
               ),
               ListTile(
                 contentPadding: EdgeInsets.zero,

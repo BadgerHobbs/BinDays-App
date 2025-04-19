@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Internal Imports
+import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/pages/setup/enter_postcode_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
 
@@ -10,9 +11,7 @@ class HowItWorksPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        minimum: const EdgeInsets.all(25),
+    return SafeBasePage(
         child: Column(
           children: [
             const Spacer(flex: 1),
@@ -52,7 +51,6 @@ class HowItWorksPage extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 }

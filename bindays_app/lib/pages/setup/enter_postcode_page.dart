@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Internal Imports
+import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/pages/setup/collectors/finding_collector_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:bindays_app/widgets/text_input.dart';
@@ -35,45 +36,42 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        minimum: const EdgeInsets.all(25),
-        child: Column(
-          children: [
-            const Spacer(flex: 1),
-            Flexible(
-              flex: 2,
-              child: Image.asset('assets/illustrations/Map_Two_Color.png'),
+    return SafeBasePage(
+      child: Column(
+        children: [
+          const Spacer(flex: 1),
+          Flexible(
+            flex: 2,
+            child: Image.asset('assets/illustrations/Map_Two_Color.png'),
+          ),
+          const SizedBox(height: 50),
+          const Text(
+            "Help us find your collector",
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(68, 68, 68, 1),
             ),
-            const SizedBox(height: 50),
-            const Text(
-              "Help us find your collector",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(68, 68, 68, 1),
-              ),
-              textAlign: TextAlign.center,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            "Please provide your postcode to identify your local bin collector.",
+            style: TextStyle(
+              fontSize: 16,
+              color: Color.fromRGBO(68, 68, 68, 1),
             ),
-            const SizedBox(height: 10),
-            const Text(
-              "Please provide your postcode to identify your local bin collector.",
-              style: TextStyle(
-                fontSize: 16,
-                color: Color.fromRGBO(68, 68, 68, 1),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 60),
-            TextInput(
-              controller: _postcodeController,
-              textCapitalization: TextCapitalization.characters,
-              hintText: 'e.g. SW1A 0AA',
-            ),
-            const Spacer(flex: 1),
-            PrimaryButton(text: "Find Schedule", onPressed: _submitPostcode),
-          ],
-        ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 60),
+          TextInput(
+            controller: _postcodeController,
+            textCapitalization: TextCapitalization.characters,
+            hintText: 'e.g. SW1A 0AA',
+          ),
+          const Spacer(flex: 1),
+          PrimaryButton(text: "Find Schedule", onPressed: _submitPostcode),
+        ],
       ),
     );
   }
