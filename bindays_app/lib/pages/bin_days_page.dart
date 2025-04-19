@@ -7,7 +7,6 @@ import 'package:bindays_client/models/collector.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
-import 'package:bindays_app/extensions/address_extension.dart';
 import 'package:bindays_app/client/bindays_client.dart';
 import 'package:bindays_app/widgets/bin_days/bin_day_groups.dart';
 import 'package:bindays_app/widgets/bin_days/bin_day_header.dart';
@@ -57,7 +56,22 @@ class _BinDaysPageState extends State<BinDaysPage> {
 
     Widget pageContent;
     if (binDays == null) {
-      pageContent = const Center(child: AnimatedEllipsis());
+      pageContent = const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Finding upcoming collections",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: Color.fromRGBO(68, 68, 68, 1),
+              ),
+            ),
+            AnimatedEllipsis(),
+          ],
+        ),
+      );
     } else if (binDays!.isEmpty) {
       pageContent = const Text("No collections found");
     } else {
@@ -70,8 +84,10 @@ class _BinDaysPageState extends State<BinDaysPage> {
                     BinDayGroups(binDays: binDays!),
                   ]
                   .map(
-                    (e) =>
-                        Padding(padding: const EdgeInsets.only(bottom: 25), child: e),
+                    (e) => Padding(
+                      padding: const EdgeInsets.only(bottom: 25),
+                      child: e,
+                    ),
                   )
                   .toList(),
         ),
@@ -79,11 +95,8 @@ class _BinDaysPageState extends State<BinDaysPage> {
     }
 
     return Scaffold(
-      drawer: const BinDayDrawer(),
-      appBar: AppBar(
-        title: Text(widget.address.toFormattedString()),
-        elevation: 0,
-      ),
+      drawer: BinDayDrawer(address: widget.address),
+      appBar: AppBar(),
       body: SafeArea(minimum: const EdgeInsets.all(25), child: pageContent),
     );
   }

@@ -1,21 +1,32 @@
 // External Imports
+import 'package:bindays_client/models/address.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
+import 'package:bindays_app/extensions/address_extension.dart';
 import 'package:bindays_app/widgets/bin_days/bin_day_drawer_background.dart';
 
 class BinDayDrawer extends StatelessWidget {
-  const BinDayDrawer({super.key});
+  final Address address;
+
+  const BinDayDrawer({super.key, required this.address});
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: BinDayDrawerBackground(
         child: Padding(
-          padding: const EdgeInsets.only(left: 25, top: 50, bottom: 25, right: 25),
+          padding: const EdgeInsets.only(
+            left: 25,
+            top: 50,
+            bottom: 25,
+            right: 25,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(address.toFormattedString()),
+              const SizedBox(height: 25),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(
