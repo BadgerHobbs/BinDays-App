@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/data/models/bin_collection_notification.dart';
+import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/notifications/notification_list_item.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
@@ -15,44 +16,63 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  List<BinCollectionNotification> notifications = [];
-
   @override
   void initState() {
     super.initState();
-    _getNotifications();
+    globalStateNotifier.addListener(() {
+      setState(() {});
+    });
   }
 
-  Future<void> _getNotifications() async {
-    // Load notifications from storage
-    // Update state with loaded notifications
-    final testNoficiations = [
-      BinCollectionNotification(
-        enabled: true,
-        time: const TimeOfDay(hour: 18, minute: 00),
-        durationBeforeCollection: const Duration(days: 1),
-      ),
-      BinCollectionNotification(
-        enabled: true,
-        time: const TimeOfDay(hour: 18, minute: 00),
-        durationBeforeCollection: const Duration(days: 2),
-      ),
-      BinCollectionNotification(
-        enabled: true,
-        time: const TimeOfDay(hour: 18, minute: 00),
-        durationBeforeCollection: const Duration(days: 3),
-      ),
-      BinCollectionNotification(
-        enabled: true,
-        time: const TimeOfDay(hour: 18, minute: 00),
-        durationBeforeCollection: const Duration(days: 4),
-      ),
-    ];
-    setState(() => notifications = testNoficiations);
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  void _addNotification() {
+    final newNotification = BinCollectionNotification(
+      enabled: true,
+      time: TimeOfDay.now(),
+      durationBeforeCollection: const Duration(days: 1),
+    );
+
+    setState(() {
+      globalStateNotifier.setNotifications([
+        ...globalStateNotifier.notifications ?? [],
+        newNotification,
+      ]);
+    });
+  }
+
+  void _updateNotification(BinCollectionNotification notification) {
+    setState(() {
+      globalStateNotifier.setNotifications(
+        globalStateNotifier.notifications!
+            .map(
+              (element) =>
+                  element.id == notification.id ? notification : element,
+            )
+            .toList(),
+      );
+    });
+  }
+
+  void _deleteNotification(BinCollectionNotification notification) {
+    setState(() {
+      globalStateNotifier.setNotifications(
+        globalStateNotifier.notifications!
+            .where((element) => element.id != notification.id)
+            .toList(),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final notifications = globalStateNotifier.notifications ?? [];
+
     return Scaffold(
       body: SafeBasePage(
         child: Column(
@@ -73,7 +93,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   size: 30,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                onPressed: () {},
+                onPressed: _addNotification,
               ),
             ),
             Text(
@@ -89,16 +109,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 itemBuilder: (context, index) {
                   return NotificationListItem(
                     notification: notifications[index],
-                    onUpdateNotification: (updatedNotification) {
-                      setState(() {
-                        notifications[index] = updatedNotification;
-                      });
-                    },
-                    onDeleteNotification: (notificationToDelete) {
-                      setState(() {
-                        notifications.remove(notificationToDelete);
-                      });
-                    },
+                    onUpdateNotification: _updateNotification,
+                    onDeleteNotification: _deleteNotification,
                   );
                 },
               ),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// Represents a notification for a bin collection.
 class BinCollectionNotification {
   /// The unique identifier of the notification.
-  final int? id;
+  late int id;
 
   /// Whether the notification is enabled.
   bool enabled;
@@ -20,11 +20,13 @@ class BinCollectionNotification {
   Duration durationBeforeCollection;
 
   BinCollectionNotification({
-    this.id,
+    int? id,
     required this.enabled,
     required this.time,
     required this.durationBeforeCollection,
-  });
+  }) {
+    this.id = id ?? DateTime.now().millisecondsSinceEpoch.hashCode;
+  }
 
   /// Converts this [BinCollectionNotification] to a JSON map.
   Map<String, dynamic> toJson() {
