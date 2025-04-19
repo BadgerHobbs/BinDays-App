@@ -1,4 +1,5 @@
 // External Imports
+import 'package:bindays_app/misc/navigators.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
@@ -59,6 +60,7 @@ class _BinDayDrawerState extends State<BinDayDrawer> {
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
+                onTap: () => navigateToEnterPostcodePage(context),
               ),
               ListTile(
                 contentPadding: EdgeInsets.zero,
