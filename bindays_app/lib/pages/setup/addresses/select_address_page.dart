@@ -27,6 +27,7 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
 
   void _onConfirmSelection() {
     // Update global state with the user selected details from setup
+    globalStateNotifier.setBinDays([]);
     globalStateNotifier.setCollector(setupState.collector!);
     globalStateNotifier.setAddress(selectedAddress!);
 
