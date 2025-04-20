@@ -25,11 +25,15 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
   }
 
   void _submitPostcode() async {
-    final postcode = _postcodeController.text.trim().toUpperCase();
+    final postcode = _getPostcode();
     if (postcode.isNotEmpty) {
-      setupState.postcode = postcode;
+      setupState.postcode = _getPostcode();
       if (mounted) navigateToFindingCollectorPage(context);
     }
+  }
+
+  String _getPostcode() {
+    return _postcodeController.text.trim().toUpperCase();
   }
 
   @override
@@ -54,7 +58,7 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
           ),
           const SizedBox(height: 10),
           Text(
-            "Please provide your postcode to identify your local bin collector.",
+            "Please provide your postcode so we can find your local bin collector.",
             style: TextStyle(
               fontSize: 16,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -68,7 +72,8 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
             hintText: 'e.g. SW1A 0AA',
           ),
           const Spacer(flex: 1),
-          PrimaryButton(text: "Find Schedule", onPressed: _submitPostcode),
+          if (_getPostcode().isNotEmpty)
+            PrimaryButton(text: "Find Collector", onPressed: _submitPostcode),
         ],
       ),
     );
