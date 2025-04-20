@@ -45,7 +45,10 @@ dependencies:
   device_preview: ^1.2.0
   flutter_local_notifications: ^19.1.0
   timezone: ^0.10.0
-  workmanager: ^0.5.2
+  workmanager:
+    git:
+      url: https://github.com/fluttercommunity/flutter_workmanager.git
+      ref: b783000
 
 dev_dependencies:
   flutter_test:
