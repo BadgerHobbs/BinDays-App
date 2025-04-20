@@ -39,7 +39,7 @@
 	<array>
 		<string>refresh-bindays</string>
 		<!-- Register a periodic task in iOS 13+ -->
-		<string>be.tramckrijte.workmanagerExample.iOSBackgroundAppRefresh</string>
+		<string>RefreshBinDays</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

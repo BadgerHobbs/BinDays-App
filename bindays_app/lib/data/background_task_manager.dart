@@ -18,7 +18,7 @@ class BackgroundTaskManager {
     Workmanager().initialize(callbackDispatcher, isInDebugMode: kDebugMode);
     Workmanager().registerPeriodicTask(
       "RefreshBinDays",
-      "RefreshBinDaysPeriodicTask",
+      "RefreshBinDays",
       frequency: const Duration(hours: 9),
       initialDelay: const Duration(hours: 9),
       existingWorkPolicy: ExistingWorkPolicy.append,

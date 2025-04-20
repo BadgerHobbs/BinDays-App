@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Internal Imports
+import 'package:bindays_app/data/background_task_manager.dart';
 import 'package:bindays_app/data/notifications_manager.dart';
 import 'package:bindays_app/data/shared_preferences_manager.dart';
 import 'package:bindays_app/pages/bin_days_page.dart';
@@ -22,6 +23,9 @@ void main() async {
 
   // Load shared preferences
   await SharedPreferencesManager.loadSharedPreferences();
+
+  // Initialise background task manager
+  BackgroundTaskManager.init();
 
   // Transparent navigation bar
   SystemChrome.setSystemUIOverlayStyle(

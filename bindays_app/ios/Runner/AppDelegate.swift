@@ -25,7 +25,7 @@ import workmanager
     WorkmanagerPlugin.registerBGProcessingTask(withIdentifier: "refresh-bindays")
 
     // Register a periodic task in iOS 13+
-    WorkmanagerPlugin.registerPeriodicTask(withIdentifier: "be.tramckrijte.workmanager.iOSBackgroundAppRefresh", frequency: NSNumber(value: 60*60*9))
+    WorkmanagerPlugin.registerPeriodicTask(withIdentifier: "RefreshBinDays", frequency: NSNumber(value: 60*60*9))
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
