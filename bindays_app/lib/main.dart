@@ -17,11 +17,11 @@ void main() async {
   // Ensure app is initialised
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load shared preferences
-  await SharedPreferencesManager.loadSharedPreferences();
-
   // Initialise notifications manager
   await NotificationsManager.init();
+
+  // Load shared preferences
+  await SharedPreferencesManager.loadSharedPreferences();
 
   // Transparent navigation bar
   SystemChrome.setSystemUIOverlayStyle(
