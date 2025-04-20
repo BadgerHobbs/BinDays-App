@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Internal Imports
+import 'package:bindays_app/data/notifications_manager.dart';
 import 'package:bindays_app/data/shared_preferences_manager.dart';
 import 'package:bindays_app/pages/bin_days_page.dart';
 import 'package:bindays_app/widgets/debug/desktop_navigation_listener.dart';
@@ -18,6 +19,9 @@ void main() async {
 
   // Load shared preferences
   await SharedPreferencesManager.loadSharedPreferences();
+
+  // Initialise notifications manager
+  await NotificationsManager.init();
 
   // Transparent navigation bar
   SystemChrome.setSystemUIOverlayStyle(

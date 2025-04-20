@@ -5,6 +5,7 @@ import 'package:bindays_client/models/collector.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
+import 'package:bindays_app/data/notifications_manager.dart';
 import 'package:bindays_app/data/models/bin_collection_notification.dart';
 import 'package:bindays_app/data/shared_preferences_manager.dart';
 
@@ -25,6 +26,12 @@ class GlobalStateNotifier extends ChangeNotifier {
     _reloadNotifications();
     _reloadLastRefresh();
     _reloadDarkMode();
+  }
+
+  /// Notify listeners and reschedule notifications.
+  void _notifyListenersAndRescheduleNotifications() {
+    notifyListeners();
+    NotificationsManager.scheduleBinCollectionNotifications();
   }
 
   /// Get current collector.
@@ -65,14 +72,14 @@ class GlobalStateNotifier extends ChangeNotifier {
   /// Reload bin days from shared preferences.
   void _reloadBinDays() {
     _binDays = SharedPreferencesManager.getBinDays();
-    notifyListeners();
+    _notifyListenersAndRescheduleNotifications();
   }
 
   /// Set bin days in shared preferences.
   Future<void> setBinDays(List<BinDay> binDays) async {
     _binDays = binDays;
     await SharedPreferencesManager.setBinDays(binDays);
-    notifyListeners();
+    _notifyListenersAndRescheduleNotifications();
   }
 
   /// Get current notifications.
@@ -81,7 +88,7 @@ class GlobalStateNotifier extends ChangeNotifier {
   /// Reload notifications from shared preferences.
   void _reloadNotifications() {
     _notifications = SharedPreferencesManager.getNotifications();
-    notifyListeners();
+    _notifyListenersAndRescheduleNotifications();
   }
 
   /// Set notifications in shared preferences.
@@ -90,7 +97,7 @@ class GlobalStateNotifier extends ChangeNotifier {
   ) async {
     _notifications = notifications;
     await SharedPreferencesManager.setNotifications(notifications);
-    notifyListeners();
+    _notifyListenersAndRescheduleNotifications();
   }
 
   /// Get current last refresh.
