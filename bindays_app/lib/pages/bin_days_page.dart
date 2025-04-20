@@ -25,7 +25,10 @@ class _BinDaysPageState extends State<BinDaysPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      //_refreshIndicatorKey.currentState?.show();
+      _refreshIndicatorKey.currentState?.show();
+    });
+    globalStateNotifier.addListener(() {
+      setState(() {});
     });
   }
 
