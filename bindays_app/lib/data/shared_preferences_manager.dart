@@ -20,6 +20,7 @@ class SharedPreferencesManager {
   static const _isDarkModeKey = 'cachedIsDarkMode';
 
   static Future<void> loadSharedPreferences() async {
+    if (_sharedPreferences != null) return;
     _sharedPreferences = await SharedPreferences.getInstance();
     await _migrateLegacyData();
   }
