@@ -50,18 +50,6 @@ class SelectAddressList extends StatelessWidget {
                     size: 25,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  trailing:
-                      isSelectedCollector
-                          ? Text(
-                            "Selected",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontStyle: FontStyle.italic,
-                              fontWeight: FontWeight.normal,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          )
-                          : null,
                 ),
               );
             },
