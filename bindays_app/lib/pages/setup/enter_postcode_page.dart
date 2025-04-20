@@ -17,6 +17,17 @@ class EnterPostcodePage extends StatefulWidget {
 
 class _EnterPostcodePageState extends State<EnterPostcodePage> {
   final _postcodeController = TextEditingController();
+  String _postcode = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _postcodeController.addListener(() {
+      setState(() {
+        _postcode = _getPostcode();
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -25,9 +36,8 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
   }
 
   void _submitPostcode() async {
-    final postcode = _getPostcode();
-    if (postcode.isNotEmpty) {
-      setupState.postcode = _getPostcode();
+    if (_postcode.isNotEmpty) {
+      setupState.postcode = _postcode;
       if (mounted) navigateToFindingCollectorPage(context);
     }
   }
@@ -72,7 +82,7 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
             hintText: 'e.g. SW1A 0AA',
           ),
           const Spacer(flex: 1),
-          if (_getPostcode().isNotEmpty)
+          if (_postcode.isNotEmpty)
             PrimaryButton(text: "Find Collector", onPressed: _submitPostcode),
         ],
       ),
