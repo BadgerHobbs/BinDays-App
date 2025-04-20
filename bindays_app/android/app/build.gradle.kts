@@ -17,7 +17,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.bindays.app.release"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973" // previously: flutter.ndkVersion
 
     compileOptions {
         // Flag to enable support for the new language APIs
