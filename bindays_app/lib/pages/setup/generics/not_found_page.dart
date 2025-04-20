@@ -27,28 +27,24 @@ class NotFoundPage extends StatelessWidget {
             flex: 2,
             child: Image.asset('assets/illustrations/Navigation_Two_Color.png'),
           ),
-          const SizedBox(height: 50),
-          Column(
-            children: [
-              Text(
-                "Uh oh!",
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
+          const SizedBox(height: 25),
+          Text(
+            "Uh oh!",
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
           const Spacer(flex: 1),
           Column(
