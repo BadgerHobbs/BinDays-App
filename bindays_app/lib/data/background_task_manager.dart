@@ -1,44 +1,41 @@
 // External Imports
-import 'package:bindays_app/data/notifications_manager.dart';
-import 'package:bindays_app/data/shared_preferences_manager.dart';
-import 'package:flutter/foundation.dart';
+import 'dart:async';
+import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
-import 'package:workmanager/workmanager.dart';
 
 // Internal Imports
 import 'package:bindays_app/client/bindays_client.dart';
+import 'package:bindays_app/data/notifications_manager.dart';
+import 'package:bindays_app/data/shared_preferences_manager.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 
 @pragma('vm:entry-point')
 class BackgroundTaskManager {
-  /// Initializes the Workmanager and registers a periodic task to refresh bin days.
-  ///
-  /// The task runs every 9 hours with an initial delay of 9 hours.
-  static void init() {
-    Workmanager().initialize(callbackDispatcher, isInDebugMode: kDebugMode);
-    Workmanager().registerPeriodicTask(
-      "RefreshBinDays",
-      "RefreshBinDays",
-      frequency: const Duration(hours: 9),
-      initialDelay: const Duration(hours: 9),
-      existingWorkPolicy: ExistingWorkPolicy.append,
-      constraints: Constraints(networkType: NetworkType.connected),
+  /// Initializes the BackgroundFetch and registers a periodic task to refresh bin days every 9 hours.
+  static Future<void> init() async {
+    // Configure BackgroundFetch.
+    // https://pub.dev/documentation/background_fetch/latest/background_fetch/BackgroundFetchConfig-class.html
+    await BackgroundFetch.configure(
+      BackgroundFetchConfig(
+        minimumFetchInterval: 60 * 9,
+        enableHeadless: true,
+        startOnBoot: true,
+        stopOnTerminate: false,
+        requiredNetworkType: NetworkType.ANY,
+      ),
+      _onBackgroundFetch,
+      backgroundFetchHeadlessTask,
     );
+
+    // Register to receive BackgroundFetch events after app is terminated.
+    // Requires {stopOnTerminate: false, enableHeadless: true}
+    BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
   }
 
-  /// Callback dispatcher for Workmanager tasks.
-  ///
-  /// This function is called by Workmanager to execute tasks in the background.
-  /// It calls [_refreshBinDays] to update the bin days data.
-  static void callbackDispatcher() async {
-    Workmanager().executeTask((task, inputData) async {
-      try {
-        await _refreshBinDays();
-        return Future.value(true);
-      } catch (e) {
-        return Future.value(false);
-      }
-    });
+  /// Background Fetch event handler.
+  static void _onBackgroundFetch(String taskId) async {
+    await _refreshBinDays();
+    BackgroundFetch.finish(taskId);
   }
 
   /// Refreshes the bin days data.
@@ -62,4 +59,20 @@ class BackgroundTaskManager {
     globalStateNotifier.setBinDays(binDays);
     globalStateNotifier.setLastRefresh(DateTime.now());
   }
+}
+
+// [Android-only] This "Headless Task" is run when the Android app is terminated with `enableHeadless: true`
+// Be sure to annotate your callback function to avoid issues in release mode on Flutter >= 3.3.0
+@pragma('vm:entry-point')
+void backgroundFetchHeadlessTask(HeadlessTask task) async {
+  String taskId = task.taskId;
+  bool isTimeout = task.timeout;
+  if (isTimeout) {
+    // This task has exceeded its allowed running-time.
+    // You must stop what you're doing and immediately .finish(taskId)
+    BackgroundFetch.finish(taskId);
+    return;
+  }
+  await BackgroundTaskManager._refreshBinDays();
+  BackgroundFetch.finish(taskId);
 }

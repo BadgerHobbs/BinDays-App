@@ -20,6 +20,7 @@ android {
     ndkVersion = "27.0.12077973" // previously: flutter.ndkVersion
 
     compileOptions {
+        // Required for flutter local notifications
         // Flag to enable support for the new language APIs
         isCoreLibraryDesugaringEnabled = true
 
@@ -34,6 +35,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.bindays.app.release"
+
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -41,6 +43,7 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
 
+        // Required for flutter local notifications
         multiDexEnabled = true
     }
 
@@ -63,6 +66,7 @@ android {
 }
 
 dependencies {
+    // Required for flutter local notifications
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
