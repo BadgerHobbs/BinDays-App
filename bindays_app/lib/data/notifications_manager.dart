@@ -14,6 +14,18 @@ class NotificationsManager {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  static const notificationDetails = NotificationDetails(
+    android: AndroidNotificationDetails(
+      'bin_collection_notifications',
+      'Bin Collection Notifications',
+      channelDescription: "Notifications for upcoming bin collections.",
+      importance: Importance.high,
+      priority: Priority.high,
+      enableVibration: true,
+    ),
+    iOS: DarwinNotificationDetails(),
+  );
+
   static Future<void> init() async {
     // Android initialisation settings
     const AndroidInitializationSettings androidInitializationSettings =
@@ -84,18 +96,6 @@ class NotificationsManager {
     BinDay binDay,
     BinCollectionNotification binCollectionNotification,
   ) async {
-    const notificationDetails = NotificationDetails(
-      android: AndroidNotificationDetails(
-        'bin_collection_notifications',
-        'Bin Collection Notifications',
-        channelDescription: "Notifications for upcoming bin collections.",
-        importance: Importance.high,
-        priority: Priority.high,
-        enableVibration: true,
-      ),
-      iOS: DarwinNotificationDetails(),
-    );
-
     final notificationDate = binDay.date.subtract(
       binCollectionNotification.durationBeforeCollection,
     );
@@ -142,11 +142,38 @@ class NotificationsManager {
     }
   }
 
+  /// Schedules a notification that there are no more notifications and the user needs to refresh manually.
+  /// This notification is scheduled for the day after the last bin day.
+  static Future<void> _scheduleNoMoreNotificationsReminder(
+    BinDay lastBinDay,
+    BinCollectionNotification binCollectionNotification,
+  ) async {
+    final notificationDateTime = DateTime(
+      lastBinDay.date.year,
+      lastBinDay.date.month,
+      lastBinDay.date.day,
+      // Use the notification time
+      binCollectionNotification.time.hour,
+      binCollectionNotification.time.minute,
+    );
+    final notificationDate = notificationDateTime.add(const Duration(days: 1));
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      _generateNotificationId(),
+      'Scheduled Notifications Reminder',
+      'There are no more scheduled bin collection notifications. Open the app to refresh.',
+      tz.TZDateTime.from(notificationDate, tz.local),
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
+  }
+
   /// Schedules all bin collection notifications.
   static Future<void> _scheduleBinCollectionNotifications(
     List<BinCollectionNotification> binCollectionNotifications,
     List<BinDay> binDays,
   ) async {
+    // Cancel all unsent notifications
     await _cancelUnSentNotifications();
 
     for (final binCollectionNotification in binCollectionNotifications) {
@@ -160,6 +187,19 @@ class NotificationsManager {
           binCollectionNotification,
         );
       }
+    }
+
+    if (binCollectionNotifications.isNotEmpty && binDays.isNotEmpty) {
+      // Get the last bin day for the no more notifications reminder
+      final lastBinDay = binDays.reduce(
+        (a, b) => a.date.isAfter(b.date) ? a : b,
+      );
+
+      // Schedule no more notifications reminder for first configured notification
+      await _scheduleNoMoreNotificationsReminder(
+        lastBinDay,
+        binCollectionNotifications.first,
+      );
     }
   }
 
