@@ -1,9 +1,11 @@
 // External Imports
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/secondary_button.dart';
+import 'package:bindays_app/widgets/url_link.dart';
 
 class NotFoundPage extends StatelessWidget {
   final String message;
@@ -16,6 +18,16 @@ class NotFoundPage extends StatelessWidget {
     required this.buttonText,
     required this.buttonOnPressed,
   });
+
+  String _getEmailUrl() {
+    var emailUrl = "mailto:contact@bindays.app?subject=BinDays Feedback";
+    if (Platform.isIOS) {
+      emailUrl += " (iOS)";
+    } else if (Platform.isAndroid) {
+      emailUrl += " (Android)";
+    }
+    return emailUrl;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +69,10 @@ class NotFoundPage extends StatelessWidget {
                   decoration: TextDecoration.underline,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
+              ),
+              UrlLink(
+                text: "Send feedback or report an issue.",
+                url: _getEmailUrl(),
               ),
               const SizedBox(height: 10),
               SecondaryButton(text: buttonText, onPressed: buttonOnPressed),

@@ -1,11 +1,14 @@
 // External Imports
-import 'package:bindays_app/misc/navigators.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 // Internal Imports
 import 'package:bindays_app/extensions/address_extension.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/pages/notifications_page.dart';
+import 'package:bindays_app/misc/navigators.dart';
+import 'package:bindays_app/widgets/url_link.dart';
 
 class BinDayDrawer extends StatefulWidget {
   const BinDayDrawer({super.key});
@@ -21,6 +24,16 @@ class _BinDayDrawerState extends State<BinDayDrawer> {
     globalStateNotifier.addListener(() {
       setState(() {});
     });
+  }
+
+  String _getEmailUrl() {
+    var emailUrl = "mailto:contact@bindays.app?subject=BinDays Feedback";
+    if (Platform.isIOS) {
+      emailUrl += " (iOS)";
+    } else if (Platform.isAndroid) {
+      emailUrl += " (Android)";
+    }
+    return emailUrl;
   }
 
   @override
@@ -110,27 +123,25 @@ class _BinDayDrawerState extends State<BinDayDrawer> {
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
+              onTap: () => launchUrlString(_getEmailUrl()),
             ),
             const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
-                  child: Text(
-                    "Privacy Policy",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  child: UrlLink(
+                    text: "Privacy Policy",
+                    url: "https://bindays.app/privacy-policy.html",
                   ),
                 ),
                 Flexible(
-                  child: Text(
-                    "Terms & Conditions",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  child: UrlLink(
+                    text: "Terms & Conditions",
+                    url:
+                        Platform.isIOS
+                            ? "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
+                            : "https://bindays.app/terms-and-conditions.html",
                   ),
                 ),
               ],

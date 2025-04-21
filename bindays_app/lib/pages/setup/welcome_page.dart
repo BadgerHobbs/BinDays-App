@@ -1,10 +1,12 @@
 // External Imports
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
+import 'package:bindays_app/widgets/url_link.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -46,28 +48,19 @@ class WelcomePage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  // TODO: Add URL Link on click
                   Flexible(
-                    child: Text(
-                      "Privacy Policy",
-                      style: TextStyle(
-                        fontSize: 15,
-                        decoration: TextDecoration.underline,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.center,
+                    child: UrlLink(
+                      text: "Privacy Policy",
+                      url: "https://bindays.app/privacy-policy.html",
                     ),
                   ),
-                  // TODO: Add URL Link on click
                   Flexible(
-                    child: Text(
-                      "Terms & Conditions",
-                      style: TextStyle(
-                        fontSize: 15,
-                        decoration: TextDecoration.underline,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.center,
+                    child: UrlLink(
+                      text: "Terms & Conditions",
+                      url:
+                          Platform.isIOS
+                              ? "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
+                              : "https://bindays.app/terms-and-conditions.html",
                     ),
                   ),
                 ],
