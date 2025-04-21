@@ -111,10 +111,11 @@ class NotificationsManager {
       binDay,
       binCollectionNotification,
     );
+    final plurality = binDay.bins.length == 1 ? "" : "s";
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       _generateNotificationId(),
-      'Upcoming Bin Collections',
+      'Upcoming Bin Collection$plurality',
       notificationBody,
       tz.TZDateTime.from(notificationDateTime, tz.local),
       notificationDetails,
