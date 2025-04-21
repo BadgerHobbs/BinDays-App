@@ -24,7 +24,7 @@ class BackgroundTaskManager {
         requiredNetworkType: NetworkType.ANY,
       ),
       _onBackgroundFetch,
-      backgroundFetchHeadlessTask,
+      _onBackgroundTimeout,
     );
 
     // Register to receive BackgroundFetch events after app is terminated.
@@ -34,7 +34,14 @@ class BackgroundTaskManager {
 
   /// Background Fetch event handler.
   static void _onBackgroundFetch(String taskId) async {
-    await _refreshBinDays();
+    try {
+      await BackgroundTaskManager._refreshBinDays();
+    } finally {
+      BackgroundFetch.finish(taskId);
+    }
+  }
+
+  static void _onBackgroundTimeout(String taskId) {
     BackgroundFetch.finish(taskId);
   }
 
@@ -51,6 +58,12 @@ class BackgroundTaskManager {
 
     // Load shared preferences
     await SharedPreferencesManager.loadSharedPreferences();
+
+    // Skip if collector and address not yet set
+    if (globalStateNotifier.collector == null ||
+        globalStateNotifier.address == null) {
+      return;
+    }
 
     final binDays = await binDaysClient.getBinDays(
       globalStateNotifier.collector!,
@@ -73,6 +86,9 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
     BackgroundFetch.finish(taskId);
     return;
   }
-  await BackgroundTaskManager._refreshBinDays();
-  BackgroundFetch.finish(taskId);
+  try {
+    await BackgroundTaskManager._refreshBinDays();
+  } finally {
+    BackgroundFetch.finish(taskId);
+  }
 }
