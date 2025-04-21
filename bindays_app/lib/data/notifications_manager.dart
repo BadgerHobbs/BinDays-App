@@ -107,6 +107,11 @@ class NotificationsManager {
       binCollectionNotification.time.minute,
     );
 
+    // Skip creating notification if in the past
+    if (notificationDateTime.isBefore(DateTime.now())) {
+      return;
+    }
+
     final notificationBody = _getNotificationBody(
       binDay,
       binCollectionNotification,
