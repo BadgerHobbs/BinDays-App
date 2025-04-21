@@ -91,14 +91,16 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromRGBO(74, 149, 117, 1),
           brightness: Brightness.light,
-          dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+          dynamicSchemeVariant: DynamicSchemeVariant.monochrome,
+          primary: const Color.fromRGBO(74, 149, 117, 1),
         ),
       ),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromRGBO(74, 149, 117, 1),
           brightness: Brightness.dark,
-          dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+          dynamicSchemeVariant: DynamicSchemeVariant.monochrome,
+          primary: const Color.fromRGBO(74, 149, 117, 1),
         ),
       ),
       themeMode:

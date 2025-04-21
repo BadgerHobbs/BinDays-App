@@ -28,24 +28,30 @@ class SelectCollectorList extends StatelessWidget {
               final collector = collectors![index];
               final isSelectedCollector = collector == selectedCollector;
 
-              return Opacity(
-                opacity: isSelectedCollector ? 1 : 0.5,
-                child: ListTile(
-                  onTap: () {
-                    onCollectorSelected(collector);
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    collector.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                  leading: Icon(
-                    Icons.place,
-                    size: 25,
-                    color: Theme.of(context).colorScheme.primary,
+              return ListTile(
+                onTap: () {
+                  onCollectorSelected(collector);
+                },
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(
+                  Icons.place,
+                  size: 25,
+                  color:
+                      isSelectedCollector
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.surfaceContainerHigh,
+                ),
+                title: Text(
+                  collector.name,
+                  style: TextStyle(
+                    fontWeight:
+                        isSelectedCollector
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                    color:
+                        isSelectedCollector
+                            ? Theme.of(context).colorScheme.onSurface
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               );

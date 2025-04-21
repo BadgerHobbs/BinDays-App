@@ -31,24 +31,30 @@ class SelectAddressList extends StatelessWidget {
               final address = addresses![index];
               final isSelectedCollector = address == selectedAddress;
 
-              return Opacity(
-                opacity: isSelectedCollector ? 1 : 0.5,
-                child: ListTile(
-                  onTap: () {
-                    onAddressSelected(address);
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    address.toFormattedString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                  leading: Icon(
-                    Icons.place,
-                    size: 25,
-                    color: Theme.of(context).colorScheme.primary,
+              return ListTile(
+                onTap: () {
+                  onAddressSelected(address);
+                },
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(
+                  Icons.place,
+                  size: 25,
+                  color:
+                      isSelectedCollector
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.surfaceContainerHigh,
+                ),
+                title: Text(
+                  address.toFormattedString(),
+                  style: TextStyle(
+                    fontWeight:
+                        isSelectedCollector
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                    color:
+                        isSelectedCollector
+                            ? Theme.of(context).colorScheme.onSurface
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               );

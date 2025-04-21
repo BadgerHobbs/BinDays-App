@@ -7,7 +7,6 @@ import 'package:bindays_app/client/bindays_client.dart';
 import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
-import 'package:bindays_app/widgets/select_collector/select_collector_background.dart';
 import 'package:bindays_app/widgets/select_collector/select_collector_header.dart';
 import 'package:bindays_app/widgets/select_collector/select_collector_list.dart';
 
@@ -49,8 +48,7 @@ class _SelectCollectorPageState extends State<SelectCollectorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SelectCollectorBackground(
-        child: SafeArea(
+      body: SafeArea(
           minimum: const EdgeInsets.all(25),
           child: Column(
             children: [
@@ -70,7 +68,6 @@ class _SelectCollectorPageState extends State<SelectCollectorPage> {
                 ),
             ],
           ),
-        ),
       ),
     );
   }
