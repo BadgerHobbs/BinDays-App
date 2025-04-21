@@ -24,6 +24,13 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
     setState(() => selectedAddress = address);
   }
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   void _onConfirmSelection() {
     // Update global state with the user selected details from setup
     globalStateNotifier.setBinDays([]);

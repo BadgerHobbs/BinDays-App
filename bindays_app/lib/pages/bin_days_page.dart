@@ -39,6 +39,13 @@ class _BinDaysPageState extends State<BinDaysPage> {
     });
   }
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   Future<void> _getBinDays() async {
     setState(() {
       _isRefreshing = true;

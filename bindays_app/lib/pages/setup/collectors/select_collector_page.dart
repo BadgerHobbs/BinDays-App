@@ -36,6 +36,13 @@ class _SelectCollectorPageState extends State<SelectCollectorPage> {
     }
   }
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   void _onCollectorSelected(Collector collector) {
     setState(() => selectedCollector = collector);
   }

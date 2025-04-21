@@ -26,6 +26,13 @@ class _BinDayDrawerState extends State<BinDayDrawer> {
     });
   }
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   String _getEmailUrl() {
     var emailUrl = "mailto:contact@bindays.app?subject=BinDays Feedback";
     if (Platform.isIOS) {

@@ -30,6 +30,13 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
   }
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void dispose() {
     _postcodeController.dispose();
     super.dispose();

@@ -36,6 +36,13 @@ class _AnimatedEllipsisState extends State<AnimatedEllipsis>
   }
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
