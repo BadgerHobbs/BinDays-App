@@ -1,4 +1,4 @@
-package com.example.bindays_app
+package com.bindays.app.release
 
 import io.flutter.embedding.android.FlutterActivity
 
