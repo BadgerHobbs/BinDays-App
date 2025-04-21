@@ -74,7 +74,7 @@ class NotificationsManager {
     String binsToCollect = binDay.bins
         .map((bin) => bin.name)
         .join(', ')
-        .replaceFirst(RegExp(r', ([^,]+)$'), r' and $1');
+        .replaceFirst(RegExp(r', ([^,]+)$'), ' and ${binDay.bins.last.name}');
 
     // Timeframe (today, tomorrow, in N days)
     final daysBefore =
