@@ -17,7 +17,7 @@ class SelectAddressHeader extends StatelessWidget {
             color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Text(
           "Please select an address to continue.",
           textAlign: TextAlign.center,

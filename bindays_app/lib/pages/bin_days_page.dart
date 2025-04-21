@@ -1,5 +1,4 @@
 // External Imports
-import 'package:bindays_client/models/bin_day.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
