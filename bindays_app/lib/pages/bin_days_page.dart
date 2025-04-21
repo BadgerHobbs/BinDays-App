@@ -1,4 +1,5 @@
 // External Imports
+import 'package:bindays_client/models/bin_day.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
@@ -19,10 +20,14 @@ class BinDaysPage extends StatefulWidget {
 class _BinDaysPageState extends State<BinDaysPage> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
+  bool _isRefreshing = false;
 
   @override
   void initState() {
     super.initState();
+    _isRefreshing =
+        globalStateNotifier.binDays == null ||
+        globalStateNotifier.binDays!.isEmpty;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _refreshIndicatorKey.currentState?.show();
     });
@@ -32,11 +37,22 @@ class _BinDaysPageState extends State<BinDaysPage> {
   }
 
   Future<void> _getBinDays() async {
-    final binDays = await binDaysClient.getBinDays(
-      globalStateNotifier.collector!,
-      globalStateNotifier.address!,
-    );
-    globalStateNotifier.setBinDays(binDays);
+    setState(() {
+      _isRefreshing = true;
+    });
+    try {
+      final binDays = await binDaysClient.getBinDays(
+        globalStateNotifier.collector!,
+        globalStateNotifier.address!,
+      );
+      globalStateNotifier.setBinDays(binDays);
+    } catch (e) {
+      globalStateNotifier.setBinDays([]);
+    } finally {
+      setState(() {
+        _isRefreshing = false;
+      });
+    }
     globalStateNotifier.setLastRefresh(DateTime.now());
   }
 
@@ -54,17 +70,23 @@ class _BinDaysPageState extends State<BinDaysPage> {
     return Scaffold(
       drawer: const BinDayDrawer(),
       appBar: AppBar(),
-      body: SafeBasePage(
-        child: RefreshIndicator(
-          key: _refreshIndicatorKey,
-          onRefresh: () => _getBinDays(),
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child:
-                binDaysFound
-                    ? BinDaysFound(binDays: binDays, lastRefresh: lastRefresh)
-                    : const BinDaysNotFound(),
-          ),
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: () => _getBinDays(),
+        child: SafeBasePage(
+          child:
+              _isRefreshing
+                  ? const SizedBox()
+                  : SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child:
+                        binDaysFound
+                            ? BinDaysFound(
+                              binDays: binDays,
+                              lastRefresh: lastRefresh,
+                            )
+                            : const BinDaysNotFound(),
+                  ),
         ),
       ),
     );
