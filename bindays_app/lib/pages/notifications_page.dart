@@ -115,11 +115,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 },
               ),
             ),
-            PrimaryButton(
-              text: "Return",
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: PrimaryButton(
+                text: "Return",
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
           ],
         ),

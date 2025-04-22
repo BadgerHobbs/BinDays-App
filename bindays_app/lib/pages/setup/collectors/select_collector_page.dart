@@ -56,25 +56,28 @@ class _SelectCollectorPageState extends State<SelectCollectorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          minimum: const EdgeInsets.all(25),
-          child: Column(
-            children: [
-              const SelectCollectorHeader(),
-              const SizedBox(height: 25),
-              Expanded(
-                child: SelectCollectorList(
-                  collectors: collectors,
-                  selectedCollector: selectedCollector,
-                  onCollectorSelected: _onCollectorSelected,
-                ),
+        minimum: const EdgeInsets.all(25),
+        child: Column(
+          children: [
+            const SelectCollectorHeader(),
+            const SizedBox(height: 25),
+            Expanded(
+              child: SelectCollectorList(
+                collectors: collectors,
+                selectedCollector: selectedCollector,
+                onCollectorSelected: _onCollectorSelected,
               ),
-              if (selectedCollector != null)
-                PrimaryButton(
+            ),
+            if (selectedCollector != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: PrimaryButton(
                   text: "Confirm Selection",
                   onPressed: _onConfirmSelection,
                 ),
-            ],
-          ),
+              ),
+          ],
+        ),
       ),
     );
   }

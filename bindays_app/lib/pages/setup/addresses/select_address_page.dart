@@ -59,9 +59,12 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
               ),
             ),
             if (selectedAddress != null)
-              PrimaryButton(
-                text: "Confirm Selection",
-                onPressed: _onConfirmSelection,
+              Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: PrimaryButton(
+                  text: "Confirm Selection",
+                  onPressed: _onConfirmSelection,
+                ),
               ),
           ],
         ),
