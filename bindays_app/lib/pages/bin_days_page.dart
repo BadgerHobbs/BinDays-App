@@ -29,8 +29,13 @@ class _BinDaysPageState extends State<BinDaysPage> {
         globalStateNotifier.binDays!.isEmpty;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Only refresh on load if hasn't been refreshed today
+      // and and no bin days have been previously found.
+      final binDays = globalStateNotifier.binDays;
       final lastRefresh = globalStateNotifier.lastRefresh;
-      if (lastRefresh == null || lastRefresh.day != DateTime.now().day) {
+      final binDaysFound = binDays != null && binDays.isNotEmpty;
+      final lastRefreshToday =
+          lastRefresh != null && lastRefresh.day == DateTime.now().day;
+      if (!binDaysFound || !lastRefreshToday) {
         _refreshIndicatorKey.currentState?.show();
       }
     });
