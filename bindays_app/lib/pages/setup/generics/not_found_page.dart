@@ -61,15 +61,6 @@ class NotFoundPage extends StatelessWidget {
           const Spacer(flex: 1),
           Column(
             children: [
-              // TODO: Add URL Link on click
-              Text(
-                "Send feedback or report an issue.",
-                style: TextStyle(
-                  fontSize: 14,
-                  decoration: TextDecoration.underline,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
               UrlLink(
                 text: "Send feedback or report an issue.",
                 url: _getEmailUrl(),
