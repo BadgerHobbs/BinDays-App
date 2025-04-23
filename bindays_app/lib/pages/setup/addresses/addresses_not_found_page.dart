@@ -16,7 +16,7 @@ class AddressesNotFoundPage extends StatelessWidget {
 
     return NotFoundPage(
       message:
-          "We couldn't find any addresses for postcode '${postcode.toUpperCase()}' associated with the collector '${collector.name}'. This might mean the postcode is incorrect, the collector doesn't cover this specific postcode, or there's an issue with the address data. Please try a different postcode or collector.",
+          "We couldn't find any addresses for postcode '${postcode.toUpperCase()}' associated with the collector '${collector.name}'.\n\nThis might be because the collector is missing data for the postcode, or there was an issue with our service.",
       buttonText: "Try a different postcode",
       buttonOnPressed: () => navigateToEnterPostcodePage(context),
     );

@@ -49,19 +49,23 @@ class NotFoundPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 10),
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
+
           const Spacer(flex: 1),
           Column(
             children: [
               UrlLink(
-                text: "Send feedback or report an issue.",
+                text: "Send feedback to contact@bindays.app",
                 url: _getEmailUrl(),
               ),
               const SizedBox(height: 10),
