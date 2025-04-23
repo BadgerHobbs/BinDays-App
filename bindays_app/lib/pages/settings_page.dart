@@ -55,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Text('General', style: Theme.of(context).textTheme.titleMedium),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Change address'),
+              title: const Text('Change Address'),
               subtitle: Text(
                 "Change the address to get the latest bin collections for. Current address is '${globalStateNotifier.address!.toFormattedString()}'.",
               ),
@@ -63,7 +63,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Manage notifications'),
+              title: const Text('Manage Notifications'),
               subtitle: const Text(
                 'Configure notifications for upcoming bin collections.',
               ),
@@ -73,7 +73,7 @@ class _SettingsPageState extends State<SettingsPage> {
               contentPadding: EdgeInsets.zero,
               value: globalStateNotifier.isDarkMode,
               onChanged: (val) => globalStateNotifier.setIsDarkMode(val),
-              title: const Text('Dark mode'),
+              title: const Text('Dark Mode'),
               subtitle: const Text(
                 'Enable a dark theme across the application.',
               ),
@@ -82,7 +82,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Text('Links', style: Theme.of(context).textTheme.titleMedium),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Rate this app'),
+              title: const Text('Rate This App'),
               subtitle: const Text(
                 'Enjoying the app? Take a moment to rate it on the store.',
               ),
@@ -97,13 +97,13 @@ class _SettingsPageState extends State<SettingsPage> {
               contentPadding: EdgeInsets.zero,
               title: const Text('Send Feedback'),
               subtitle: const Text(
-                'Have a suggestion or found a issue? Let us know!',
+                'Have a suggestion or found an issue? Let us know by sending an email to contact@bindays.app. We value your feedback!',
               ),
               onTap: () => launchUrlString(_getEmailUrl()),
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Privacy policy'),
+              title: const Text('Privacy Policy'),
               subtitle: const Text('View the app\'s privacy policy.'),
               onTap:
                   () => launchUrlString(
