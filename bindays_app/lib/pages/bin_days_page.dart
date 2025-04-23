@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 // Internal Imports
 import 'package:bindays_app/client/bindays_client.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
+import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
-import 'package:bindays_app/widgets/bin_days/bin_day_drawer.dart';
 import 'package:bindays_app/widgets/bin_days/bin_days_found.dart';
 import 'package:bindays_app/widgets/bin_days/bin_days_not_found.dart';
+import 'package:bindays_app/extensions/address_extension.dart';
 
 class BinDaysPage extends StatefulWidget {
   const BinDaysPage({super.key});
@@ -82,9 +83,24 @@ class _BinDaysPageState extends State<BinDaysPage> {
     final binDaysFound =
         binDays != null && binDays.isNotEmpty && lastRefresh != null;
 
+    final address = globalStateNotifier.address;
+
     return Scaffold(
-      drawer: const BinDayDrawer(),
-      appBar: AppBar(),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          address?.toFormattedStringNoPostcode() ?? "",
+          style: TextStyle(
+            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => navigateToSettingsPage(context),
+          ),
+        ],
+      ),
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: () => _getBinDays(),

@@ -60,9 +60,8 @@ class _AnimatedEllipsisState extends State<AnimatedEllipsis>
       style:
           widget.style ??
           TextStyle(
-            fontSize: 30,
+            fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.onSurface,
           ),
       textAlign: TextAlign.left,
       overflow: TextOverflow.clip,

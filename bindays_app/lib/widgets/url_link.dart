@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class UrlLink extends StatelessWidget {
-  String text;
-  String url;
+  final String text;
+  final String url;
 
-  UrlLink({super.key, required this.text, required this.url});
+  const UrlLink({super.key, required this.text, required this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class UrlLink extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 13,
+          fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
           decoration: TextDecoration.underline,
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),

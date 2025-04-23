@@ -67,9 +67,8 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
           Text(
             "Help us find your collector",
             style: TextStyle(
-              fontSize: 28,
+              fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
@@ -77,7 +76,7 @@ class _EnterPostcodePageState extends State<EnterPostcodePage> {
           Text(
             "Please provide your postcode so we can find your local bin collector.",
             style: TextStyle(
-              fontSize: 16,
+              fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.center,

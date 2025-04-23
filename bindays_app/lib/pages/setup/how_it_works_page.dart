@@ -25,9 +25,8 @@ class HowItWorksPage extends StatelessWidget {
           Text(
             "How it works",
             style: TextStyle(
-              fontSize: 30,
+              fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
@@ -35,7 +34,7 @@ class HowItWorksPage extends StatelessWidget {
           Text(
             "BinDays provides free bin collection information from your local council's website. We strive for accuracy, but data reliability depends on the council's website content.\n\nThis app is maintained at cost. We cannot guarantee continued availability of all council data.\n\nBy proceeding, you acknowledge this disclaimer.",
             style: TextStyle(
-              fontSize: 16,
+              fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.left,

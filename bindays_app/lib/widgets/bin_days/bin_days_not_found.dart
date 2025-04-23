@@ -20,9 +20,8 @@ class BinDaysNotFound extends StatelessWidget {
           Text(
             "Uh oh!",
             style: TextStyle(
-              fontSize: 30,
+              fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
@@ -31,8 +30,7 @@ class BinDaysNotFound extends StatelessWidget {
             "No upcoming bin collections were found.\nPull down to refresh.",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 16,
-              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
             ),
           ),
         ],

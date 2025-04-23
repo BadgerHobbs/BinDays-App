@@ -43,9 +43,8 @@ class NotFoundPage extends StatelessWidget {
           Text(
             "Uh oh!",
             style: TextStyle(
-              fontSize: 30,
+              fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
@@ -54,7 +53,7 @@ class NotFoundPage extends StatelessWidget {
             message,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),

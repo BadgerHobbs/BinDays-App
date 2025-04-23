@@ -38,9 +38,8 @@ class BinDayHeader extends StatelessWidget {
               Text(
                 binDay.date.toLongDateString(),
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ],

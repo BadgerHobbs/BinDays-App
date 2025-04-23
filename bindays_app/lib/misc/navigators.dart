@@ -12,6 +12,8 @@ import 'package:bindays_app/pages/setup/addresses/finding_addresses_page.dart';
 import 'package:bindays_app/pages/setup/addresses/select_address_page.dart';
 import 'package:bindays_app/pages/setup/collectors/finding_collector_page.dart';
 import 'package:bindays_app/pages/setup/collectors/select_collector_page.dart';
+import 'package:bindays_app/pages/settings_page.dart';
+import 'package:bindays_app/pages/notifications_page.dart';
 
 /// Navigates to the HowItWorksPage.
 void navigateToHowItWorksPage(BuildContext context) {
@@ -89,6 +91,16 @@ void navigateToAddressNotFoundPage(
 /// Navigates to the BinDaysPage.
 void navigateToBinDaysPage(BuildContext context) {
   _navigateToPage(context, const BinDaysPage());
+}
+
+/// Navigate to SettingsPage.
+void navigateToSettingsPage(BuildContext context) {
+  _navigateToPage(context, const SettingsPage());
+}
+
+/// Navigate to NotificationsPage.
+void navigateToNotificationsPage(BuildContext context) {
+  _navigateToPage(context, const NotificationsPage());
 }
 
 /// Navigates to a specified page.

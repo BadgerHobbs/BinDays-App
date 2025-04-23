@@ -34,16 +34,14 @@ class LoadingPage extends StatelessWidget {
                 titleText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               AnimatedEllipsis(
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 10),
@@ -51,7 +49,7 @@ class LoadingPage extends StatelessWidget {
                 descriptionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),

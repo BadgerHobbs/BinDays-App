@@ -13,7 +13,7 @@ class SafeBasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(minimum: const EdgeInsets.all(25), child: child),
+      body: SafeArea(minimum: const EdgeInsets.all(16), child: child),
     );
   }
 }

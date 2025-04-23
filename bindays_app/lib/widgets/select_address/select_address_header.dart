@@ -12,9 +12,8 @@ class SelectAddressHeader extends StatelessWidget {
           "Addresses",
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 25,
+            fontSize: Theme.of(context).textTheme.titleLarge!.fontSize,
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 10),
@@ -22,7 +21,7 @@ class SelectAddressHeader extends StatelessWidget {
           "Please select an address to continue.",
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),

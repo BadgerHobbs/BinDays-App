@@ -6,7 +6,6 @@ import 'package:bindays_app/data/models/bin_collection_notification.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/notifications/notification_list_item.dart';
-import 'package:bindays_app/widgets/primary_button.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -82,9 +81,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
               title: Text(
                 "Notifications",
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: Theme.of(context).textTheme.titleLarge!.fontSize,
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               trailing: IconButton(
@@ -96,33 +94,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 onPressed: _addNotification,
               ),
             ),
-            Text(
+            const Text(
               "Add and manage notifications for future bin collections, long press to delete notifications.",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
             ),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: notifications.length,
-                itemBuilder: (context, index) {
-                  return NotificationListItem(
-                    notification: notifications[index],
-                    onUpdateNotification: _updateNotification,
-                    onDeleteNotification: _deleteNotification,
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: PrimaryButton(
-                text: "Return",
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: notifications.length,
+              itemBuilder: (context, index) {
+                return NotificationListItem(
+                  notification: notifications[index],
+                  onUpdateNotification: _updateNotification,
+                  onDeleteNotification: _deleteNotification,
+                );
+              },
             ),
           ],
         ),

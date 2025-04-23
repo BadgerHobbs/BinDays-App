@@ -49,14 +49,13 @@ class BinDayListItem extends StatelessWidget {
       title: Text(
         bin.name,
         style: TextStyle(
-          fontSize: 16,
-          color: Theme.of(context).colorScheme.onSurface,
+          fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
         ),
       ),
       subtitle: Text(
         _getBinType(),
         style: TextStyle(
-          fontSize: 15,
+          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
       ),

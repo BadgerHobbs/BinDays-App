@@ -21,15 +21,14 @@ class BinDayListGroup extends StatelessWidget {
             Text(
               binDay.date.toLongDateString(),
               style: TextStyle(
-                fontSize: 16,
+                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             Text(
               binDay.date.daysUntilString(),
               style: TextStyle(
-                fontSize: 16,
+                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),

@@ -27,9 +27,8 @@ class WelcomePage extends StatelessWidget {
           Text(
             "Welcome to BinDays",
             style: TextStyle(
-              fontSize: 30,
+              fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
@@ -37,7 +36,7 @@ class WelcomePage extends StatelessWidget {
           Text(
             "Join our UK community in recieving the latest information on your local bin collection services.",
             style: TextStyle(
-              fontSize: 15,
+              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.center,
@@ -48,7 +47,7 @@ class WelcomePage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Flexible(
+                  const Flexible(
                     child: UrlLink(
                       text: "Privacy Policy",
                       url: "https://bindays.app/privacy-policy.html",
