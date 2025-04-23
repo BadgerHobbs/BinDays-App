@@ -83,17 +83,9 @@ class _BinDaysPageState extends State<BinDaysPage> {
     final binDaysFound =
         binDays != null && binDays.isNotEmpty && lastRefresh != null;
 
-    final address = globalStateNotifier.address;
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
-          address?.toFormattedStringNoPostcode() ?? "",
-          style: TextStyle(
-            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-          ),
-        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),

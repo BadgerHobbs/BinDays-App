@@ -15,7 +15,7 @@ class UrlLink extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
           decoration: TextDecoration.underline,
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),

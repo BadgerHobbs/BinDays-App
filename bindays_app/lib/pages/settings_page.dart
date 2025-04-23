@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 // Internal Imports
+import 'package:bindays_app/extensions/address_extension.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
@@ -55,8 +56,8 @@ class _SettingsPageState extends State<SettingsPage> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('Change address'),
-              subtitle: const Text(
-                'Change the address to get the latest bin collections for.',
+              subtitle: Text(
+                "Change the address to get the latest bin collections for. Current address is '${globalStateNotifier.address!.toFormattedString()}'.",
               ),
               onTap: () => navigateToEnterPostcodePage(context),
             ),

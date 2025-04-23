@@ -1,8 +1,8 @@
 // External Imports
-import 'package:bindays_app/misc/navigators.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
+import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/pages/setup/generics/not_found_page.dart';
 
