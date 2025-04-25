@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Internal Imports
 import 'package:bindays_app/data/models/bin_collection_notification.dart';
+import 'package:bindays_app/client/bindays_client.dart';
+import 'package:bindays_app/misc/migrate_legacy.dart';
 
 /// Manages shared preferences.
 class SharedPreferencesManager {
@@ -22,20 +24,45 @@ class SharedPreferencesManager {
   static Future<void> loadSharedPreferences() async {
     if (_sharedPreferences != null) return;
     _sharedPreferences = await SharedPreferences.getInstance();
-    await _migrateLegacyData();
+
+    // Try to migrate legacy data.
+    // This is done in a try finally block so that if there is an error
+    // during migration, the app will still load.
+    try {
+      await _migrateLegacyData();
+    } finally {}
   }
 
   /// Migrate data from legacy 1.x version
   static Future<void> _migrateLegacyData() async {
-    // TODO
-    // - Get legacy shared preferences data (if exists)
-    //   - 'Address'
-    //   - 'BinDays'
-    //   - 'LastRefresh'
-    //   - 'savedNotifications'
-    //   - 'IsDarkMode'
-    // - Migrate to new format and save
-    // - Remove legacy shared preferences data
+    // Migrate dark mode if it is not already set.
+    if (_sharedPreferences?.getBool(_isDarkModeKey) == null) {
+      final darkMode = MigrateLegacy.migrateDarkMode(_sharedPreferences!);
+      if (darkMode != null) {
+        await setIsDarkMode(darkMode);
+      }
+    }
+
+    // Migrate notifications if it is not already set.
+    if (getSharedPreferenceJson(_notificationsKey) == null) {
+      final notifications = MigrateLegacy.migrateNotifications(
+        _sharedPreferences!,
+      );
+      if (notifications != null) {
+        await setNotifications(notifications);
+      }
+    }
+
+    // Migrate address if it is not already set.
+    // Collector will already be set if the address is.
+    if (getSharedPreferenceJson(_addressKey) == null) {
+      final address = MigrateLegacy.migrateAddress(_sharedPreferences!);
+      if (address != null) {
+        final collector = await binDaysClient.getCollector(address.postcode!);
+        await setCollector(collector);
+        await setAddress(address);
+      }
+    }
   }
 
   /// Generic method to get and parse shared preferences json
