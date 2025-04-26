@@ -8,7 +8,6 @@ import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/bin_days/bin_days_found.dart';
 import 'package:bindays_app/widgets/bin_days/bin_days_not_found.dart';
-import 'package:bindays_app/extensions/address_extension.dart';
 
 class BinDaysPage extends StatefulWidget {
   const BinDaysPage({super.key});
@@ -62,8 +61,6 @@ class _BinDaysPageState extends State<BinDaysPage> {
         globalStateNotifier.address!,
       );
       globalStateNotifier.setBinDays(binDays);
-    } catch (e) {
-      globalStateNotifier.setBinDays([]);
     } finally {
       setState(() {
         _isRefreshing = false;
@@ -94,11 +91,13 @@ class _BinDaysPageState extends State<BinDaysPage> {
         ],
       ),
       body: RefreshIndicator(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.onPrimary,
         key: _refreshIndicatorKey,
         onRefresh: () => _getBinDays(),
         child: SafeBasePage(
           child:
-              _isRefreshing
+              _isRefreshing && !binDaysFound
                   ? const SizedBox()
                   : SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
