@@ -29,7 +29,7 @@ class MigrateLegacy {
     final notifications = <BinCollectionNotification>[];
 
     for (var notificationJson in notificationsJson) {
-      final notification = _parseNotification(notificationJson);
+      final notification = _parseNotification(jsonDecode(notificationJson));
       notifications.add(notification);
     }
 
@@ -38,7 +38,7 @@ class MigrateLegacy {
 
   /// Migrates the address from shared preferences.
   static Address? migrateAddress(SharedPreferences sharedPreferences) {
-    final addressString = sharedPreferences.getString("savedAddress");
+    final addressString = sharedPreferences.getString("Address");
     if (addressString == null) {
       return null;
     }
