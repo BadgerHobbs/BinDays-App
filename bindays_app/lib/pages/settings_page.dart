@@ -57,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
               contentPadding: EdgeInsets.zero,
               title: const Text('Change Address'),
               subtitle: Text(
-                "Change the address to get the latest bin collections for. Current address is '${globalStateNotifier.address!.toFormattedString()}'.",
+                "Change the address to get the latest bin collections for. Your current address is '${globalStateNotifier.address!.toFormattedString()}'.",
               ),
               onTap: () => navigateToEnterPostcodePage(context),
             ),
@@ -79,7 +79,34 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             const SizedBox(height: 20),
-            Text('Links', style: Theme.of(context).textTheme.titleMedium),
+            Text('Source Code', style: Theme.of(context).textTheme.titleMedium),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('App Source Code'),
+              subtitle: const Text(
+                'Explore the Flutter app code on GitHub. Report app bugs or suggest features here.',
+              ),
+              onTap:
+                  () => launchUrlString(
+                    "https://github.com/BadgerHobbs/BinDays-App",
+                  ),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('API Source Code'),
+              subtitle: const Text(
+                'View the back-end API code on GitHub. This service fetches bin collection data from councils/collectors.',
+              ),
+              onTap:
+                  () => launchUrlString(
+                    "https://github.com/BadgerHobbs/BinDays-API",
+                  ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'User Feedback',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('Rate This App'),
@@ -97,9 +124,14 @@ class _SettingsPageState extends State<SettingsPage> {
               contentPadding: EdgeInsets.zero,
               title: const Text('Send Feedback'),
               subtitle: const Text(
-                'Have a suggestion or found an issue? Let us know by sending an email to contact@bindays.app. We value your feedback!',
+                'Have other feedback or questions? Send us an email directly at contact@bindays.app.',
               ),
               onTap: () => launchUrlString(_getEmailUrl()),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Legal & Policies',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -121,6 +153,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         : "https://bindays.app/terms-and-conditions.html",
                   ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
