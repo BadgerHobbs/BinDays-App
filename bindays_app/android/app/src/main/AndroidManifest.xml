@@ -79,6 +79,7 @@
 
     <!-- Required for local notifications -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <!-- Required for background fetch -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
