@@ -22,6 +22,7 @@ class NotificationsManager {
       importance: Importance.high,
       priority: Priority.high,
       enableVibration: true,
+      styleInformation: BigTextStyleInformation(''),
     ),
     iOS: DarwinNotificationDetails(),
   );
