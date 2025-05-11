@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 // Internal Imports
 import 'package:bindays_app/client/bindays_client.dart';
@@ -53,11 +54,14 @@ class BackgroundTaskManager {
     // Ensure app is initialised
     WidgetsFlutterBinding.ensureInitialized();
 
-    // Initialise notifications manager
-    await NotificationsManager.init();
+    // Initialise timezone (for notifications)
+    tz.initializeTimeZones();
 
     // Load shared preferences
     await SharedPreferencesManager.loadSharedPreferences();
+
+    // Load shared preferences into global state notifier
+    globalStateNotifier.reload();
 
     // Skip if collector and address not yet set
     if (globalStateNotifier.collector == null ||
