@@ -54,6 +54,9 @@ class _SelectCollectorPageState extends State<SelectCollectorPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Sort collectors
+    collectors?.sort((a, b) => a.name.compareTo(b.name));
+
     return Scaffold(
       body: SafeArea(
         minimum: const EdgeInsets.all(25),
