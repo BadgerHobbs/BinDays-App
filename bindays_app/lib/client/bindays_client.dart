@@ -1,4 +1,7 @@
 // External Imports
+import 'package:bindays_app/client/client_with_retry.dart';
 import 'package:bindays_client/client.dart';
 
-Client binDaysClient = Client(Uri.parse("https://api.bindays.app"));
+ClientWithRetry binDaysClient = ClientWithRetry(
+  Client(Uri.parse("https://api.bindays.app")),
+);
