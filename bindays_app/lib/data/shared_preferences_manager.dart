@@ -20,6 +20,7 @@ class SharedPreferencesManager {
   static const _notificationsKey = 'cachedNotifications';
   static const _lastRefreshKey = 'cachedLastRefresh';
   static const _isDarkModeKey = 'cachedIsDarkMode';
+  static const _requestReviewAfterKey = 'requestReviewAfter';
 
   static Future<void> loadSharedPreferences() async {
     if (_sharedPreferences != null) return;
@@ -168,5 +169,22 @@ class SharedPreferencesManager {
   /// Set is dark mode shared preferences json.
   static Future<void> setIsDarkMode(bool isDarkMode) async {
     await _sharedPreferences?.setBool(_isDarkModeKey, isDarkMode);
+  }
+
+  /// Get request review after date from shared preferences.
+  static DateTime? getRequestReviewAfter() {
+    final requestReviewAfterString = _sharedPreferences?.getString(
+      _requestReviewAfterKey,
+    );
+    if (requestReviewAfterString == null) return null;
+    return DateTime.parse(requestReviewAfterString);
+  }
+
+  /// Set request review after date in shared preferences.
+  static Future<void> setRequestReviewAfter(DateTime requestReviewAfter) async {
+    await _sharedPreferences?.setString(
+      _requestReviewAfterKey,
+      requestReviewAfter.toIso8601String(),
+    );
   }
 }

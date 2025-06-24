@@ -1,8 +1,10 @@
 // External Imports
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 // Internal Imports
 import 'package:bindays_app/client/bindays_client.dart';
+import 'package:bindays_app/data/shared_preferences_manager.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
@@ -20,6 +22,7 @@ class _BinDaysPageState extends State<BinDaysPage> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
   bool _isRefreshing = false;
+  final InAppReview _inAppReview = InAppReview.instance;
 
   @override
   void initState() {
@@ -61,12 +64,31 @@ class _BinDaysPageState extends State<BinDaysPage> {
         globalStateNotifier.address!,
       );
       globalStateNotifier.setBinDays(binDays);
+
+      // If this is the first successful fetch, schedule a review request.
+      final reviewAfter = SharedPreferencesManager.getRequestReviewAfter();
+      if (reviewAfter == null && binDays.isNotEmpty) {
+        final twoWeeksFromNow = DateTime.now().add(const Duration(days: 14));
+        await SharedPreferencesManager.setRequestReviewAfter(twoWeeksFromNow);
+      }
+      _checkAndRequestReview();
     } finally {
       setState(() {
         _isRefreshing = false;
       });
     }
     globalStateNotifier.setLastRefresh(DateTime.now());
+  }
+
+  Future<void> _checkAndRequestReview() async {
+    final requestReviewAfter = SharedPreferencesManager.getRequestReviewAfter();
+
+    if (requestReviewAfter?.isBefore(DateTime.now()) ?? false) {
+      if (await _inAppReview.isAvailable()) {
+        _inAppReview.requestReview();
+        await SharedPreferencesManager.setRequestReviewAfter(DateTime(9999));
+      }
+    }
   }
 
   @override
