@@ -41,6 +41,10 @@ class _BinDaysPageState extends State<BinDaysPage> {
       if (!binDaysFound || !lastRefreshToday) {
         _refreshIndicatorKey.currentState?.show();
       }
+      // Check/request review if bin days loaded from cache
+      else {
+        _checkAndRequestReview();
+      }
     });
     globalStateNotifier.addListener(() {
       setState(() {});
