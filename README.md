@@ -20,7 +20,7 @@ The app is built with Flutter and Dart, and it supports both Android and iOS. It
 
 ## App-Specific Issues
 
-For issues related to the app itself, such as UI bugs, crashes, or feature requests, please [**create an issue**](https://github.com/BadgerHobbs/BinDays-App/issues) in this repository.
+For issues related to the app itself, such as UI bugs, crashes, or feature requests, please [**create an issue**](https://github.com/BadgerHobbs/BinDays-App/issues) in this repository. For questions, check the [**FAQs**](FAQS.md).
 
 ## License
 
