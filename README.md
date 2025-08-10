@@ -25,3 +25,9 @@ For issues related to the app itself, such as UI bugs, crashes, or feature reque
 ## License
 
 This project is licensed under the [GPLv3 License](LICENSE).
+
+## Support
+
+If you find this project helpful, please consider supporting its development.
+
+[![Buy Me A Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=badgerhobbs&button_colour=FFDD00&font_colour=000000&font_family=Poppins&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/badgerhobbs)
