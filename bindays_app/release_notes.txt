@@ -1,1 +1,1 @@
-Bug fixes and performance improvements.
+Fixed a bug where bin days in the past could be stored and displayed.

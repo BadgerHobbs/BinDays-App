@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:bindays_app/data/notifications_manager.dart';
 import 'package:bindays_app/data/models/bin_collection_notification.dart';
 import 'package:bindays_app/data/shared_preferences_manager.dart';
+import 'package:bindays_app/extensions/date_time_extension.dart';
 
 /// Change notifier for global app state changes.
 class GlobalStateNotifier extends ChangeNotifier {
@@ -67,7 +68,8 @@ class GlobalStateNotifier extends ChangeNotifier {
   }
 
   /// Get current bin days.
-  List<BinDay>? get binDays => _binDays;
+  List<BinDay>? get binDays =>
+      _binDays?.where((binDay) => binDay.date.isTodayOrAfter()).toList();
 
   /// Reload bin days from shared preferences.
   void _reloadBinDays() {

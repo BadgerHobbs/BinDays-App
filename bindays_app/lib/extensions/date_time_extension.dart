@@ -23,4 +23,12 @@ extension DateTimeExtension on DateTime {
       return '${difference.abs()} days ago';
     }
   }
+
+  /// Returns true if this [DateTime] is today or after today.
+  bool isTodayOrAfter() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final other = DateTime(year, month, day);
+    return !other.isBefore(today);
+  }
 }
