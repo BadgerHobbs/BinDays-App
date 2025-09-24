@@ -31,7 +31,7 @@ class FindingAddressesPage extends StatelessWidget {
     _getAddresses(context);
 
     return const LoadingPage(
-      titleText: "Finding Addresss",
+      titleText: "Finding Addresses",
       descriptionText:
           "Please wait while we check for addresses under your collector and postcode. This may take a few seconds.",
     );
