@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "Fixed a typo on the 'Finding Addresses' page."
+        "text": "Updated dependencies to support additional councils."
     },
     {
         "language": "en-US",
-        "text": "Fixed a typo on the 'Finding Addresses' page."
+        "text": "Updated dependencies to support additional councils."
     }
 ]
