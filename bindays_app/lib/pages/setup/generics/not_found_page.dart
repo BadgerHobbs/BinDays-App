@@ -8,12 +8,14 @@ import 'package:bindays_app/widgets/secondary_button.dart';
 import 'package:bindays_app/widgets/url_link.dart';
 
 class NotFoundPage extends StatelessWidget {
+  final String headline;
   final String message;
   final String buttonText;
   final VoidCallback buttonOnPressed;
 
   const NotFoundPage({
     super.key,
+    this.headline = "Uh oh!",
     required this.message,
     required this.buttonText,
     required this.buttonOnPressed,
@@ -41,7 +43,7 @@ class NotFoundPage extends StatelessWidget {
           ),
           const SizedBox(height: 25),
           Text(
-            "Uh oh!",
+            headline,
             style: TextStyle(
               fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
               fontWeight: FontWeight.bold,

@@ -7,6 +7,7 @@ import 'package:bindays_app/pages/setup/how_it_works_page.dart';
 import 'package:bindays_app/pages/setup/enter_postcode_page.dart';
 import 'package:bindays_app/pages/setup/addresses/addresses_not_found_page.dart';
 import 'package:bindays_app/pages/setup/collectors/collector_not_found_page.dart';
+import 'package:bindays_app/pages/setup/collectors/collector_unsupported_page.dart';
 import 'package:bindays_app/pages/setup/collectors/confirm_collector_page.dart';
 import 'package:bindays_app/pages/setup/addresses/finding_addresses_page.dart';
 import 'package:bindays_app/pages/setup/addresses/select_address_page.dart';
@@ -55,6 +56,19 @@ void navigateToCollectorNotFoundPage(
   _navigateToPage(
     context,
     const CollectorNotFoundPage(),
+    pushReplacement: pushReplacement,
+  );
+}
+
+/// Navigates to the CollectorUnsupportedPage.
+void navigateToCollectorUnsupportedPage(
+  BuildContext context, {
+  bool pushReplacement = false,
+  String? collectorName,
+}) {
+  _navigateToPage(
+    context,
+    CollectorUnsupportedPage(collectorName: collectorName),
     pushReplacement: pushReplacement,
   );
 }

@@ -30,6 +30,19 @@ class _FindingCollectorPage extends State<FindingCollectorPage> {
         navigateToConfirmCollectorPage(context, pushReplacement: true);
       }
     } catch (e) {
+      final unsupportedDetails = _parseUnsupportedCollectorError(e);
+      if (unsupportedDetails != null) {
+        setupState.collector = null;
+        if (mounted) {
+          navigateToCollectorUnsupportedPage(
+            context,
+            pushReplacement: true,
+            collectorName: unsupportedDetails.collectorName,
+          );
+        }
+        return;
+      }
+
       if (mounted) {
         navigateToCollectorNotFoundPage(context, pushReplacement: true);
       }
@@ -43,5 +56,56 @@ class _FindingCollectorPage extends State<FindingCollectorPage> {
       descriptionText:
           "Please wait while we check which bin collector serves your area. This may take a few seconds.",
     );
+  }
+
+  ({String? collectorName})? _parseUnsupportedCollectorError(Object error) {
+    for (final message in _errorMessages(error)) {
+      final trimmed = message.trim();
+      if (trimmed.isEmpty) {
+        continue;
+      }
+
+      final normalized = trimmed.toLowerCase();
+      if (!normalized.contains('not currently supported')) {
+        continue;
+      }
+
+      final match = RegExp(
+        r'^(.*?) is not currently supported\.?$',
+        caseSensitive: false,
+      ).firstMatch(trimmed);
+
+      final collectorName = match?.group(1)?.trim();
+      return (
+        collectorName:
+            (collectorName != null && collectorName.isNotEmpty)
+                ? collectorName
+                : null,
+      );
+    }
+
+    return null;
+  }
+
+  Iterable<String> _errorMessages(Object error) sync* {
+    // Try to extract from DioException-like responses.
+    try {
+      final dynamic dynamicError = error;
+      final response = dynamicError.response;
+      final data = response?.data;
+
+      if (data is String) {
+        yield data;
+      } else if (data is Map) {
+        final message = data['message'] ?? data['Message'];
+        if (message is String) {
+          yield message;
+        }
+      }
+    } catch (_) {
+      // Ignore – fall back to string representation below.
+    }
+
+    yield error.toString();
   }
 }

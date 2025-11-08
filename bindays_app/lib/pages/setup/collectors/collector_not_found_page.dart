@@ -15,7 +15,7 @@ class CollectorNotFoundPage extends StatelessWidget {
 
     return NotFoundPage(
       message:
-          "We couldn't automatically detect a supported collector for postcode '${postcode.toUpperCase()}'.\n\nThis might be because your collector is not yet supported, or there was an issue with our service.",
+          "We couldn't automatically identify a supported collector for postcode '${postcode.toUpperCase()}'.\n\nThis might be because of a temporary issue with our service. Please try selecting a collector manually or try again later.",
       buttonText: "Select Collector Manually",
       buttonOnPressed: () => navigateToSelectCollectorPage(context),
     );

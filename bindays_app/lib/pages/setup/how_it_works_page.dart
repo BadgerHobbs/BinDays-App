@@ -31,13 +31,16 @@ class HowItWorksPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 10),
-          Text(
-            "BinDays provides free bin collection information from your local council's website. We strive for accuracy, but data reliability depends on the council's website content.\n\nThis app is maintained at cost. We cannot guarantee continued availability of all council data.\n\nBy proceeding, you acknowledge this disclaimer.",
-            style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              "BinDays finds your bin collection dates by checking your council's website.\n\nWe keep the app up to date, but the information comes directly from the council and can change without warning.\n\nBinDays is run at cost as a community project, so we can't promise every council will always be supported.\n\nSelect Continue if you're happy to proceed.",
+              style: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.left,
             ),
-            textAlign: TextAlign.left,
           ),
           const Spacer(flex: 1),
           PrimaryButton(
