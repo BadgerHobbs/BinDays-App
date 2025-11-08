@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "Updated dependencies to support additional councils."
+        "text": "Improved the message shown when we detect an unsupported collector."
     },
     {
         "language": "en-US",
-        "text": "Updated dependencies to support additional councils."
+        "text": "Improved the message shown when we detect an unsupported collector."
     }
 ]
