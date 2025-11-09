@@ -6,7 +6,6 @@ import 'package:timezone/data/latest.dart' as tz;
 
 // Internal Imports
 import 'package:bindays_app/client/bindays_client.dart';
-import 'package:bindays_app/data/notifications_manager.dart';
 import 'package:bindays_app/data/shared_preferences_manager.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 
