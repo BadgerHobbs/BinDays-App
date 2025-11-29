@@ -47,7 +47,7 @@ class NotFoundPage extends StatelessWidget {
               fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
               fontWeight: FontWeight.bold,
             ),
-            textAlign: TextAlign.left,
+            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 10),
           Padding(
