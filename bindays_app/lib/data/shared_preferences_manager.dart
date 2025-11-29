@@ -26,7 +26,7 @@ class SharedPreferencesManager {
   static Future<void> loadSharedPreferences() async {
     if (_sharedPreferences != null) return;
     _sharedPreferences = await SharedPreferences.getInstance();
-		
+
     // Try to migrate legacy data.
     // This is done in a try finally block so that if there is an error
     // during migration, the app will still load.

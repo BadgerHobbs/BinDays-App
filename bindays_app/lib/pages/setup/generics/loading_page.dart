@@ -34,13 +34,15 @@ class LoadingPage extends StatelessWidget {
                 titleText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
+                  fontSize:
+                      Theme.of(context).textTheme.headlineMedium!.fontSize,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               AnimatedEllipsis(
                 style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
+                  fontSize:
+                      Theme.of(context).textTheme.headlineMedium!.fontSize,
                   fontWeight: FontWeight.bold,
                 ),
               ),
