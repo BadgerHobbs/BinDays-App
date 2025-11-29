@@ -18,6 +18,7 @@ class GlobalStateNotifier extends ChangeNotifier {
   List<BinCollectionNotification>? _notifications;
   DateTime? _lastRefresh;
   bool? _darkMode;
+  bool? _showBinTypeIcons;
 
   /// Reload all state from shared preferences.
   void reload() {
@@ -27,6 +28,7 @@ class GlobalStateNotifier extends ChangeNotifier {
     _reloadNotifications();
     _reloadLastRefresh();
     _reloadDarkMode();
+    _reloadShowBinTypeIcons();
   }
 
   /// Notify listeners and reschedule notifications.
@@ -131,6 +133,22 @@ class GlobalStateNotifier extends ChangeNotifier {
   Future<void> setIsDarkMode(bool isDarkMode) async {
     _darkMode = isDarkMode;
     await SharedPreferencesManager.setIsDarkMode(isDarkMode);
+    notifyListeners();
+  }
+
+  /// Get current show bin type icons.
+  bool get showBinTypeIcons => _showBinTypeIcons ?? true;
+
+  /// Reload show bin type icons from shared preferences.
+  void _reloadShowBinTypeIcons() {
+    _showBinTypeIcons = SharedPreferencesManager.getShowBinTypeIcons();
+    notifyListeners();
+  }
+
+  /// Set show bin type icons in shared preferences.
+  Future<void> setShowBinTypeIcons(bool showBinTypeIcons) async {
+    _showBinTypeIcons = showBinTypeIcons;
+    await SharedPreferencesManager.setShowBinTypeIcons(showBinTypeIcons);
     notifyListeners();
   }
 }

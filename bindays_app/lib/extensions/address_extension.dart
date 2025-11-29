@@ -1,6 +1,8 @@
 // External Imports
-import 'package:bindays_app/extensions/string_extension.dart';
 import 'package:bindays_client/models/address.dart';
+
+// Internal Imports
+import 'package:bindays_app/extensions/string_extension.dart';
 
 extension AddressExtension on Address {
   String toFormattedString() {

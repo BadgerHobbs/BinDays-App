@@ -78,6 +78,15 @@ class _SettingsPageState extends State<SettingsPage> {
                 'Enable a dark theme across the application.',
               ),
             ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: globalStateNotifier.showBinTypeIcons,
+              onChanged: (val) => globalStateNotifier.setShowBinTypeIcons(val),
+              title: const Text('Show Bin Type Icons'),
+              subtitle: const Text(
+                'Show bin type icons instead of the default icon.',
+              ),
+            ),
             const SizedBox(height: 20),
             Text('Source Code', style: Theme.of(context).textTheme.titleMedium),
             ListTile(

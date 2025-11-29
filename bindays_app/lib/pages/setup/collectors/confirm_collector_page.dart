@@ -29,7 +29,8 @@ class ConfirmCollectorPage extends StatelessWidget {
               Text(
                 collector.name,
                 style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
+                  fontSize:
+                      Theme.of(context).textTheme.headlineMedium!.fontSize,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
