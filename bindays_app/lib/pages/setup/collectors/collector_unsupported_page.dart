@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/setup/generics/not_found_page.dart';
+import 'package:bindays_app/widgets/primary_button.dart';
+import 'package:bindays_app/widgets/secondary_button.dart';
 
 class CollectorUnsupportedPage extends StatelessWidget {
   final String? collectorName;
@@ -19,8 +21,14 @@ class CollectorUnsupportedPage extends StatelessWidget {
     return NotFoundPage(
       headline: "Collector Not Supported",
       message: message,
-      buttonText: "Select Collector Manually",
-      buttonOnPressed: () => navigateToSelectCollectorPage(context),
+      button: SecondaryButton(
+        text: "Select Collector Manually",
+        onPressed: () => navigateToSelectCollectorPage(context),
+      ),
+      extraButton: PrimaryButton(
+        text: "Request Council Support",
+        onPressed: () => navigateToRequestCouncilPage(context),
+      ),
     );
   }
 
@@ -34,6 +42,7 @@ class CollectorUnsupportedPage extends StatelessWidget {
             : "a collector";
 
     return "We identified $collectorIdentifier for $formattedPostcode, which we don't support yet.\n\n"
-        "If we incorrectly identified your collector and it is currently supported, please select it manually.";
+        "If we incorrectly identified your collector and it is currently supported, please select it manually.\n\n"
+        "Alternatively, you can request support for your collector to be added below.";
   }
 }
