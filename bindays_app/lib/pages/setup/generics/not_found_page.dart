@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/pages/safe_base_page.dart';
-import 'package:bindays_app/widgets/secondary_button.dart';
 import 'package:bindays_app/widgets/url_link.dart';
 
 class NotFoundPage extends StatelessWidget {
@@ -48,14 +47,14 @@ class NotFoundPage extends StatelessWidget {
               fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
               fontWeight: FontWeight.bold,
             ),
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
           ),
           const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
               message,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
               style: TextStyle(
                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,

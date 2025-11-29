@@ -21,12 +21,12 @@ class CollectorUnsupportedPage extends StatelessWidget {
     return NotFoundPage(
       headline: "Collector Not Supported",
       message: message,
-      button: PrimaryButton(
+      button: SecondaryButton(
         text: "Select Collector Manually",
         onPressed: () => navigateToSelectCollectorPage(context),
       ),
-      extraButton: SecondaryButton(
-        text: "Request council support",
+      extraButton: PrimaryButton(
+        text: "Request Council Support",
         onPressed: () => navigateToRequestCouncilPage(context),
       ),
     );
@@ -42,7 +42,7 @@ class CollectorUnsupportedPage extends StatelessWidget {
             : "a collector";
 
     return "We identified $collectorIdentifier for $formattedPostcode, which we don't support yet.\n\n"
-        "If we incorrectly identified your collector and it is currently supported, please select it manually. "
-        "Alternatively, you can request support for your council below.";
+        "If we incorrectly identified your collector and it is currently supported, please select it manually.\n\n"
+        "Alternatively, you can request support for your collector to be added below.";
   }
 }
