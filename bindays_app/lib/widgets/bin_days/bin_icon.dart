@@ -2,6 +2,9 @@
 import 'package:bindays_client/models/bin.dart';
 import 'package:flutter/material.dart';
 
+// Internal Imports
+import 'package:bindays_app/notifiers/global_notifiers.dart';
+
 class BinIcon extends StatelessWidget {
   final Bin bin;
 
@@ -42,7 +45,11 @@ class BinIcon extends StatelessWidget {
     final bool isWhite = binColour == Colors.white;
     final Brightness brightness = Theme.of(context).brightness;
 
-    final String? typeKey = bin.type?.trim().toLowerCase();
+    final String? typeKey =
+        globalStateNotifier.showBinTypeIcons
+            ? bin.type?.trim().toLowerCase()
+            : null;
+
     final String assetPath = _binTypeAssets[typeKey] ?? _defaultBinAssetPath;
 
     // Determine the background color of the bin icon container.

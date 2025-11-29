@@ -21,11 +21,12 @@ class SharedPreferencesManager {
   static const _lastRefreshKey = 'cachedLastRefresh';
   static const _isDarkModeKey = 'cachedIsDarkMode';
   static const _requestReviewAfterKey = 'requestReviewAfter';
+  static const _showBinTypeIconsKey = 'showBinTypeIcons';
 
   static Future<void> loadSharedPreferences() async {
     if (_sharedPreferences != null) return;
     _sharedPreferences = await SharedPreferences.getInstance();
-
+		
     // Try to migrate legacy data.
     // This is done in a try finally block so that if there is an error
     // during migration, the app will still load.
@@ -186,5 +187,15 @@ class SharedPreferencesManager {
       _requestReviewAfterKey,
       requestReviewAfter.toIso8601String(),
     );
+  }
+
+  /// Get show bin type icons from shared preferences.
+  static bool getShowBinTypeIcons() {
+    return _sharedPreferences?.getBool(_showBinTypeIconsKey) ?? true;
+  }
+
+  /// Set show bin type icons in shared preferences.
+  static Future<void> setShowBinTypeIcons(bool showBinTypeIcons) async {
+    await _sharedPreferences?.setBool(_showBinTypeIconsKey, showBinTypeIcons);
   }
 }
