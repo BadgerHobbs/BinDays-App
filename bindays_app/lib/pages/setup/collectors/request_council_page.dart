@@ -1,37 +1,14 @@
 // External Imports
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 // Internal Imports
 import 'package:bindays_app/pages/safe_base_page.dart';
+import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:bindays_app/widgets/secondary_button.dart';
-import 'package:bindays_app/widgets/url_link.dart';
 
-class NotFoundPage extends StatelessWidget {
-  final String headline;
-  final String message;
-  final String buttonText;
-  final VoidCallback buttonOnPressed;
-  final Widget? extraButton;
-
-  const NotFoundPage({
-    super.key,
-    this.headline = "Uh oh!",
-    required this.message,
-    required this.buttonText,
-    required this.buttonOnPressed,
-    this.extraButton,
-  });
-
-  String _getEmailUrl() {
-    var emailUrl = "mailto:contact@bindays.app?subject=BinDays Feedback";
-    if (Platform.isIOS) {
-      emailUrl += " (iOS)";
-    } else if (Platform.isAndroid) {
-      emailUrl += " (Android)";
-    }
-    return emailUrl;
-  }
+class RequestCouncilPage extends StatelessWidget {
+  const RequestCouncilPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +18,12 @@ class NotFoundPage extends StatelessWidget {
           const Spacer(flex: 1),
           Flexible(
             flex: 2,
-            child: Image.asset('assets/illustrations/Navigation_Two_Color.png'),
+            child: Image.asset(
+                'assets/illustrations/Construction_Worker_Two_Color.png'),
           ),
           const SizedBox(height: 25),
           Text(
-            headline,
+            "Request Council Support",
             style: TextStyle(
               fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
               fontWeight: FontWeight.bold,
@@ -56,7 +34,7 @@ class NotFoundPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              message,
+              "We are always working to add support for more councils. Please use the links below to request support for your council.\n\nPlease note that we can't guarantee a timeline for when your council will be supported, but we will do our best to add it as soon as possible.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
@@ -64,20 +42,20 @@ class NotFoundPage extends StatelessWidget {
               ),
             ),
           ),
-
           const Spacer(flex: 1),
           Column(
             children: [
-              UrlLink(
-                text: "Send feedback to contact@bindays.app",
-                url: _getEmailUrl(),
+              PrimaryButton(
+                text: "Request via GitHub",
+                onPressed: () => launchUrlString(
+                    "https://github.com/BadgerHobbs/BinDays-API/issues/new?template=council-request.md"),
               ),
               const SizedBox(height: 10),
-              SecondaryButton(text: buttonText, onPressed: buttonOnPressed),
-              if (extraButton != null) ...[
-                const SizedBox(height: 10),
-                extraButton!,
-              ],
+              SecondaryButton(
+                text: "Request via Google Form",
+                onPressed: () =>
+                    launchUrlString("https://forms.gle/vsr7rRadBDYDCRaT9"),
+              ),
             ],
           ),
         ],

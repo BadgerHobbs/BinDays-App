@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Internal Imports
+import 'package:bindays_app/pages/setup/collectors/request_council_page.dart';
 import 'package:bindays_app/pages/bin_days_page.dart';
 import 'package:bindays_app/pages/setup/how_it_works_page.dart';
 import 'package:bindays_app/pages/setup/enter_postcode_page.dart';
@@ -58,6 +59,11 @@ void navigateToCollectorNotFoundPage(
     const CollectorNotFoundPage(),
     pushReplacement: pushReplacement,
   );
+}
+
+/// Navigates to the RequestCouncilPage.
+void navigateToRequestCouncilPage(BuildContext context) {
+  _navigateToPage(context, const RequestCouncilPage());
 }
 
 /// Navigates to the CollectorUnsupportedPage.
