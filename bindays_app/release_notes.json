@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "Improved the message shown when we detect an unsupported collector."
+        "text": "Added new bin type icons to the bin collections page."
     },
     {
         "language": "en-US",
-        "text": "Improved the message shown when we detect an unsupported collector."
+        "text": "Added new bin type icons to the bin collections page."
     }
 ]
