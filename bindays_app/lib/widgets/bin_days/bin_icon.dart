@@ -81,8 +81,6 @@ class BinIcon extends StatelessWidget {
         child: Center(
           child: Image.asset(
             assetPath,
-            width: 35,
-            height: 35,
             fit: BoxFit.contain,
             color: isWhite ? Colors.black : null,
             colorBlendMode: isWhite ? BlendMode.srcIn : null,
