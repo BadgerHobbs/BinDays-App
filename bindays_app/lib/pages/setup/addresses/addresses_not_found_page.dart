@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/pages/setup/generics/not_found_page.dart';
+import 'package:bindays_app/widgets/secondary_button.dart';
 
 class AddressesNotFoundPage extends StatelessWidget {
   const AddressesNotFoundPage({super.key});
@@ -17,8 +18,10 @@ class AddressesNotFoundPage extends StatelessWidget {
     return NotFoundPage(
       message:
           "We couldn't find any addresses for postcode '${postcode.toUpperCase()}' associated with the collector '${collector.name}'.\n\nThis might be because the collector is missing data for the postcode, or there was an issue with our service.",
-      buttonText: "Try a different postcode",
-      buttonOnPressed: () => navigateToEnterPostcodePage(context),
+      button: SecondaryButton(
+        text: "Try a different postcode",
+        onPressed: () => navigateToEnterPostcodePage(context),
+      ),
     );
   }
 }

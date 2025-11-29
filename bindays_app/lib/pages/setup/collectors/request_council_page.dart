@@ -34,7 +34,7 @@ class RequestCouncilPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              "We are always working to add support for more councils. Please use the links below to request support for your council.\n\nPlease note that we can't guarantee a timeline for when your council will be supported, but we will do our best to add it as soon as possible.",
+              "Thank you for your interest in adding your council to BinDays.\n\nYou can provide your council details using either the GitHub issue or Google Form below, which will add it to our backlog of user-requested councils.\n\nPlease note, as a free, open-source project, new councils are added on a voluntary basis, so it may take some time for support to be added. Contributions are always welcome!\n\nIf you use the GitHub option, you will be automatically notified of any progress.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,

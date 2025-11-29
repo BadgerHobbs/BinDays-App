@@ -10,16 +10,14 @@ import 'package:bindays_app/widgets/url_link.dart';
 class NotFoundPage extends StatelessWidget {
   final String headline;
   final String message;
-  final String buttonText;
-  final VoidCallback buttonOnPressed;
+  final Widget button;
   final Widget? extraButton;
 
   const NotFoundPage({
     super.key,
     this.headline = "Uh oh!",
     required this.message,
-    required this.buttonText,
-    required this.buttonOnPressed,
+    required this.button,
     this.extraButton,
   });
 
@@ -73,7 +71,7 @@ class NotFoundPage extends StatelessWidget {
                 url: _getEmailUrl(),
               ),
               const SizedBox(height: 10),
-              SecondaryButton(text: buttonText, onPressed: buttonOnPressed),
+              button,
               if (extraButton != null) ...[
                 const SizedBox(height: 10),
                 extraButton!,

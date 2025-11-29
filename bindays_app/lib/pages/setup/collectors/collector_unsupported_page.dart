@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/setup/generics/not_found_page.dart';
+import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:bindays_app/widgets/secondary_button.dart';
 
 class CollectorUnsupportedPage extends StatelessWidget {
@@ -20,8 +21,10 @@ class CollectorUnsupportedPage extends StatelessWidget {
     return NotFoundPage(
       headline: "Collector Not Supported",
       message: message,
-      buttonText: "Select Collector Manually",
-      buttonOnPressed: () => navigateToSelectCollectorPage(context),
+      button: PrimaryButton(
+        text: "Select Collector Manually",
+        onPressed: () => navigateToSelectCollectorPage(context),
+      ),
       extraButton: SecondaryButton(
         text: "Request council support",
         onPressed: () => navigateToRequestCouncilPage(context),
