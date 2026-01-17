@@ -2,12 +2,13 @@
 
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
-![d2(10)](https://github.com/user-attachments/assets/5a7f8908-e6e1-4c84-97b6-7a66dfe5eae3)
+![d2(11)](https://github.com/user-attachments/assets/ad464fa3-87f8-4e53-9a47-6a8538982f1e)
 
 <p align="center">
   <a href="https://github.com/BadgerHobbs/BinDays-App">BinDays-App</a> •
   <a href="https://github.com/BadgerHobbs/BinDays-Client">BinDays-Client</a> •
-  <a href="https://github.com/BadgerHobbs/BinDays-API">BinDays-API</a>
+  <a href="https://github.com/BadgerHobbs/BinDays-API">BinDays-API</a> •
+  <a href="https://github.com/BadgerHobbs/BinDays-HomeAssistant">BinDays-HomeAssistant</a>
 </p>
 
 > **Council-related issue?** For problems with a specific council's bin collection data or to request a new council, please open an issue in the [**BinDays-API repository**](https://github.com/BadgerHobbs/BinDays-API/issues).
