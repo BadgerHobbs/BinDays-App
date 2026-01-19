@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "Added new bin type icons to the bin collections page."
+        "text": "Fixed rare issue when sending requests to some councils."
     },
     {
         "language": "en-US",
-        "text": "Added new bin type icons to the bin collections page."
+        "text": "Fixed rare issue when sending requests to some councils."
     }
 ]
