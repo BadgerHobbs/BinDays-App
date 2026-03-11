@@ -39,9 +39,18 @@ class BinIcon extends StatelessWidget {
 
   const BinIcon({super.key, required this.bin});
 
+  Color _resolveColour() {
+    final hex = bin.colourHex;
+    if (hex != null) {
+      final value = int.tryParse(hex.replaceAll('#', '0xff'));
+      if (value != null) return Color(value);
+    }
+    return _binColours[bin.colour] ?? Colors.grey;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Color binColour = _binColours[bin.colour] ?? Colors.grey;
+    final Color binColour = _resolveColour();
     final bool isWhite = binColour == Colors.white;
     final Brightness brightness = Theme.of(context).brightness;
 

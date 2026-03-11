@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "Fixed rare issue when sending requests to some councils."
+        "text": "Added support for more customisable bin colours."
     },
     {
         "language": "en-US",
-        "text": "Fixed rare issue when sending requests to some councils."
+        "text": "Added support for more customizable bin colors."
     }
 ]
