@@ -114,9 +114,9 @@ class NotificationsManager {
     // any active notifications already showing in the notification tray.
     final pendingNotifications =
         await flutterLocalNotificationsPlugin.pendingNotificationRequests();
-    for (final notification in pendingNotifications) {
-      await flutterLocalNotificationsPlugin.cancel(notification.id);
-    }
+    await Future.wait(
+      pendingNotifications.map((n) => flutterLocalNotificationsPlugin.cancel(n.id)),
+    );
     if (cancellationToken.isCancelled) return;
 
     final now = DateTime.now();
