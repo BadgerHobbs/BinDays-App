@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "Added support for more customisable bin colours."
+        "text": "Improved notification scheduling reliability and respect for device limits."
     },
     {
         "language": "en-US",
-        "text": "Added support for more customizable bin colors."
+        "text": "Improved notification scheduling reliability and respect for device limits."
     }
 ]
