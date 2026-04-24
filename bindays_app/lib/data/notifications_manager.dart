@@ -1,18 +1,27 @@
 // External Imports
+import 'dart:math';
 import 'package:bindays_client/models/bin_day.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
 // Internal Imports
 import 'package:bindays_app/data/models/bin_collection_notification.dart';
+import 'package:bindays_app/data/models/cancellation_token.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 
 /// Manages the scheduling and handling of local notifications.
 class NotificationsManager {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+
+  /// iOS limits scheduled notifications to 64. Reserve 1 slot for the
+  /// "no more notifications" reminder.
+  static const int _maxBinCollectionNotifications = 63;
+
+  /// Token for the currently active scheduling operation. Cancelled when
+  /// a new scheduling call supersedes it.
+  static CancellationToken? _activeCancellationToken;
 
   static const notificationDetails = NotificationDetails(
     android: AndroidNotificationDetails(
@@ -43,7 +52,7 @@ class NotificationsManager {
           iOS: iosInitializationSettings,
         );
 
-    // Intialize timezones
+    // Initialize timezones
     tz.initializeTimeZones();
 
     // Initialize the plugin
@@ -61,10 +70,10 @@ class NotificationsManager {
         ?.requestNotificationsPermission();
   }
 
-  /// Generates a unique notification id.
-  static int _generateNotificationId() {
-    return UniqueKey().hashCode;
-  }
+  static final _random = Random();
+
+  /// Generates a random notification ID.
+  static int _generateNotificationId() => _random.nextInt(1 << 31);
 
   /// Gets the notification body for the given bin day and notification.
   static String _getNotificationBody(
@@ -75,7 +84,7 @@ class NotificationsManager {
     String binsToCollect = binDay.bins
         .map((bin) => bin.name)
         .join(', ')
-        .replaceFirst(RegExp(r', ([^,]+)$'), ' and ${binDay.bins.last.name}');
+        .replaceFirst(RegExp(r', ([^,]+)$'), r' and $1');
 
     // Timeframe (today, tomorrow, in N days)
     final daysBefore =
@@ -92,133 +101,132 @@ class NotificationsManager {
     return "Collection of your $binsToCollect bin$plurality is $timeframe.";
   }
 
-  /// Schedules a bin collection notification.
-  static Future<void> _scheduleBinCollectionNotification(
-    BinDay binDay,
-    BinCollectionNotification binCollectionNotification,
+  /// Schedules all bin collection notifications.
+  ///
+  /// Checks [cancellationToken] after each async gap; if cancelled, stops
+  /// early and lets the newer call take over.
+  static Future<void> _scheduleBinCollectionNotifications(
+    List<BinCollectionNotification> binCollectionNotifications,
+    List<BinDay> binDays,
+    CancellationToken cancellationToken,
   ) async {
-    final notificationDate = binDay.date.subtract(
-      binCollectionNotification.durationBeforeCollection,
-    );
-    final notificationDateTime = DateTime(
-      notificationDate.year,
-      notificationDate.month,
-      notificationDate.day,
-      binCollectionNotification.time.hour,
-      binCollectionNotification.time.minute,
-    );
+    // Cancel only pending (not yet delivered) notifications, preserving
+    // any active notifications already showing in the notification tray.
+    final pendingNotifications =
+        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    for (final notification in pendingNotifications) {
+      await flutterLocalNotificationsPlugin.cancel(notification.id);
+    }
+    if (cancellationToken.isCancelled) return;
 
-    // Skip creating notification if in the past
-    if (notificationDateTime.isBefore(DateTime.now())) {
+    final now = DateTime.now();
+    final enabledNotifications =
+        binCollectionNotifications.where((n) => n.enabled).toList();
+
+    if (enabledNotifications.isEmpty || binDays.isEmpty) {
       return;
     }
 
-    final notificationBody = _getNotificationBody(
-      binDay,
-      binCollectionNotification,
-    );
-    final plurality = binDay.bins.length == 1 ? "" : "s";
+    // Build all candidate (dateTime, binDay, notification) tuples,
+    // filtering out past notifications, then sort by date ascending.
+    final candidates =
+        <
+          ({
+            DateTime dateTime,
+            BinDay binDay,
+            BinCollectionNotification notification,
+          })
+        >[];
 
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      _generateNotificationId(),
-      'Upcoming Bin Collection$plurality',
-      notificationBody,
-      tz.TZDateTime.from(notificationDateTime, tz.local),
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    );
-  }
+    for (final binCollectionNotification in enabledNotifications) {
+      for (final binDay in binDays) {
+        final notificationDate = binDay.date.subtract(
+          binCollectionNotification.durationBeforeCollection,
+        );
+        final notificationDateTime = DateTime(
+          notificationDate.year,
+          notificationDate.month,
+          notificationDate.day,
+          binCollectionNotification.time.hour,
+          binCollectionNotification.time.minute,
+        );
 
-  /// Cancels all unsent notifications.
-  static Future<void> _cancelUnSentNotifications() async {
-    final pendingNotifications =
-        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
-    final activeNotifications =
-        await flutterLocalNotificationsPlugin.getActiveNotifications();
-
-    final notificationsToCancel = pendingNotifications.where(
-      (pendingNotification) =>
-          !activeNotifications.any(
-            (activeNotification) =>
-                activeNotification.id == pendingNotification.id,
-          ),
-    );
-
-    for (final notification in notificationsToCancel) {
-      await flutterLocalNotificationsPlugin.cancel(notification.id);
+        if (notificationDateTime.isAfter(now)) {
+          candidates.add((
+            dateTime: notificationDateTime,
+            binDay: binDay,
+            notification: binCollectionNotification,
+          ));
+        }
+      }
     }
-  }
 
-  /// Schedules a notification that there are no more notifications and the user needs to refresh manually.
-  /// This notification is scheduled for the day after the last bin day.
-  static Future<void> _scheduleNoMoreNotificationsReminder(
-    BinDay lastBinDay,
-    BinCollectionNotification binCollectionNotification,
-  ) async {
-    final notificationDateTime = DateTime(
+    // Sort by date ascending so earliest notifications are scheduled first
+    candidates.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+
+    // Truncate to the iOS limit, reserving 1 slot for the reminder
+    final toSchedule = candidates.take(_maxBinCollectionNotifications).toList();
+
+    for (final candidate in toSchedule) {
+      if (cancellationToken.isCancelled) return;
+
+      final notificationBody = _getNotificationBody(
+        candidate.binDay,
+        candidate.notification,
+      );
+      final plurality = candidate.binDay.bins.length == 1 ? "" : "s";
+
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        _generateNotificationId(),
+        'Upcoming Bin Collection$plurality',
+        notificationBody,
+        tz.TZDateTime.from(candidate.dateTime, tz.local),
+        notificationDetails,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      );
+    }
+
+    if (cancellationToken.isCancelled) return;
+
+    // Always schedule the "no more notifications" reminder
+    final lastBinDay = binDays.reduce((a, b) => a.date.isAfter(b.date) ? a : b);
+    final reminderNotification = enabledNotifications.first;
+    final reminderDateTime = DateTime(
       lastBinDay.date.year,
       lastBinDay.date.month,
       lastBinDay.date.day,
-      // Use the notification time
-      binCollectionNotification.time.hour,
-      binCollectionNotification.time.minute,
-    );
-    final notificationDate = notificationDateTime.add(const Duration(days: 1));
+      reminderNotification.time.hour,
+      reminderNotification.time.minute,
+    ).add(const Duration(days: 1));
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       _generateNotificationId(),
       'Scheduled Notifications Reminder',
       'There are no more scheduled bin collection notifications. Open the app to refresh.',
-      tz.TZDateTime.from(notificationDate, tz.local),
+      tz.TZDateTime.from(reminderDateTime, tz.local),
       notificationDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
 
-  /// Schedules all bin collection notifications.
-  static Future<void> _scheduleBinCollectionNotifications(
-    List<BinCollectionNotification> binCollectionNotifications,
-    List<BinDay> binDays,
-  ) async {
-    // Cancel all unsent notifications
-    await _cancelUnSentNotifications();
-
-    for (final binCollectionNotification in binCollectionNotifications) {
-      if (!binCollectionNotification.enabled) {
-        continue;
-      }
-
-      for (final binDay in binDays) {
-        await _scheduleBinCollectionNotification(
-          binDay,
-          binCollectionNotification,
-        );
-      }
-    }
-
-    if (binCollectionNotifications.isNotEmpty && binDays.isNotEmpty) {
-      // Get the last bin day for the no more notifications reminder
-      final lastBinDay = binDays.reduce(
-        (a, b) => a.date.isAfter(b.date) ? a : b,
-      );
-
-      // Schedule no more notifications reminder for first configured notification
-      await _scheduleNoMoreNotificationsReminder(
-        lastBinDay,
-        binCollectionNotifications.first,
-      );
-    }
-  }
-
   /// Schedules all bin collection notifications from global state.
+  ///
+  /// If a scheduling operation is already in progress, it is cancelled
+  /// and a new one begins immediately.
   static Future<void> scheduleBinCollectionNotifications() async {
     // Fetch bin collections and notifications from global state
     final binDays = globalStateNotifier.binDays ?? [];
     final binCollectionNotifications = globalStateNotifier.notifications ?? [];
 
+    // Cancel any in-flight scheduling operation
+    _activeCancellationToken?.cancel();
+    final cancellationToken = CancellationToken();
+    _activeCancellationToken = cancellationToken;
+
     await _scheduleBinCollectionNotifications(
       binCollectionNotifications,
       binDays,
+      cancellationToken,
     );
   }
 }
