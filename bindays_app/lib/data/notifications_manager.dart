@@ -84,7 +84,7 @@ class NotificationsManager {
     String binsToCollect = binDay.bins
         .map((bin) => bin.name)
         .join(', ')
-        .replaceFirstMapped(RegExp(r', ([^,]+)$'), (m) => ' and ${m[1]}');
+        .replaceFirst(RegExp(r', ([^,]+)$'), ' and ${binDay.bins.last.name}');
 
     // Timeframe (today, tomorrow, in N days)
     final daysBefore =
@@ -115,7 +115,9 @@ class NotificationsManager {
     final pendingNotifications =
         await flutterLocalNotificationsPlugin.pendingNotificationRequests();
     await Future.wait(
-      pendingNotifications.map((n) => flutterLocalNotificationsPlugin.cancel(n.id)),
+      pendingNotifications.map(
+        (n) => flutterLocalNotificationsPlugin.cancel(n.id),
+      ),
     );
     if (cancellationToken.isCancelled) return;
 
