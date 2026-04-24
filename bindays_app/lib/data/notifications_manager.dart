@@ -190,13 +190,15 @@ class NotificationsManager {
 
     if (cancellationToken.isCancelled) return;
 
-    // Always schedule the "no more notifications" reminder
-    final lastBinDay = binDays.reduce((a, b) => a.date.isAfter(b.date) ? a : b);
+    // Schedule reminder for the day after the last *scheduled* notification,
+    // not the last bin day, so the user is prompted to refresh sooner when
+    // the notification limit is reached.
+    final lastScheduledBinDay = toSchedule.last.binDay;
     final reminderNotification = enabledNotifications.first;
     final reminderDateTime = DateTime(
-      lastBinDay.date.year,
-      lastBinDay.date.month,
-      lastBinDay.date.day,
+      lastScheduledBinDay.date.year,
+      lastScheduledBinDay.date.month,
+      lastScheduledBinDay.date.day,
       reminderNotification.time.hour,
       reminderNotification.time.minute,
     ).add(const Duration(days: 1));
