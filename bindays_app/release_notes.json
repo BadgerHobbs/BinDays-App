@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "Improved notification scheduling reliability and respect for device limits."
+        "text": "Fixed an issue where the 'no more notifications' reminder was not always scheduled correctly."
     },
     {
         "language": "en-US",
-        "text": "Improved notification scheduling reliability and respect for device limits."
+        "text": "Fixed an issue where the 'no more notifications' reminder was not always scheduled correctly."
     }
 ]

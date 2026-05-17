@@ -190,27 +190,35 @@ class NotificationsManager {
 
     if (cancellationToken.isCancelled) return;
 
-    // Schedule reminder for the day after the last *scheduled* notification,
-    // not the last bin day, so the user is prompted to refresh sooner when
-    // the notification limit is reached.
-    final lastScheduledBinDay = toSchedule.last.binDay;
+    // Anchor for the reminder: the last scheduled notification's bin day if
+    // any were scheduled (earlier, since we cap at 63), otherwise the last
+    // bin collection day overall. Whichever is earlier ensures the reminder
+    // fires as soon as notifications run out.
+    final lastBinDate = binDays
+        .map((d) => d.date)
+        .reduce((a, b) => a.isAfter(b) ? a : b);
+    final anchorDate =
+        toSchedule.isNotEmpty ? toSchedule.last.binDay.date : lastBinDate;
+
     final reminderNotification = enabledNotifications.first;
     final reminderDateTime = DateTime(
-      lastScheduledBinDay.date.year,
-      lastScheduledBinDay.date.month,
-      lastScheduledBinDay.date.day,
+      anchorDate.year,
+      anchorDate.month,
+      anchorDate.day,
       reminderNotification.time.hour,
       reminderNotification.time.minute,
     ).add(const Duration(days: 1));
 
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      _generateNotificationId(),
-      'Scheduled Notifications Reminder',
-      'There are no more scheduled bin collection notifications. Open the app to refresh.',
-      tz.TZDateTime.from(reminderDateTime, tz.local),
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    );
+    if (reminderDateTime.isAfter(now)) {
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        _generateNotificationId(),
+        'Scheduled Notifications Reminder',
+        'There are no more scheduled bin collection notifications. Open the app to refresh.',
+        tz.TZDateTime.from(reminderDateTime, tz.local),
+        notificationDetails,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      );
+    }
   }
 
   /// Schedules all bin collection notifications from global state.
