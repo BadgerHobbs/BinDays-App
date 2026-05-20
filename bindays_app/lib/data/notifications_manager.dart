@@ -19,6 +19,10 @@ class NotificationsManager {
   /// "no more notifications" reminder.
   static const int _maxBinCollectionNotifications = 63;
 
+  /// Fixed ID for the collector-update notification so repeated background
+  /// fetches replace the existing notification rather than stacking new ones.
+  static const int _collectorUpdateNotificationId = 0;
+
   /// Token for the currently active scheduling operation. Cancelled when
   /// a new scheduling call supersedes it.
   static CancellationToken? _activeCancellationToken;
@@ -36,7 +40,7 @@ class NotificationsManager {
     iOS: DarwinNotificationDetails(),
   );
 
-  static Future<void> init() async {
+  static Future<void> init({bool requestPermissions = true}) async {
     // Android initialisation settings
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('notification_icon');
@@ -58,7 +62,9 @@ class NotificationsManager {
     // Initialize the plugin
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-    _requestPermissions();
+    if (requestPermissions) {
+      _requestPermissions();
+    }
   }
 
   /// Request device permissions
@@ -219,6 +225,20 @@ class NotificationsManager {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
     }
+  }
+
+  /// Shows an immediate notification informing the user that their address
+  /// must be re-selected because the council's data format has changed.
+  ///
+  /// Uses a fixed notification ID so repeated background fetches replace the
+  /// existing notification rather than creating duplicates.
+  static Future<void> showCollectorUpdateNotification() async {
+    await flutterLocalNotificationsPlugin.show(
+      _collectorUpdateNotificationId,
+      'Council Website Changed',
+      'Your council has changed their website and your saved address is no longer compatible. Open BinDays to re-select your address and continue receiving bin collections.',
+      notificationDetails,
+    );
   }
 
   /// Schedules all bin collection notifications from global state.

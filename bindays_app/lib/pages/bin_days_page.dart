@@ -5,6 +5,7 @@ import 'package:in_app_review/in_app_review.dart';
 // Internal Imports
 import 'package:bindays_app/client/bindays_client.dart';
 import 'package:bindays_app/data/shared_preferences_manager.dart';
+import 'package:bindays_app/misc/collector_version_error.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
@@ -76,12 +77,18 @@ class _BinDaysPageState extends State<BinDaysPage> {
         await SharedPreferencesManager.setRequestReviewAfter(twoWeeksFromNow);
       }
       _checkAndRequestReview();
+      globalStateNotifier.setLastRefresh(DateTime.now());
+    } catch (e) {
+      if (isCollectorVersionOutdated(e) && mounted) {
+        navigateToCollectorOutdatedPage(context);
+      } else {
+        rethrow;
+      }
     } finally {
       setState(() {
         _isRefreshing = false;
       });
     }
-    globalStateNotifier.setLastRefresh(DateTime.now());
   }
 
   Future<void> _checkAndRequestReview() async {

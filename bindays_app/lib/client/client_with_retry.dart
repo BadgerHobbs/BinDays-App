@@ -4,6 +4,9 @@ import 'package:bindays_client/models/address.dart';
 import 'package:bindays_client/models/bin_day.dart';
 import 'package:bindays_client/models/collector.dart';
 
+// Internal Imports
+import 'package:bindays_app/misc/collector_version_error.dart';
+
 /// [ClientWithRetry] wraps the [Client] class methods providing additional retry mechanism on failure.
 class ClientWithRetry {
   final Client _client;
@@ -16,7 +19,9 @@ class ClientWithRetry {
       try {
         return await function.call();
       } catch (e) {
-        if (i == retryCount) {
+        // A 410 means the collector version is permanently out of date —
+        // retrying will always fail until the user re-selects their address.
+        if (isCollectorVersionOutdated(e) || i == retryCount) {
           rethrow;
         }
       }
