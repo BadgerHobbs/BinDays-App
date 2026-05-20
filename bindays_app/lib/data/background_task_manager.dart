@@ -81,8 +81,12 @@ class BackgroundTaskManager {
       if (isCollectorVersionOutdated(e)) {
         // init() is called here because in headless mode the notification
         // plugin may not have been initialised by the normal app startup path.
-        await NotificationsManager.init();
+        // requestPermissions: false avoids triggering a permission dialog from
+        // a background context.
+        await NotificationsManager.init(requestPermissions: false);
         await NotificationsManager.showCollectorUpdateNotification();
+      } else {
+        rethrow;
       }
     }
   }

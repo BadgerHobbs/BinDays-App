@@ -40,7 +40,7 @@ class NotificationsManager {
     iOS: DarwinNotificationDetails(),
   );
 
-  static Future<void> init() async {
+  static Future<void> init({bool requestPermissions = true}) async {
     // Android initialisation settings
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('notification_icon');
@@ -62,7 +62,9 @@ class NotificationsManager {
     // Initialize the plugin
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-    _requestPermissions();
+    if (requestPermissions) {
+      _requestPermissions();
+    }
   }
 
   /// Request device permissions

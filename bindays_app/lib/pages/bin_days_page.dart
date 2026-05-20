@@ -81,6 +81,8 @@ class _BinDaysPageState extends State<BinDaysPage> {
     } catch (e) {
       if (isCollectorVersionOutdated(e) && mounted) {
         navigateToCollectorOutdatedPage(context);
+      } else {
+        rethrow;
       }
     } finally {
       setState(() {
