@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/pages/bin_days_page.dart';
+import 'package:bindays_app/pages/collector_outdated_page.dart';
 import 'package:bindays_app/pages/setup/addresses/addresses_not_found_page.dart';
 import 'package:bindays_app/pages/setup/addresses/finding_addresses_page.dart';
 import 'package:bindays_app/pages/setup/addresses/select_address_page.dart';
@@ -104,6 +105,18 @@ void navigateToAddressNotFoundPage(
   _navigateToPage(
     context,
     const AddressesNotFoundPage(),
+    pushReplacement: pushReplacement,
+  );
+}
+
+/// Navigates to the CollectorOutdatedPage.
+void navigateToCollectorOutdatedPage(
+  BuildContext context, {
+  bool pushReplacement = false,
+}) {
+  _navigateToPage(
+    context,
+    const CollectorOutdatedPage(),
     pushReplacement: pushReplacement,
   );
 }

@@ -6,7 +6,9 @@ import 'package:timezone/data/latest.dart' as tz;
 
 // Internal Imports
 import 'package:bindays_app/client/bindays_client.dart';
+import 'package:bindays_app/data/notifications_manager.dart';
 import 'package:bindays_app/data/shared_preferences_manager.dart';
+import 'package:bindays_app/misc/collector_version_error.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 
 @pragma('vm:entry-point')
@@ -68,13 +70,23 @@ class BackgroundTaskManager {
       return;
     }
 
-    final binDays = await binDaysClient.getBinDays(
-      globalStateNotifier.collector!,
-      globalStateNotifier.address!,
-    );
-    globalStateNotifier.setBinDays(binDays);
-    globalStateNotifier.setLastRefresh(DateTime.now());
+    try {
+      final binDays = await binDaysClient.getBinDays(
+        globalStateNotifier.collector!,
+        globalStateNotifier.address!,
+      );
+      globalStateNotifier.setBinDays(binDays);
+      globalStateNotifier.setLastRefresh(DateTime.now());
+    } catch (e) {
+      if (isCollectorVersionOutdated(e)) {
+        // init() is called here because in headless mode the notification
+        // plugin may not have been initialised by the normal app startup path.
+        await NotificationsManager.init();
+        await NotificationsManager.showCollectorUpdateNotification();
+      }
+    }
   }
+
 }
 
 // [Android-only] This "Headless Task" is run when the Android app is terminated with `enableHeadless: true`
