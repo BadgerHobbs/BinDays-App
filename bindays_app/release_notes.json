@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "Fixed an issue where the 'no more notifications' reminder was not always scheduled correctly."
+        "text": "Added a notification and in-app prompt when your council updates their website, letting you know your address needs to be re-selected."
     },
     {
         "language": "en-US",
-        "text": "Fixed an issue where the 'no more notifications' reminder was not always scheduled correctly."
+        "text": "Added a notification and in-app prompt when your council updates their website, letting you know your address needs to be re-selected."
     }
 ]
