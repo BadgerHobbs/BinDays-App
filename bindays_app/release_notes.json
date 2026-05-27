@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "Added a notification and in-app prompt when your council updates their website, letting you know your address needs to be re-selected."
+        "text": "Fixed an issue where bin collection days could not be retrieved for some East Ayrshire Council addresses."
     },
     {
         "language": "en-US",
-        "text": "Added a notification and in-app prompt when your council updates their website, letting you know your address needs to be re-selected."
+        "text": "Fixed an issue where bin collection days could not be retrieved for some East Ayrshire Council addresses."
     }
 ]
