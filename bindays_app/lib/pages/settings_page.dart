@@ -44,7 +44,7 @@ class _SettingsPageState extends State<SettingsPage> {
         globalStateNotifier.address?.toFormattedString() ?? "Not set";
     final body =
         "[Please describe your issue or feedback here]\n\n---\n\nCollector: $collector\nAddress: $address";
-    return "mailto:contact@bindays.app?subject=$subject&body=${Uri.encodeComponent(body)}";
+    return "mailto:contact@bindays.app?subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}";
   }
 
   @override

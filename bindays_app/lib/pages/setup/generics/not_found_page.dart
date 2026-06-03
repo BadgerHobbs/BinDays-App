@@ -31,7 +31,7 @@ class NotFoundPage extends StatelessWidget {
     final postcode = setupState.postcode ?? "Not set";
     final body =
         "[Please describe your issue or feedback here]\n\n---\n\nPostcode: $postcode";
-    return "mailto:contact@bindays.app?subject=$subject&body=${Uri.encodeComponent(body)}";
+    return "mailto:contact@bindays.app?subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}";
   }
 
   @override
