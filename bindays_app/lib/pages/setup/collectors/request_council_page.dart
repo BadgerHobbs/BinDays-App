@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 // Internal Imports
+import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:bindays_app/widgets/secondary_button.dart';
@@ -13,13 +14,16 @@ class RequestCouncilPage extends StatelessWidget {
   const RequestCouncilPage({super.key});
 
   String _getEmailUrl() {
-    var emailUrl = "mailto:contact@bindays.app?subject=BinDays Feedback";
+    var subject = "BinDays Feedback";
     if (Platform.isIOS) {
-      emailUrl += " (iOS)";
+      subject += " (iOS)";
     } else if (Platform.isAndroid) {
-      emailUrl += " (Android)";
+      subject += " (Android)";
     }
-    return emailUrl;
+    final postcode = setupState.postcode ?? "Not set";
+    final body =
+        "[Please describe your issue or feedback here]\n\n---\n\nPostcode: $postcode";
+    return "mailto:contact@bindays.app?subject=$subject&body=${Uri.encodeComponent(body)}";
   }
 
   @override
