@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Internal Imports
 import 'package:bindays_app/misc/navigators.dart';
+import 'package:bindays_app/pages/safe_base_page.dart';
 
 class NotFoundPage extends StatelessWidget {
   final String headline;
@@ -22,8 +23,7 @@ class NotFoundPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: SafeArea(
-        minimum: const EdgeInsets.all(16),
+      body: SafeBasePage(
         child: Column(
           children: [
             const Spacer(flex: 1),

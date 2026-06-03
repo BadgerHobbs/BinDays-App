@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:bindays_app/misc/issue_type.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
+import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:bindays_app/widgets/secondary_button.dart';
 import 'package:bindays_app/widgets/url_link.dart';
@@ -20,8 +21,7 @@ class VerifyCouncilPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Before You Report")),
-      body: SafeArea(
-        minimum: const EdgeInsets.all(16),
+      body: SafeBasePage(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

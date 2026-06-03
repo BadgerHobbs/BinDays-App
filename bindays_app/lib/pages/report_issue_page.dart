@@ -1,5 +1,4 @@
 // External Imports
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -7,6 +6,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:bindays_app/extensions/address_extension.dart';
 import 'package:bindays_app/misc/issue_type.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
+import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:bindays_app/widgets/secondary_button.dart';
 
@@ -20,11 +20,12 @@ class ReportIssuePage extends StatelessWidget {
     required this.councilWebsiteWorking,
   });
 
-  String _getEmailUrl() {
+  String _getEmailUrl(BuildContext context) {
     var subject = "BinDays Issue Report";
-    if (Platform.isIOS) {
+    final platform = Theme.of(context).platform;
+    if (platform == TargetPlatform.iOS) {
       subject += " (iOS)";
-    } else if (Platform.isAndroid) {
+    } else if (platform == TargetPlatform.android) {
       subject += " (Android)";
     }
     final issue = issueType.displayName;
@@ -41,12 +42,28 @@ class ReportIssuePage extends StatelessWidget {
     return "mailto:contact@bindays.app?subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}";
   }
 
+  Future<void> _launchUrl(BuildContext context, String urlString) async {
+    try {
+      final launched = await launchUrlString(urlString);
+      if (!launched && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open link')),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open link')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Report an Issue")),
-      body: SafeArea(
-        minimum: const EdgeInsets.all(16),
+      body: SafeBasePage(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -111,12 +128,13 @@ class ReportIssuePage extends StatelessWidget {
             const SizedBox(height: 16),
             PrimaryButton(
               text: "Send an Email",
-              onPressed: () => launchUrlString(_getEmailUrl()),
+              onPressed: () => _launchUrl(context, _getEmailUrl(context)),
             ),
             const SizedBox(height: 10),
             SecondaryButton(
               text: "Open a GitHub Issue",
-              onPressed: () => launchUrlString(
+              onPressed: () => _launchUrl(
+                context,
                 "https://github.com/BadgerHobbs/BinDays-App/issues/new",
               ),
             ),
