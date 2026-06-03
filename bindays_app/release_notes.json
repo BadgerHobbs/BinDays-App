@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "Fixed an issue where bin collection days could not be retrieved for some East Ayrshire Council addresses."
+        "text": "Added a Troubleshooting flow to help diagnose common issues, accessible from the main screen, settings, and error pages."
     },
     {
         "language": "en-US",
-        "text": "Fixed an issue where bin collection days could not be retrieved for some East Ayrshire Council addresses."
+        "text": "Added a Troubleshooting flow to help diagnose common issues, accessible from the main screen, settings, and error pages."
     }
 ]
