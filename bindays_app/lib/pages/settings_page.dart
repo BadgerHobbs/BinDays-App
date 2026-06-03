@@ -33,13 +33,18 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   String _getEmailUrl() {
-    var emailUrl = "mailto:contact@bindays.app?subject=BinDays Feedback";
+    var subject = "BinDays Feedback";
     if (Platform.isIOS) {
-      emailUrl += " (iOS)";
+      subject += " (iOS)";
     } else if (Platform.isAndroid) {
-      emailUrl += " (Android)";
+      subject += " (Android)";
     }
-    return emailUrl;
+    final collector = globalStateNotifier.collector?.name ?? "Not set";
+    final address =
+        globalStateNotifier.address?.toFormattedString() ?? "Not set";
+    final body =
+        "[Please describe your issue or feedback here]\n\n---\n\nCollector: $collector\nAddress: $address";
+    return "mailto:contact@bindays.app?subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}";
   }
 
   @override
