@@ -21,14 +21,7 @@ class NotFoundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline),
-            onPressed: () => navigateToTroubleshootingPage(context),
-          ),
-        ],
-      ),
+      appBar: AppBar(),
       body: SafeArea(
         minimum: const EdgeInsets.all(16),
         child: Column(
