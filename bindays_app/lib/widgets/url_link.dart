@@ -5,8 +5,9 @@ import 'package:url_launcher/url_launcher_string.dart';
 class UrlLink extends StatelessWidget {
   final String text;
   final String url;
+  final double? fontSize;
 
-  const UrlLink({super.key, required this.text, required this.url});
+  const UrlLink({super.key, required this.text, required this.url, this.fontSize});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class UrlLink extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+          fontSize: fontSize ?? Theme.of(context).textTheme.bodyMedium!.fontSize,
           decoration: TextDecoration.underline,
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),

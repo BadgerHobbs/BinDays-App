@@ -116,6 +116,10 @@ class _BinDaysPageState extends State<BinDaysPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.help_outline),
+          onPressed: () => navigateToTroubleshootingPage(context),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),

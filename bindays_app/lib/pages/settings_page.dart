@@ -50,10 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Settings"),
-        automaticallyImplyLeading: false,
-      ),
+      appBar: AppBar(title: const Text("Settings")),
       body: SafeBasePage(
         child: ListView(
           children: [
@@ -118,7 +115,20 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             const SizedBox(height: 20),
             Text(
-              'User Feedback',
+              'Help & Support',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Troubleshoot an Issue'),
+              subtitle: const Text(
+                'Find answers to common problems or get in touch.',
+              ),
+              onTap: () => navigateToTroubleshootingPage(context),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Feedback',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             ListTile(

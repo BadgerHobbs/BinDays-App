@@ -2,8 +2,11 @@
 import 'package:flutter/material.dart';
 
 // Internal Imports
+import 'package:bindays_app/misc/issue_type.dart';
 import 'package:bindays_app/pages/bin_days_page.dart';
 import 'package:bindays_app/pages/collector_outdated_page.dart';
+import 'package:bindays_app/pages/report_issue_page.dart';
+import 'package:bindays_app/pages/troubleshooting_page.dart';
 import 'package:bindays_app/pages/setup/addresses/addresses_not_found_page.dart';
 import 'package:bindays_app/pages/setup/addresses/finding_addresses_page.dart';
 import 'package:bindays_app/pages/setup/addresses/select_address_page.dart';
@@ -17,6 +20,7 @@ import 'package:bindays_app/pages/setup/enter_postcode_page.dart';
 import 'package:bindays_app/pages/setup/how_it_works_page.dart';
 import 'package:bindays_app/pages/settings_page.dart';
 import 'package:bindays_app/pages/notifications_page.dart';
+import 'package:bindays_app/pages/verify_council_page.dart';
 
 /// Navigates to the HowItWorksPage.
 void navigateToHowItWorksPage(BuildContext context) {
@@ -134,6 +138,34 @@ void navigateToSettingsPage(BuildContext context) {
 /// Navigate to NotificationsPage.
 void navigateToNotificationsPage(BuildContext context) {
   _navigateToPage(context, const NotificationsPage());
+}
+
+/// Navigate to TroubleshootingPage.
+void navigateToTroubleshootingPage(BuildContext context) {
+  _navigateToPage(context, const TroubleshootingPage());
+}
+
+/// Navigate to VerifyCouncilPage.
+void navigateToVerifyCouncilPage(
+  BuildContext context, {
+  required IssueType issueType,
+}) {
+  _navigateToPage(context, VerifyCouncilPage(issueType: issueType));
+}
+
+/// Navigate to ReportIssuePage.
+void navigateToReportIssuePage(
+  BuildContext context, {
+  required IssueType issueType,
+  required bool? councilWebsiteWorking,
+}) {
+  _navigateToPage(
+    context,
+    ReportIssuePage(
+      issueType: issueType,
+      councilWebsiteWorking: councilWebsiteWorking,
+    ),
+  );
 }
 
 /// Navigates to a specified page.
