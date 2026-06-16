@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "Added a Troubleshooting flow to help diagnose common issues, accessible from the main screen, settings, and error pages."
+        "text": "Fixed an issue where bin collection days could not be retrieved for some Sunderland City Council."
     },
     {
         "language": "en-US",
-        "text": "Added a Troubleshooting flow to help diagnose common issues, accessible from the main screen, settings, and error pages."
+        "text": "Fixed an issue where bin collection days could not be retrieved for some Sunderland City Council."
     }
 ]
