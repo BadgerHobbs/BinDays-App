@@ -49,6 +49,12 @@ dependencies:
   url_launcher: ^6.3.1
   flutter_native_splash: ^2.4.6
   in_app_review: ^2.0.10
+  # Native HTTP stack (Cronet on Android, NSURLSession on iOS) so requests
+  # present a real browser TLS fingerprint, required for Cloudflare-gated
+  # councils (e.g. Sunderland). See lib/client/native_transport_io.dart.
+  native_dio_adapter: ^1.4.0
+  # Direct dependency for the HttpClientAdapter type used in native_transport_*.
+  dio: ^5.0.0
 
 dev_dependencies:
   flutter_test:
