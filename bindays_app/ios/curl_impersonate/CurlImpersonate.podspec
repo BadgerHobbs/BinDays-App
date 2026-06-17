@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.version          = native_version
   s.summary          = 'libcurl-impersonate native library for BinDays (dart:ffi).'
   s.description       = <<-DESC
-Dynamic libcurl-impersonate xcframework published by the bindays_client repo,
+Static libcurl-impersonate xcframework published by the bindays_client repo,
 providing browser TLS/JA3 + HTTP/2 impersonation for the BinDays app on iOS,
 consumed via dart:ffi.
   DESC
@@ -30,8 +30,17 @@ consumed via dart:ffi.
   s.source           = {
     :http => "https://github.com/BadgerHobbs/BinDays-Client/releases/download/native-v#{native_version}/libcurl-impersonate-ios-xcframework-v#{native_version}.tar.gz"
   }
-  # Dynamic framework: its curl_* symbols are loaded into the process and
-  # resolved via dart:ffi DynamicLibrary.process(); no -force_load needed (that
-  # was only required for the upstream *static* xcframework).
   s.vendored_frameworks = 'libcurl-impersonate.xcframework'
+  # The xcframework is a *static* library, linked into the app executable. FFI
+  # only references curl_* at runtime, so (a) force the linker to keep each used
+  # symbol's object (-u, which also defeats dead-stripping without needing a
+  # build-dir path like -force_load did), and (b) export them into the dynamic
+  # symbol table so dart:ffi DynamicLibrary.process() can dlsym them.
+  s.user_target_xcconfig = {
+    'OTHER_LDFLAGS' => '-Wl,-u,_curl_global_init -Wl,-u,_curl_easy_init ' \
+      '-Wl,-u,_curl_easy_setopt -Wl,-u,_curl_easy_perform ' \
+      '-Wl,-u,_curl_easy_getinfo -Wl,-u,_curl_easy_cleanup ' \
+      '-Wl,-u,_curl_easy_impersonate -Wl,-u,_curl_slist_append ' \
+      '-Wl,-u,_curl_slist_free_all -Wl,-export_dynamic',
+  }
 end
