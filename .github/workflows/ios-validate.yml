@@ -65,6 +65,19 @@ jobs:
           xcrun simctl bootstatus "$UDID" -b || true
           echo "SIM_UDID=$UDID" >> "$GITHUB_ENV"
 
+      - name: Inspect xcframework slices and platform tag
+        working-directory: BinDays-App/bindays_app
+        run: |
+          FW=ios/curl_impersonate/Frameworks/CurlImpersonate.xcframework
+          echo "=== slices ==="
+          ls "$FW"
+          echo "=== Info.plist ==="
+          cat "$FW/Info.plist"
+          echo "=== binary platform (otool) ==="
+          BIN=$(find "$FW" -name CurlImpersonate -type f | head -1)
+          echo "binary: $BIN"
+          otool -l "$BIN" | grep -A5 -E "LC_BUILD_VERSION|LC_VERSION_MIN" | head -30 || true
+
       - name: Run impersonate regression test on simulator
         working-directory: BinDays-App/bindays_app
         run: flutter test integration_test/transport_test.dart -d "$SIM_UDID"
