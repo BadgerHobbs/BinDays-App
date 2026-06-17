@@ -74,42 +74,50 @@ flutter {
     source = "../.."
 }
 
-// libcurl-impersonate native library (the impersonate HTTP transport).
-// Downloaded from the upstream lexiforest/curl-impersonate release pinned in
-// `native_libs.version`, plus libc++_shared.so from the NDK, extracted into
-// jniLibs at build time — binaries are not vendored in this repo. To update,
-// bump native_libs.version (and keep it in sync with the dio_impersonate dep).
-val curlImpersonateVersion = rootProject.file("../native_libs.version").readText().trim()
+// libcurl-impersonate native library (the impersonate HTTP transport), bundled
+// into the APK from the prebuilt jniLibs archive published by the bindays_client
+// repo (each ABI's libcurl-impersonate.so paired with libc++_shared.so). The
+// version is the single source of truth in bindays_client's native_libs.version,
+// resolved here via the Dart package config so the app never pins it separately.
+// To update, bump native_libs.version in bindays_client and re-run its
+// publish-native-libs workflow. Binaries are not vendored in this repo.
 val impersonateJniLibs = file("src/main/jniLibs")
-// Android ABI -> upstream release target triple.
-val impersonateAbiTriples = mapOf(
-    "arm64-v8a" to "aarch64-linux-android",
-    "x86_64" to "x86_64-linux-android",
-)
+
+// Locate the resolved bindays_client package via the Dart package config, then
+// read the native library version it pins.
+val bindaysClientDir: File = run {
+    val pkgConfig = rootProject.file("../.dart_tool/package_config.json")
+    require(pkgConfig.exists()) {
+        "package_config.json not found; run `flutter pub get` first."
+    }
+    @Suppress("UNCHECKED_CAST")
+    val parsed = groovy.json.JsonSlurper().parseText(pkgConfig.readText()) as Map<String, Any>
+    @Suppress("UNCHECKED_CAST")
+    val packages = parsed["packages"] as List<Map<String, Any>>
+    val rootUri = packages.first { it["name"] == "bindays_client" }["rootUri"] as String
+    if (rootUri.startsWith("file:")) File(java.net.URI(rootUri))
+    else File(pkgConfig.parentFile, rootUri).canonicalFile
+}
+val curlImpersonateVersion = File(bindaysClientDir, "native_libs.version").readText().trim()
+
 val downloadImpersonateLibs = tasks.register("downloadImpersonateLibs") {
     val marker = file("${impersonateJniLibs}/.impersonate-version")
     outputs.dir(impersonateJniLibs)
     doLast {
         if (marker.exists() && marker.readText().trim() == curlImpersonateVersion) return@doLast
-        val prebuilt = file("${android.ndkDirectory}/toolchains/llvm/prebuilt")
-            .listFiles()!!.first { it.isDirectory }
-        impersonateAbiTriples.forEach { (abi, triple) ->
-            val url =
-                "https://github.com/lexiforest/curl-impersonate/releases/download/" +
-                "v$curlImpersonateVersion/libcurl-impersonate-v$curlImpersonateVersion.$triple.tar.gz"
-            val tgz = File(temporaryDir, "$abi.tar.gz")
-            ant.withGroovyBuilder { "get"("src" to url, "dest" to tgz) }
-            val abiDir = file("${impersonateJniLibs}/$abi")
-            copy {
-                from(tarTree(resources.gzip(tgz)))
-                include("libcurl-impersonate.so")
-                into(abiDir)
-            }
-            // The .so links against libc++_shared.so; ship the NDK's copy.
-            copy {
-                from("$prebuilt/sysroot/usr/lib/$triple/libc++_shared.so")
-                into(abiDir)
-            }
+        val url =
+            "https://github.com/BadgerHobbs/BinDays-Client/releases/download/" +
+            "native-v$curlImpersonateVersion/android-jniLibs-v$curlImpersonateVersion.tar.gz"
+        val tgz = File(temporaryDir, "android-jniLibs.tar.gz")
+        ant.withGroovyBuilder { "get"("src" to url, "dest" to tgz) }
+        // Replace any previous ABI dirs with the freshly downloaded bundle.
+        impersonateJniLibs.listFiles()?.filter { it.isDirectory }?.forEach { it.deleteRecursively() }
+        copy {
+            from(tarTree(resources.gzip(tgz)))
+            // Bundle entries are jniLibs/<abi>/<lib>; strip the leading dir.
+            eachFile { path = path.removePrefix("jniLibs/") }
+            includeEmptyDirs = false
+            into(impersonateJniLibs)
         }
         marker.writeText(curlImpersonateVersion)
     }
