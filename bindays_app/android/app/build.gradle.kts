@@ -1,5 +1,7 @@
 import java.util.Properties
 import java.io.FileInputStream
+import java.net.URI
+import groovy.json.JsonSlurper
 
 plugins {
     id("com.android.application")
@@ -91,11 +93,11 @@ val bindaysClientDir: File = run {
         "package_config.json not found; run `flutter pub get` first."
     }
     @Suppress("UNCHECKED_CAST")
-    val parsed = groovy.json.JsonSlurper().parseText(pkgConfig.readText()) as Map<String, Any>
+    val parsed = JsonSlurper().parseText(pkgConfig.readText()) as Map<String, Any>
     @Suppress("UNCHECKED_CAST")
     val packages = parsed["packages"] as List<Map<String, Any>>
     val rootUri = packages.first { it["name"] == "bindays_client" }["rootUri"] as String
-    if (rootUri.startsWith("file:")) File(java.net.URI(rootUri))
+    if (rootUri.startsWith("file:")) File(URI(rootUri))
     else File(pkgConfig.parentFile, rootUri).canonicalFile
 }
 val curlImpersonateVersion = File(bindaysClientDir, "native_libs.version").readText().trim()
