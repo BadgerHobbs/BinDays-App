@@ -12,5 +12,5 @@ Dio-Impersonate repo's native/build_ios.sh and consumed here via dart:ffi.
   s.author           = { 'BadgerHobbs' => 'andyjriggs@gmail.com' }
   s.platform         = :ios, '13.0'
   s.source           = { :path => '.' }
-  s.vendored_frameworks = 'Frameworks/CurlImpersonate.xcframework'
+  s.vendored_frameworks = 'Frameworks/CurlImpersonate.framework'
 end

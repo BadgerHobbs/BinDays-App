@@ -40,12 +40,12 @@ jobs:
           SDKS: iphonesimulator
         run: bash "$GITHUB_WORKSPACE/Dio-Impersonate/native/build_ios.sh"
 
-      - name: Place xcframework in app
+      - name: Place framework in app
         run: |
           DEST="$GITHUB_WORKSPACE/BinDays-App/bindays_app/ios/curl_impersonate/Frameworks"
           mkdir -p "$DEST"
-          cp -R "$GITHUB_WORKSPACE/Dio-Impersonate/native/ios/CurlImpersonate.xcframework" "$DEST/"
-          ls -R "$DEST"
+          cp -R "$GITHUB_WORKSPACE/Dio-Impersonate/native/ios/CurlImpersonate.framework" "$DEST/"
+          ls "$DEST"
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -65,22 +65,6 @@ jobs:
           xcrun simctl bootstatus "$UDID" -b || true
           echo "SIM_UDID=$UDID" >> "$GITHUB_ENV"
 
-      - name: Diagnose pod/xcframework integration (config-only, fast)
-        working-directory: BinDays-App/bindays_app
-        run: |
-          flutter build ios --config-only --simulator 2>&1 | tail -20 || true
-          echo "=== Runner Debug.xcconfig (does it include Pods?) ==="
-          cat ios/Flutter/Debug.xcconfig || true
-          echo "=== Pods-Runner.debug.xcconfig (framework wiring) ==="
-          F="ios/Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
-          grep -iE "FRAMEWORK_SEARCH_PATHS|OTHER_LDFLAGS|CurlImpersonate|XCFRAMEWORK" "$F" || echo "(no matches / file missing: $F)"
-          echo "=== Pods dir ==="
-          ls ios/Pods/ 2>/dev/null || echo "no Pods dir"
-          ls -R ios/Pods/CurlImpersonate 2>/dev/null || echo "no Pods/CurlImpersonate"
-          echo "=== Copy XCFrameworks script? ==="
-          ls "ios/Pods/Target Support Files/Pods-Runner/" 2>/dev/null || true
-
       - name: Run impersonate regression test on simulator
         working-directory: BinDays-App/bindays_app
-        run: echo "skipped while diagnosing pod integration"
-        # run: flutter test integration_test/transport_test.dart -d "$SIM_UDID"
+        run: flutter test integration_test/transport_test.dart -d "$SIM_UDID"

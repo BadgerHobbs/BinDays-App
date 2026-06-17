@@ -28,19 +28,17 @@ require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelpe
 flutter_ios_podfile_setup
 
 target 'Runner' do
-  # Dynamic frameworks so the prebuilt CurlImpersonate.xcframework (a dynamic
-  # framework consumed via dart:ffi) is embedded and loadable at runtime. Static
-  # linkage left the linker unable to find the vendored dynamic framework.
-  use_frameworks!
+  use_frameworks! :linkage => :static
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
-  # libcurl-impersonate native library (built by the Dio-Impersonate CI). Only
-  # linked when the xcframework has been placed here, so `pod install` still
-  # works on machines that haven't built it; the iOS validation pipeline drops
-  # the xcframework in before running pod install.
-  curl_imp_xcframework = File.join(__dir__, 'curl_impersonate', 'Frameworks', 'CurlImpersonate.xcframework')
-  if File.exist?(curl_imp_xcframework)
+  # libcurl-impersonate native library (built by the Dio-Impersonate CI),
+  # vendored as a bare .framework (loaded via dart:ffi). The bare framework sits
+  # directly on the framework search path, avoiding CocoaPods' xcframework
+  # slice-extraction phase (which doesn't run under this project's setup). Only
+  # linked when present, so `pod install` still works without it.
+  curl_imp_framework = File.join(__dir__, 'curl_impersonate', 'Frameworks', 'CurlImpersonate.framework')
+  if File.exist?(curl_imp_framework)
     pod 'CurlImpersonate', :path => 'curl_impersonate'
   end
 
