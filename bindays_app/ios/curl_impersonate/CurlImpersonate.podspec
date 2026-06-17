@@ -20,4 +20,9 @@ consumed via dart:ffi.
     :http => "https://github.com/lexiforest/curl-impersonate/releases/download/v#{native_version}/libcurl-impersonate-v#{native_version}.ios-xcframework.tar.gz"
   }
   s.vendored_frameworks = 'libcurl-impersonate.xcframework'
+  # The xcframework is a static library; force-load it so the curl_* symbols
+  # survive dead-stripping and are resolvable via dart:ffi DynamicLibrary.process().
+  s.user_target_xcconfig = {
+    'OTHER_LDFLAGS' => '-force_load "${PODS_XCFRAMEWORKS_BUILD_DIR}/CurlImpersonate/libcurl-impersonate.a"'
+  }
 end
