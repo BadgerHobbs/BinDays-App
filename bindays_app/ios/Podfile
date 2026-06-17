@@ -28,10 +28,12 @@ require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelpe
 flutter_ios_podfile_setup
 
 target 'Runner' do
-  # Dynamic frameworks (Flutter default): the vendored libcurl-impersonate
-  # framework is dynamic, so its symbols are loaded into the process and
-  # resolved via dart:ffi DynamicLibrary.process().
-  use_frameworks!
+  # Static linkage is required because some plugins (e.g. background_fetch's
+  # TSBackgroundFetch) vendor static xcframeworks, which dynamic linkage rejects.
+  # Our own vendored libcurl-impersonate framework is dynamic and is still
+  # embedded into the app bundle under static linkage, so dart:ffi loads it via
+  # DynamicLibrary.open('libcurl-impersonate.framework/libcurl-impersonate').
+  use_frameworks! :linkage => :static
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
