@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "Fixed an issue where bin collection days could not be retrieved for some Sunderland City Council."
+        "text": "Reliability improvements for retrieving bin collection days across councils."
     },
     {
         "language": "en-US",
-        "text": "Fixed an issue where bin collection days could not be retrieved for some Sunderland City Council."
+        "text": "Reliability improvements for retrieving bin collection days across councils."
     }
 ]

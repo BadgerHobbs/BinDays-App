@@ -25,6 +25,13 @@ jobs:
         with:
           channel: stable
 
+      # The vendored libcurl-impersonate.framework is embedded into the app by
+      # CocoaPods. Flutter's Swift Package Manager integration produces a
+      # hybrid setup where the framework is not copied into Runner.app/Frameworks,
+      # so dart:ffi can't load it. Disable SPM so the project is pure CocoaPods.
+      - name: Disable Swift Package Manager
+        run: flutter config --no-enable-swift-package-manager
+
       - name: flutter pub get
         run: flutter pub get
 
