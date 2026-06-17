@@ -19,7 +19,9 @@ native_libs.version) into this directory and vendored as a local pod.
   # only references curl_* at runtime, so (a) force the linker to keep each used
   # symbol's object (-u, which also defeats dead-stripping), and (b) export them
   # into the dynamic symbol table so dart:ffi DynamicLibrary.process() can dlsym
-  # them.
+  # them. libcurl-impersonate also depends on the system libiconv (iconv*) and
+  # libicucore (uidna*, for internationalized domain names), so link those too.
+  s.libraries = 'iconv', 'icucore'
   s.user_target_xcconfig = {
     'OTHER_LDFLAGS' => '-Wl,-u,_curl_global_init -Wl,-u,_curl_easy_init ' \
       '-Wl,-u,_curl_easy_setopt -Wl,-u,_curl_easy_perform ' \
