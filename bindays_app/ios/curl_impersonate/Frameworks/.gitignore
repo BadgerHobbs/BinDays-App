@@ -1,4 +1,0 @@
-# The xcframework is a build artifact produced by Dio-Impersonate's
-# native/build_ios.sh (in CI). Keep the directory, ignore the built framework.
-*
-!.gitignore

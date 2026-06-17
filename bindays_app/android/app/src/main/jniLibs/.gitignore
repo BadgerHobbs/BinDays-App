@@ -1,0 +1,3 @@
+# libcurl-impersonate native libs are downloaded at build time. Do not commit.
+*
+!.gitignore

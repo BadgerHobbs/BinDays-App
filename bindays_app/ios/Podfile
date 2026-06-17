@@ -32,15 +32,11 @@ target 'Runner' do
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
-  # libcurl-impersonate native library (built by the Dio-Impersonate CI),
-  # vendored as a bare .framework (loaded via dart:ffi). The bare framework sits
-  # directly on the framework search path, avoiding CocoaPods' xcframework
-  # slice-extraction phase (which doesn't run under this project's setup). Only
-  # linked when present, so `pod install` still works without it.
-  curl_imp_framework = File.join(__dir__, 'curl_impersonate', 'Frameworks', 'CurlImpersonate.framework')
-  if File.exist?(curl_imp_framework)
-    pod 'CurlImpersonate', :path => 'curl_impersonate'
-  end
+  # libcurl-impersonate native library (loaded via dart:ffi), downloaded from the
+  # Dio-Impersonate GitHub release named in native_libs.version. Using :podspec
+  # (not :path) so CocoaPods honours the podspec's :http source and fetches the
+  # prebuilt xcframework rather than treating it as a local development pod.
+  pod 'CurlImpersonate', :podspec => 'curl_impersonate/CurlImpersonate.podspec'
 
   target 'RunnerTests' do
     inherit! :search_paths
