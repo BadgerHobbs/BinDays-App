@@ -31,6 +31,16 @@ target 'Runner' do
   use_frameworks! :linkage => :static
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # libcurl-impersonate native library (built by the Dio-Impersonate CI). Only
+  # linked when the xcframework has been placed here, so `pod install` still
+  # works on machines that haven't built it; the iOS validation pipeline drops
+  # the xcframework in before running pod install.
+  curl_imp_xcframework = File.join(__dir__, 'curl_impersonate', 'Frameworks', 'CurlImpersonate.xcframework')
+  if File.exist?(curl_imp_xcframework)
+    pod 'CurlImpersonate', :path => 'curl_impersonate'
+  end
+
   target 'RunnerTests' do
     inherit! :search_paths
   end

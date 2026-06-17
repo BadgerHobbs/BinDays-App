@@ -1,0 +1,70 @@
+name: Validate iOS impersonate transport (simulator)
+
+# One-shot validation that the libcurl-impersonate transport works on iOS:
+# builds the simulator xcframework (from the Dio-Impersonate repo), wires it into
+# the app, and runs the on-device regression test on an iOS simulator. No
+# physical device required.
+#
+# Requires the Dio-Impersonate repo to be pushed with the native/ build scripts
+# and the iOS DynamicLibrary.process() branch.
+
+on:
+  workflow_dispatch:
+  # workflow_dispatch only works once the workflow is on the default branch, so
+  # while this lives on a feature branch, trigger on push to that branch too.
+  push:
+    branches:
+      - feature/dio-impersonate-transport
+
+jobs:
+  ios-simulator:
+    runs-on: macos-14 # Apple Silicon (arm64 simulator)
+    steps:
+      - name: Checkout app
+        uses: actions/checkout@v4
+        with:
+          path: BinDays-App
+
+      - name: Checkout Dio-Impersonate
+        uses: actions/checkout@v4
+        with:
+          repository: BadgerHobbs/Dio-Impersonate
+          ref: feature/mobile-native
+          path: Dio-Impersonate
+
+      - name: Install native build tools
+        run: brew install cmake ninja go
+
+      - name: Build iOS simulator xcframework
+        env:
+          SDKS: iphonesimulator
+        run: bash "$GITHUB_WORKSPACE/Dio-Impersonate/native/build_ios.sh"
+
+      - name: Place xcframework in app
+        run: |
+          DEST="$GITHUB_WORKSPACE/BinDays-App/bindays_app/ios/curl_impersonate/Frameworks"
+          mkdir -p "$DEST"
+          cp -R "$GITHUB_WORKSPACE/Dio-Impersonate/native/ios/CurlImpersonate.xcframework" "$DEST/"
+          ls -R "$DEST"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: flutter pub get
+        working-directory: BinDays-App/bindays_app
+        run: flutter pub get
+
+      - name: Boot iOS simulator
+        run: |
+          xcrun simctl list devices available | grep iPhone || true
+          UDID=$(xcrun simctl list devices available | grep -m1 -oE '\([0-9A-F-]{36}\)' | tr -d '()')
+          echo "Booting $UDID"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b || true
+          echo "SIM_UDID=$UDID" >> "$GITHUB_ENV"
+
+      - name: Run impersonate regression test on simulator
+        working-directory: BinDays-App/bindays_app
+        run: flutter test integration_test/transport_test.dart -d "$SIM_UDID"

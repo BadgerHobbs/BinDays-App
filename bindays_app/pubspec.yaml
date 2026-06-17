@@ -49,15 +49,22 @@ dependencies:
   url_launcher: ^6.3.1
   flutter_native_splash: ^2.4.6
   in_app_review: ^2.0.10
-  # Native HTTP stack (Cronet on Android, NSURLSession on iOS) so requests
-  # present a real browser TLS fingerprint, required for Cloudflare-gated
-  # councils (e.g. Sunderland). See lib/client/native_transport_io.dart.
-  native_dio_adapter: ^1.4.0
-  # Direct dependency for the HttpClientAdapter type used in native_transport_*.
+  # Browser TLS/JA3 + HTTP/2 impersonation via libcurl-impersonate (dart:ffi).
+  # Presents a real Chrome fingerprint (required for Cloudflare-gated councils
+  # such as Sunderland) and tolerates incomplete cert chains (e.g. West Devon)
+  # in the same transport. The SAME adapter the BinDays-API integration tests
+  # use, so the client and tests share one transport.
+  dio_impersonate:
+    git:
+      url: https://github.com/BadgerHobbs/Dio-Impersonate.git
+      ref: feature/mobile-native
+  # Direct dependency for the HttpClientAdapter / Dio types.
   dio: ^5.0.0
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
