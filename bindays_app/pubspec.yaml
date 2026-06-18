@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 2.6.1+1
+version: 2.6.2+2
 
 environment:
   sdk: ^3.7.0
@@ -31,7 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # BinDays Client API library
+  # BinDays Client API library. Bundles the libcurl-impersonate transport
+  # (browser TLS/JA3 + HTTP/2 fingerprint via dart:ffi), used by Client by
+  # default — the same transport the BinDays-API integration tests use.
   bindays_client:
     git:
       url: https://github.com/BadgerHobbs/BinDays-Client.git
@@ -49,15 +51,11 @@ dependencies:
   url_launcher: ^6.3.1
   flutter_native_splash: ^2.4.6
   in_app_review: ^2.0.10
-  # Native HTTP stack (Cronet on Android, NSURLSession on iOS) so requests
-  # present a real browser TLS fingerprint, required for Cloudflare-gated
-  # councils (e.g. Sunderland). See lib/client/native_transport_io.dart.
-  native_dio_adapter: ^1.4.0
-  # Direct dependency for the HttpClientAdapter type used in native_transport_*.
-  dio: ^5.0.0
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to

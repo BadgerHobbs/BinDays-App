@@ -1,0 +1,74 @@
+name: Validate Android impersonate transport (emulator)
+
+# Validates the libcurl-impersonate transport on Android: the app's Gradle build
+# downloads the prebuilt jniLibs bundle from the bindays_client release and bundles
+# it into the APK, then runs the on-device regression test on an x86_64 emulator.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - bindays_app/android/**
+      - bindays_app/lib/**
+      - bindays_app/pubspec.yaml
+      - bindays_app/integration_test/**
+      - .github/workflows/android-validate.yml
+
+jobs:
+  android-emulator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Hardware acceleration for the emulator.
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      # Install the NDK version the app pins (build.gradle.kts ndkVersion).
+      # sdkmanager isn't on PATH on the runner, so invoke it by full path.
+      - name: Install Android NDK
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.0.12077973"
+
+      - name: flutter pub get
+        working-directory: bindays_app
+        run: flutter pub get
+
+      # The release signing config (build.gradle.kts) reads key.properties, which
+      # is a gitignored secret absent in CI. The debug build still evaluates that
+      # block, so write throwaway values to satisfy it (release signing is never
+      # used by the debug test build).
+      - name: Write placeholder signing config
+        working-directory: bindays_app
+        run: |
+          cat > android/key.properties <<'EOF'
+          keyAlias=dummy
+          keyPassword=dummy
+          storeFile=dummy.jks
+          storePassword=dummy
+          EOF
+
+      - name: Run impersonate regression test on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          working-directory: bindays_app
+          script: flutter test integration_test/transport_test.dart -d emulator-5554

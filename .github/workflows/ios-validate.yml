@@ -1,0 +1,53 @@
+name: Validate iOS impersonate transport (simulator)
+
+# Validates the libcurl-impersonate transport on iOS: the app links the prebuilt
+# static xcframework from the bindays_client release (vendored as a local pod via
+# the Podfile) and runs the on-device regression test on an iOS simulator. No
+# physical device or local native build required.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - bindays_app/ios/**
+      - bindays_app/lib/**
+      - bindays_app/pubspec.yaml
+      - bindays_app/integration_test/**
+      - .github/workflows/ios-validate.yml
+
+jobs:
+  ios-simulator:
+    runs-on: macos-14 # Apple Silicon (arm64 simulator)
+    defaults:
+      run:
+        working-directory: bindays_app
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      # The vendored libcurl-impersonate.framework is embedded into the app by
+      # CocoaPods. Flutter's Swift Package Manager integration produces a
+      # hybrid setup where the framework is not copied into Runner.app/Frameworks,
+      # so dart:ffi can't load it. Disable SPM so the project is pure CocoaPods.
+      - name: Disable Swift Package Manager
+        run: flutter config --no-enable-swift-package-manager
+
+      - name: flutter pub get
+        run: flutter pub get
+
+      - name: Boot iOS simulator
+        run: |
+          UDID=$(xcrun simctl list devices available | grep -m1 -oE '\([0-9A-F-]{36}\)' | tr -d '()')
+          echo "Booting $UDID"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b || true
+          echo "SIM_UDID=$UDID" >> "$GITHUB_ENV"
+
+      - name: Run impersonate regression test on simulator
+        run: flutter test integration_test/transport_test.dart -d "$SIM_UDID"

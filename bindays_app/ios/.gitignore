@@ -27,6 +27,10 @@ Flutter/flutter_export_environment.sh
 ServiceDefinitions.json
 Runner/GeneratedPluginRegistrant.*
 
+# libcurl-impersonate xcframework downloaded by the Podfile at pod install time.
+curl_impersonate/libcurl-impersonate.xcframework/
+curl_impersonate/.xcframework-version
+
 # Exceptions to above rules.
 !default.mode1v3
 !default.mode2v3
