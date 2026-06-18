@@ -85,26 +85,29 @@ flutter {
 // publish-native-libs workflow. Binaries are not vendored in this repo.
 val impersonateJniLibs = file("src/main/jniLibs")
 
-// Locate the resolved bindays_client package via the Dart package config, then
-// read the native library version it pins.
-val bindaysClientDir: File = run {
+// Locate the resolved bindays_client package via the Dart package config and
+// read the native-library version it pins. Resolved optionally at configuration
+// time (returning "" if anything is missing) so `clean` and IDE Gradle syncs
+// work on a fresh checkout before `flutter pub get`; the download task fails
+// with a clear message at execution time if it's still unresolved.
+val curlImpersonateVersion: String = run {
     val pkgConfig = rootProject.file("../.dart_tool/package_config.json")
-    require(pkgConfig.exists()) {
-        "package_config.json not found; run `flutter pub get` first."
-    }
+    if (!pkgConfig.exists()) return@run ""
     @Suppress("UNCHECKED_CAST")
-    val parsed = JsonSlurper().parseText(pkgConfig.readText()) as Map<String, Any>
+    val parsed = (try {
+        JsonSlurper().parseText(pkgConfig.readText())
+    } catch (e: Exception) {
+        null
+    } as? Map<String, Any>) ?: return@run ""
     @Suppress("UNCHECKED_CAST")
-    val packages = parsed["packages"] as List<Map<String, Any>>
-    val bindaysClient = packages.firstOrNull { it["name"] == "bindays_client" }
-    requireNotNull(bindaysClient) {
-        "bindays_client not found in package_config.json; run `flutter pub get` first."
-    }
-    val rootUri = bindaysClient["rootUri"] as String
-    if (rootUri.startsWith("file:")) File(URI(rootUri))
-    else File(pkgConfig.parentFile, rootUri).canonicalFile
+    val packages = parsed["packages"] as? List<Map<String, Any>> ?: return@run ""
+    val rootUri = packages.firstOrNull { it["name"] == "bindays_client" }
+        ?.get("rootUri") as? String ?: return@run ""
+    val dir = if (rootUri.startsWith("file:")) File(URI(rootUri))
+        else File(pkgConfig.parentFile, rootUri).canonicalFile
+    val versionFile = File(dir, "native_libs.version")
+    if (versionFile.exists()) versionFile.readText().trim() else ""
 }
-val curlImpersonateVersion = File(bindaysClientDir, "native_libs.version").readText().trim()
 
 val downloadImpersonateLibs = tasks.register("downloadImpersonateLibs") {
     // Declare the version as an input so Gradle can treat the task as up-to-date
@@ -113,6 +116,12 @@ val downloadImpersonateLibs = tasks.register("downloadImpersonateLibs") {
     val marker = file("${impersonateJniLibs}/.impersonate-version")
     outputs.dir(impersonateJniLibs)
     doLast {
+        if (curlImpersonateVersion.isEmpty()) {
+            throw GradleException(
+                "Could not resolve bindays_client's native_libs.version from the Dart " +
+                "package config; run `flutter pub get` first."
+            )
+        }
         if (marker.exists() && marker.readText().trim() == curlImpersonateVersion) return@doLast
         val url =
             "https://github.com/BadgerHobbs/BinDays-Client/releases/download/" +
