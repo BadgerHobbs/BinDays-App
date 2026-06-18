@@ -27,9 +27,15 @@ native_libs.version) into this directory and vendored as a local pod.
   # An explicit -exported_symbol per symbol is used instead of the blanket
   # -export_dynamic: the latter worked in the debug simulator build but did not
   # survive Release stripping on device, leaving dlsym unable to find the
-  # symbols. The export trie is load-command metadata that strip never removes
-  # (dlsym(RTLD_DEFAULT) reads it, not the nlist symbol table), so these exports
-  # survive the host app's default STRIP_STYLE=all with no need to weaken it.
+  # symbols. STRIP_STYLE=non-global is ALSO required (not belt-and-braces):
+  # this is a main executable, not a dylib, so its exports are not needed for
+  # the binary to run and Xcode's default STRIP_STYLE=all discards them (export
+  # trie included) during the Release strip. non-global keeps global symbols
+  # through strip, so the curl_* exports remain dlsym-able. Verified on device:
+  # removing either the -exported_symbol flags or non-global breaks dlsym. It is
+  # set on the whole Runner target (CocoaPods has no per-pod way to scope it),
+  # which keeps some extra symbols app-wide -- an acceptable cost for a working
+  # transport.
   # libcurl-impersonate also depends on the system libiconv (iconv*) and
   # libicucore (uidna*, for internationalized domain names), so link those too.
   s.libraries = 'iconv', 'icucore'
@@ -48,5 +54,6 @@ native_libs.version) into this directory and vendored as a local pod.
       '-Wl,-exported_symbol,_curl_easy_impersonate ' \
       '-Wl,-exported_symbol,_curl_slist_append ' \
       '-Wl,-exported_symbol,_curl_slist_free_all',
+    'STRIP_STYLE' => 'non-global',
   }
 end
