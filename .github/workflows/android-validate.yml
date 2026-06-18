@@ -42,8 +42,9 @@ jobs:
           channel: stable
 
       # Install the NDK version the app pins (build.gradle.kts ndkVersion).
+      # sdkmanager isn't on PATH on the runner, so invoke it by full path.
       - name: Install Android NDK
-        run: yes | sdkmanager "ndk;27.0.12077973"
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.0.12077973"
 
       - name: flutter pub get
         working-directory: bindays_app
