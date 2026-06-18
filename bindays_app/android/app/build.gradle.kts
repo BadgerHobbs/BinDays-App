@@ -1,5 +1,7 @@
 import java.util.Properties
 import java.io.FileInputStream
+import java.net.URI
+import groovy.json.JsonSlurper
 
 plugins {
     id("com.android.application")
@@ -73,3 +75,61 @@ dependencies {
 flutter {
     source = "../.."
 }
+
+// libcurl-impersonate native library (the impersonate HTTP transport), bundled
+// into the APK from the prebuilt jniLibs archive published by the bindays_client
+// repo (each ABI's libcurl-impersonate.so paired with libc++_shared.so). The
+// version is the single source of truth in bindays_client's native_libs.version,
+// resolved here via the Dart package config so the app never pins it separately.
+// To update, bump native_libs.version in bindays_client and re-run its
+// publish-native-libs workflow. Binaries are not vendored in this repo.
+val impersonateJniLibs = file("src/main/jniLibs")
+
+// Locate the resolved bindays_client package via the Dart package config, then
+// read the native library version it pins.
+val bindaysClientDir: File = run {
+    val pkgConfig = rootProject.file("../.dart_tool/package_config.json")
+    require(pkgConfig.exists()) {
+        "package_config.json not found; run `flutter pub get` first."
+    }
+    @Suppress("UNCHECKED_CAST")
+    val parsed = JsonSlurper().parseText(pkgConfig.readText()) as Map<String, Any>
+    @Suppress("UNCHECKED_CAST")
+    val packages = parsed["packages"] as List<Map<String, Any>>
+    val bindaysClient = packages.firstOrNull { it["name"] == "bindays_client" }
+    requireNotNull(bindaysClient) {
+        "bindays_client not found in package_config.json; run `flutter pub get` first."
+    }
+    val rootUri = bindaysClient["rootUri"] as String
+    if (rootUri.startsWith("file:")) File(URI(rootUri))
+    else File(pkgConfig.parentFile, rootUri).canonicalFile
+}
+val curlImpersonateVersion = File(bindaysClientDir, "native_libs.version").readText().trim()
+
+val downloadImpersonateLibs = tasks.register("downloadImpersonateLibs") {
+    val marker = file("${impersonateJniLibs}/.impersonate-version")
+    outputs.dir(impersonateJniLibs)
+    doLast {
+        if (marker.exists() && marker.readText().trim() == curlImpersonateVersion) return@doLast
+        val url =
+            "https://github.com/BadgerHobbs/BinDays-Client/releases/download/" +
+            "native-v$curlImpersonateVersion/android-jniLibs-v$curlImpersonateVersion.tar.gz"
+        val tgz = File(temporaryDir, "android-jniLibs.tar.gz")
+        ant.withGroovyBuilder { "get"("src" to url, "dest" to tgz) }
+        // Remove only the files this task manages, per ABI, so native libraries
+        // contributed by other plugins are never deleted.
+        listOf("arm64-v8a", "x86_64").forEach { abi ->
+            File(impersonateJniLibs, "$abi/libcurl-impersonate.so").delete()
+            File(impersonateJniLibs, "$abi/libc++_shared.so").delete()
+        }
+        copy {
+            from(tarTree(resources.gzip(tgz)))
+            // Bundle entries are jniLibs/<abi>/<lib>; strip the leading dir.
+            eachFile { path = path.removePrefix("jniLibs/") }
+            includeEmptyDirs = false
+            into(impersonateJniLibs)
+        }
+        marker.writeText(curlImpersonateVersion)
+    }
+}
+tasks.named("preBuild") { dependsOn(downloadImpersonateLibs) }

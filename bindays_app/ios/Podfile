@@ -27,10 +27,55 @@ require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelpe
 
 flutter_ios_podfile_setup
 
+# Download the libcurl-impersonate static xcframework (the impersonate HTTP
+# transport) into curl_impersonate/ so it can be vendored as a local CocoaPods
+# pod. The version is the single source of truth in bindays_client's
+# native_libs.version, resolved here via the Dart package config. The binary is
+# downloaded (not committed) from the bindays_client GitHub release.
+def install_curl_impersonate_xcframework
+  require 'json'
+  require 'uri'
+  require 'fileutils'
+
+  pkg_config = File.expand_path(File.join(__dir__, '..', '.dart_tool', 'package_config.json'))
+  raise 'package_config.json not found; run `flutter pub get` first.' unless File.exist?(pkg_config)
+  pkg_entry = JSON.parse(File.read(pkg_config))['packages']
+    .find { |p| p['name'] == 'bindays_client' }
+  raise 'bindays_client not found in package_config.json; run `flutter pub get` first.' if pkg_entry.nil?
+  root_uri = pkg_entry['rootUri']
+  client_dir = root_uri.start_with?('file:') ? URI(root_uri).path :
+    File.expand_path(File.join(File.dirname(pkg_config), root_uri))
+  version = File.read(File.join(client_dir, 'native_libs.version')).strip
+
+  dest = File.join(__dir__, 'curl_impersonate')
+  xcframework = File.join(dest, 'libcurl-impersonate.xcframework')
+  marker = File.join(dest, '.xcframework-version')
+  return if File.directory?(xcframework) && File.exist?(marker) && File.read(marker).strip == version
+
+  FileUtils.rm_rf(xcframework)
+  url = "https://github.com/BadgerHobbs/BinDays-Client/releases/download/" \
+    "native-v#{version}/libcurl-impersonate-ios-xcframework-v#{version}.tar.gz"
+  tgz = File.join(dest, '_xcframework.tgz')
+  system("curl -fsSL '#{url}' -o '#{tgz}'") or raise "Failed to download #{url}"
+  system("tar -xzf '#{tgz}' -C '#{dest}'") or raise "Failed to extract #{tgz}"
+  FileUtils.rm_f(tgz)
+  File.write(marker, version)
+end
+install_curl_impersonate_xcframework
+
 target 'Runner' do
+  # Static linkage is required because some plugins (e.g. background_fetch's
+  # TSBackgroundFetch) vendor static xcframeworks, which dynamic linkage rejects.
   use_frameworks! :linkage => :static
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # libcurl-impersonate native library (loaded via dart:ffi). A local pod
+  # vendoring the static xcframework downloaded above; CocoaPods links it into
+  # the app executable, and the podspec's linker flags keep/export the curl_*
+  # symbols for DynamicLibrary.process().
+  pod 'CurlImpersonate', :path => 'curl_impersonate'
+
   target 'RunnerTests' do
     inherit! :search_paths
   end
