@@ -107,6 +107,9 @@ val bindaysClientDir: File = run {
 val curlImpersonateVersion = File(bindaysClientDir, "native_libs.version").readText().trim()
 
 val downloadImpersonateLibs = tasks.register("downloadImpersonateLibs") {
+    // Declare the version as an input so Gradle can treat the task as up-to-date
+    // (and skip it) when the version is unchanged and the outputs already exist.
+    inputs.property("version", curlImpersonateVersion)
     val marker = file("${impersonateJniLibs}/.impersonate-version")
     outputs.dir(impersonateJniLibs)
     doLast {

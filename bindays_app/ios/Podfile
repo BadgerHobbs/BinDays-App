@@ -43,8 +43,13 @@ def install_curl_impersonate_xcframework
     .find { |p| p['name'] == 'bindays_client' }
   raise 'bindays_client not found in package_config.json; run `flutter pub get` first.' if pkg_entry.nil?
   root_uri = pkg_entry['rootUri']
-  client_dir = root_uri.start_with?('file:') ? URI(root_uri).path :
-    File.expand_path(File.join(File.dirname(pkg_config), root_uri))
+  # rootUri is a percent-encoded URI; decode so paths with spaces resolve.
+  client_dir = if root_uri.start_with?('file:')
+    URI.decode_www_form_component(URI(root_uri).path)
+  else
+    File.expand_path(File.join(File.dirname(pkg_config),
+      URI.decode_www_form_component(root_uri)))
+  end
   version = File.read(File.join(client_dir, 'native_libs.version')).strip
 
   dest = File.join(__dir__, 'curl_impersonate')
