@@ -39,8 +39,10 @@ def install_curl_impersonate_xcframework
 
   pkg_config = File.expand_path(File.join(__dir__, '..', '.dart_tool', 'package_config.json'))
   raise 'package_config.json not found; run `flutter pub get` first.' unless File.exist?(pkg_config)
-  root_uri = JSON.parse(File.read(pkg_config))['packages']
-    .find { |p| p['name'] == 'bindays_client' }['rootUri']
+  pkg_entry = JSON.parse(File.read(pkg_config))['packages']
+    .find { |p| p['name'] == 'bindays_client' }
+  raise 'bindays_client not found in package_config.json; run `flutter pub get` first.' if pkg_entry.nil?
+  root_uri = pkg_entry['rootUri']
   client_dir = root_uri.start_with?('file:') ? URI(root_uri).path :
     File.expand_path(File.join(File.dirname(pkg_config), root_uri))
   version = File.read(File.join(client_dir, 'native_libs.version')).strip

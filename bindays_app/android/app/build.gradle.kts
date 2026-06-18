@@ -96,7 +96,11 @@ val bindaysClientDir: File = run {
     val parsed = JsonSlurper().parseText(pkgConfig.readText()) as Map<String, Any>
     @Suppress("UNCHECKED_CAST")
     val packages = parsed["packages"] as List<Map<String, Any>>
-    val rootUri = packages.first { it["name"] == "bindays_client" }["rootUri"] as String
+    val bindaysClient = packages.firstOrNull { it["name"] == "bindays_client" }
+    requireNotNull(bindaysClient) {
+        "bindays_client not found in package_config.json; run `flutter pub get` first."
+    }
+    val rootUri = bindaysClient["rootUri"] as String
     if (rootUri.startsWith("file:")) File(URI(rootUri))
     else File(pkgConfig.parentFile, rootUri).canonicalFile
 }
@@ -112,8 +116,12 @@ val downloadImpersonateLibs = tasks.register("downloadImpersonateLibs") {
             "native-v$curlImpersonateVersion/android-jniLibs-v$curlImpersonateVersion.tar.gz"
         val tgz = File(temporaryDir, "android-jniLibs.tar.gz")
         ant.withGroovyBuilder { "get"("src" to url, "dest" to tgz) }
-        // Replace any previous ABI dirs with the freshly downloaded bundle.
-        impersonateJniLibs.listFiles()?.filter { it.isDirectory }?.forEach { it.deleteRecursively() }
+        // Remove only the files this task manages, per ABI, so native libraries
+        // contributed by other plugins are never deleted.
+        listOf("arm64-v8a", "x86_64").forEach { abi ->
+            File(impersonateJniLibs, "$abi/libcurl-impersonate.so").delete()
+            File(impersonateJniLibs, "$abi/libc++_shared.so").delete()
+        }
         copy {
             from(tarTree(resources.gzip(tgz)))
             // Bundle entries are jniLibs/<abi>/<lib>; strip the leading dir.
