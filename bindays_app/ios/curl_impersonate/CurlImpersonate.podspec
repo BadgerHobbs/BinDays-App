@@ -27,8 +27,9 @@ native_libs.version) into this directory and vendored as a local pod.
   # An explicit -exported_symbol per symbol is used instead of the blanket
   # -export_dynamic: the latter worked in the debug simulator build but did not
   # survive Release stripping on device, leaving dlsym unable to find the
-  # symbols. Required exports are preserved by strip; STRIP_STYLE=non-global is
-  # belt-and-braces (it strips only local symbols, never globals like curl_*).
+  # symbols. The export trie is load-command metadata that strip never removes
+  # (dlsym(RTLD_DEFAULT) reads it, not the nlist symbol table), so these exports
+  # survive the host app's default STRIP_STYLE=all with no need to weaken it.
   # libcurl-impersonate also depends on the system libiconv (iconv*) and
   # libicucore (uidna*, for internationalized domain names), so link those too.
   s.libraries = 'iconv', 'icucore'
@@ -47,6 +48,5 @@ native_libs.version) into this directory and vendored as a local pod.
       '-Wl,-exported_symbol,_curl_easy_impersonate ' \
       '-Wl,-exported_symbol,_curl_slist_append ' \
       '-Wl,-exported_symbol,_curl_slist_free_all',
-    'STRIP_STYLE' => 'non-global',
   }
 end
