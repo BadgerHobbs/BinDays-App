@@ -61,8 +61,10 @@ def install_curl_impersonate_xcframework
   url = "https://github.com/BadgerHobbs/BinDays-Client/releases/download/" \
     "native-v#{version}/libcurl-impersonate-ios-xcframework-v#{version}.tar.gz"
   tgz = File.join(dest, '_xcframework.tgz')
-  system("curl -fsSL '#{url}' -o '#{tgz}'") or raise "Failed to download #{url}"
-  system("tar -xzf '#{tgz}' -C '#{dest}'") or raise "Failed to extract #{tgz}"
+  # Array-form system() runs the binaries directly (no shell), so paths/URLs are
+  # never word-split or interpreted by a shell.
+  system('curl', '-fsSL', url, '-o', tgz) or raise "Failed to download #{url}"
+  system('tar', '-xzf', tgz, '-C', dest) or raise "Failed to extract #{tgz}"
   FileUtils.rm_f(tgz)
   File.write(marker, version)
 end
