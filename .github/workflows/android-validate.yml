@@ -50,6 +50,20 @@ jobs:
         working-directory: bindays_app
         run: flutter pub get
 
+      # The release signing config (build.gradle.kts) reads key.properties, which
+      # is a gitignored secret absent in CI. The debug build still evaluates that
+      # block, so write throwaway values to satisfy it (release signing is never
+      # used by the debug test build).
+      - name: Write placeholder signing config
+        working-directory: bindays_app
+        run: |
+          cat > android/key.properties <<'EOF'
+          keyAlias=dummy
+          keyPassword=dummy
+          storeFile=dummy.jks
+          storePassword=dummy
+          EOF
+
       - name: Run impersonate regression test on emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
