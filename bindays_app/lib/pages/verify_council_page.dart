@@ -72,7 +72,7 @@ class VerifyCouncilPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             PrimaryButton(
-              text: "Yes, it's working fine",
+              text: "Council website is correct",
               onPressed: () => navigateToReportIssuePage(
                 context,
                 issueType: issueType,
@@ -81,7 +81,7 @@ class VerifyCouncilPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             SecondaryButton(
-              text: "No, there's a problem",
+              text: "Council website has a problem",
               onPressed: () => navigateToReportIssuePage(
                 context,
                 issueType: issueType,

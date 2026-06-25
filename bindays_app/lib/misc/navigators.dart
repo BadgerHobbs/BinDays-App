@@ -17,6 +17,7 @@ import 'package:bindays_app/pages/setup/collectors/finding_collector_page.dart';
 import 'package:bindays_app/pages/setup/collectors/request_council_page.dart';
 import 'package:bindays_app/pages/setup/collectors/select_collector_page.dart';
 import 'package:bindays_app/pages/setup/enter_postcode_page.dart';
+import 'package:bindays_app/pages/bins_not_collected_page.dart';
 import 'package:bindays_app/pages/setup/how_it_works_page.dart';
 import 'package:bindays_app/pages/settings_page.dart';
 import 'package:bindays_app/pages/notifications_page.dart';
@@ -143,6 +144,11 @@ void navigateToNotificationsPage(BuildContext context) {
 /// Navigate to TroubleshootingPage.
 void navigateToTroubleshootingPage(BuildContext context) {
   _navigateToPage(context, const TroubleshootingPage());
+}
+
+/// Navigate to BinsNotCollectedPage.
+void navigateToBinsNotCollectedPage(BuildContext context) {
+  _navigateToPage(context, const BinsNotCollectedPage());
 }
 
 /// Navigate to VerifyCouncilPage.

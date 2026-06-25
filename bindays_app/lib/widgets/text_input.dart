@@ -5,25 +5,36 @@ class TextInput extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final ValueChanged<String>? onSubmitted;
+  final ValueChanged<String>? onChanged;
   final TextInputType keyboardType;
   final TextCapitalization textCapitalization;
+  final TextAlign textAlign;
+  final int? maxLines;
+  final int? minLines;
 
   const TextInput({
     super.key,
     required this.controller,
     required this.hintText,
     this.onSubmitted,
+    this.onChanged,
     // Defaults match the postcode field, but can be overridden if necessary
     this.keyboardType = TextInputType.text,
     this.textCapitalization = TextCapitalization.characters,
+    this.textAlign = TextAlign.center,
+    // Resolved in build(): defaults to single-line, unless minLines is set.
+    this.maxLines,
+    this.minLines,
   });
 
   @override
   Widget build(BuildContext context) {
     const borderRadiusValue = 10.0;
-    const contentPadding = EdgeInsets.symmetric(vertical: 15.0);
+    const contentPadding = EdgeInsets.symmetric(
+      vertical: 15.0,
+      horizontal: 15.0,
+    );
     const textStyle = TextStyle(fontSize: 18);
-    const textAlign = TextAlign.center;
 
     final borderRadius = BorderRadius.circular(borderRadiusValue);
     final borderSide = BorderSide(
@@ -40,6 +51,8 @@ class TextInput extends StatelessWidget {
       keyboardType: keyboardType,
       textCapitalization: textCapitalization,
       textAlign: textAlign,
+      maxLines: maxLines ?? (minLines != null ? null : 1),
+      minLines: minLines,
       style: textStyle,
       decoration: InputDecoration(
         hintText: hintText,
@@ -48,6 +61,7 @@ class TextInput extends StatelessWidget {
         enabledBorder: outlineInputBorder,
         focusedBorder: outlineInputBorder,
       ),
+      onChanged: onChanged,
       onSubmitted: onSubmitted,
     );
   }

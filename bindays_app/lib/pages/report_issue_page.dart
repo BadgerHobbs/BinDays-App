@@ -9,8 +9,9 @@ import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
 import 'package:bindays_app/widgets/secondary_button.dart';
+import 'package:bindays_app/widgets/text_input.dart';
 
-class ReportIssuePage extends StatelessWidget {
+class ReportIssuePage extends StatefulWidget {
   final IssueType issueType;
   final bool? councilWebsiteWorking;
 
@@ -20,7 +21,20 @@ class ReportIssuePage extends StatelessWidget {
     required this.councilWebsiteWorking,
   });
 
-  String _getEmailUrl(BuildContext context) {
+  @override
+  State<ReportIssuePage> createState() => _ReportIssuePageState();
+}
+
+class _ReportIssuePageState extends State<ReportIssuePage> {
+  final TextEditingController _descriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  String _getEmailUrl(BuildContext context, String description) {
     var subject = "BinDays Issue Report";
     final platform = Theme.of(context).platform;
     if (platform == TargetPlatform.iOS) {
@@ -28,8 +42,8 @@ class ReportIssuePage extends StatelessWidget {
     } else if (platform == TargetPlatform.android) {
       subject += " (Android)";
     }
-    final issue = issueType.displayName;
-    final councilStatus = switch (councilWebsiteWorking) {
+    final issue = widget.issueType.displayName;
+    final councilStatus = switch (widget.councilWebsiteWorking) {
       true => 'Working',
       false => 'Has an issue',
       null => 'N/A',
@@ -38,7 +52,7 @@ class ReportIssuePage extends StatelessWidget {
     final address =
         globalStateNotifier.address?.toFormattedString() ?? "Not set";
     final body =
-        "[Please describe your issue here]\n\n---\n\nIssue: $issue\nCouncil website: $councilStatus\nCollector: $collector\nAddress: $address";
+        "${description.trim()}\n\n---\n\nIssue: $issue\nCouncil website: $councilStatus\nCollector: $collector\nAddress: $address";
     return "mailto:contact@bindays.app?subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}";
   }
 
@@ -73,7 +87,7 @@ class ReportIssuePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Thanks for confirming. Please include as much of the following as you can to help us look into it quickly.",
+                      "Thanks for confirming. Please describe your issue below, including as much of the following as you can to help us look into it quickly.",
                       style: TextStyle(
                         fontSize:
                             Theme.of(context).textTheme.bodyLarge!.fontSize,
@@ -121,6 +135,17 @@ class ReportIssuePage extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 8),
+                    TextInput(
+                      controller: _descriptionController,
+                      hintText: "Describe your issue...",
+                      keyboardType: TextInputType.multiline,
+                      textCapitalization: TextCapitalization.sentences,
+                      textAlign: TextAlign.start,
+                      minLines: 4,
+                      maxLines: 8,
+                      onChanged: (_) => setState(() {}),
+                    ),
                   ],
                 ),
               ),
@@ -128,7 +153,11 @@ class ReportIssuePage extends StatelessWidget {
             const SizedBox(height: 16),
             PrimaryButton(
               text: "Send an Email",
-              onPressed: () => _launchUrl(context, _getEmailUrl(context)),
+              enabled: _descriptionController.text.trim().isNotEmpty,
+              onPressed: () => _launchUrl(
+                context,
+                _getEmailUrl(context, _descriptionController.text),
+              ),
             ),
             const SizedBox(height: 10),
             SecondaryButton(
