@@ -22,7 +22,8 @@ class TextInput extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.textCapitalization = TextCapitalization.characters,
     this.textAlign = TextAlign.center,
-    this.maxLines = 1,
+    // Resolved in build(): defaults to single-line, unless minLines is set.
+    this.maxLines,
     this.minLines,
   });
 
@@ -50,7 +51,7 @@ class TextInput extends StatelessWidget {
       keyboardType: keyboardType,
       textCapitalization: textCapitalization,
       textAlign: textAlign,
-      maxLines: maxLines,
+      maxLines: maxLines ?? (minLines != null ? null : 1),
       minLines: minLines,
       style: textStyle,
       decoration: InputDecoration(

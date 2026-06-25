@@ -15,7 +15,7 @@ class BinsNotCollectedPage extends StatelessWidget {
     final websiteUrl = collector?.websiteUrl;
 
     final bodyStyle = TextStyle(
-      fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+      fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
       color: Theme.of(context).colorScheme.onSurfaceVariant,
     );
 
@@ -46,7 +46,7 @@ class BinsNotCollectedPage extends StatelessWidget {
                   child: UrlLink(
                     text: "Visit ${collector?.name ?? 'council'} website",
                     url: websiteUrl.toString(),
-                    fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                    fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
                   ),
                 ),
               ],
