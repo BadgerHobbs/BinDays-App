@@ -55,6 +55,14 @@ class TroubleshootingPage extends StatelessWidget {
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
+              title: const Text("Bins weren't collected"),
+              subtitle: const Text(
+                'Your council did not collect your bins.',
+              ),
+              onTap: () => navigateToBinsNotCollectedPage(context),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
               title: const Text('Something else'),
               subtitle: const Text("My problem isn't listed here."),
               onTap: () => navigateToReportIssuePage(
