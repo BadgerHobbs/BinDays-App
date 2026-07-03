@@ -133,6 +133,18 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
+              title: const Text('Leave a Tip'),
+              subtitle: const Text(
+                'Enjoying the app? Leave a tip if you\'d like to support development.',
+              ),
+              onTap:
+                  () => launchUrlString(
+                    "https://www.buymeacoffee.com/badgerhobbs",
+                    mode: LaunchMode.externalApplication,
+                  ),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
               title: const Text('Rate This App'),
               subtitle: const Text(
                 'Enjoying the app? Take a moment to rate it on the store.',
