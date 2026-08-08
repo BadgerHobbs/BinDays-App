@@ -89,6 +89,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 'Show bin type icons instead of the default icon.',
               ),
             ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: globalStateNotifier.groupByBin,
+              onChanged: (val) => globalStateNotifier.setGroupByBin(val),
+              title: const Text('Group by Bin'),
+              subtitle: const Text(
+                'Show each bin\'s next collection date, when only one date '
+                'per bin is shown.',
+              ),
+            ),
             const SizedBox(height: 20),
             Text('Source Code', style: Theme.of(context).textTheme.titleMedium),
             ListTile(

@@ -22,6 +22,7 @@ class SharedPreferencesManager {
   static const _isDarkModeKey = 'cachedIsDarkMode';
   static const _requestReviewAfterKey = 'requestReviewAfter';
   static const _showBinTypeIconsKey = 'showBinTypeIcons';
+  static const _groupByBinKey = 'groupByBin';
 
   static Future<void> loadSharedPreferences() async {
     if (_sharedPreferences != null) return;
@@ -197,5 +198,15 @@ class SharedPreferencesManager {
   /// Set show bin type icons in shared preferences.
   static Future<void> setShowBinTypeIcons(bool showBinTypeIcons) async {
     await _sharedPreferences?.setBool(_showBinTypeIconsKey, showBinTypeIcons);
+  }
+
+  /// Get group by bin from shared preferences.
+  static bool getGroupByBin() {
+    return _sharedPreferences?.getBool(_groupByBinKey) ?? false;
+  }
+
+  /// Set group by bin in shared preferences.
+  static Future<void> setGroupByBin(bool groupByBin) async {
+    await _sharedPreferences?.setBool(_groupByBinKey, groupByBin);
   }
 }

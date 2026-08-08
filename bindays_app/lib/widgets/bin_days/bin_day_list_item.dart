@@ -3,16 +3,13 @@ import 'package:bindays_client/models/bin.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
+import 'package:bindays_app/extensions/bin_extension.dart';
 import 'package:bindays_app/widgets/bin_days/bin_icon.dart';
 
 class BinDayListItem extends StatelessWidget {
   final Bin bin;
 
   const BinDayListItem({super.key, required this.bin});
-
-  String _getBinType() {
-    return "${bin.colour.trim()} ${bin.type ?? "Bin".trim()}";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +25,7 @@ class BinDayListItem extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        _getBinType(),
+        bin.toTypeString(),
         style: TextStyle(
           fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
           color: Theme.of(context).colorScheme.onSurfaceVariant,

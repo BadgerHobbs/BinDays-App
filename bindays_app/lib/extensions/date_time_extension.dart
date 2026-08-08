@@ -6,6 +6,10 @@ extension DateTimeExtension on DateTime {
     return "${DateFormat(DateFormat.WEEKDAY).format(this)}, $day ${DateFormat(DateFormat.MONTH).format(this)}";
   }
 
+  String toShortDateString() {
+    return "${DateFormat(DateFormat.ABBR_WEEKDAY).format(this)}, $day ${DateFormat(DateFormat.ABBR_MONTH).format(this)}";
+  }
+
   String daysUntilString() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
