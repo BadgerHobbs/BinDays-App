@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 // Internal Imports
+import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/widgets/bin_days/bin_day_groups.dart';
 import 'package:bindays_app/widgets/bin_days/bin_day_header.dart';
+import 'package:bindays_app/widgets/bin_days/bin_groups.dart';
 
 class BinDaysFound extends StatelessWidget {
   final List<BinDay> _binDays;
@@ -27,7 +29,9 @@ class BinDaysFound extends StatelessWidget {
         children: [
           BinDayHeader(binDay: _binDays.first),
           const SizedBox(height: 25),
-          BinDayGroups(binDays: _binDays),
+          globalStateNotifier.groupByBin
+              ? BinGroups(binDays: _binDays)
+              : BinDayGroups(binDays: _binDays),
           const SizedBox(height: 25),
           Text(
             "Refreshed on ${DateFormat("dd/MM/yyyy").format(_lastRefresh)} at ${DateFormat("HH:mm").format(_lastRefresh)}",

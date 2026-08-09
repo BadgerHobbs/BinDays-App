@@ -19,6 +19,7 @@ class GlobalStateNotifier extends ChangeNotifier {
   DateTime? _lastRefresh;
   bool? _darkMode;
   bool? _showBinTypeIcons;
+  bool? _groupByBin;
 
   /// Reload all state from shared preferences.
   void reload() {
@@ -29,6 +30,7 @@ class GlobalStateNotifier extends ChangeNotifier {
     _reloadLastRefresh();
     _reloadDarkMode();
     _reloadShowBinTypeIcons();
+    _reloadGroupByBin();
   }
 
   /// Notify listeners and reschedule notifications.
@@ -149,6 +151,22 @@ class GlobalStateNotifier extends ChangeNotifier {
   Future<void> setShowBinTypeIcons(bool showBinTypeIcons) async {
     _showBinTypeIcons = showBinTypeIcons;
     await SharedPreferencesManager.setShowBinTypeIcons(showBinTypeIcons);
+    notifyListeners();
+  }
+
+  /// Get current group by bin.
+  bool get groupByBin => _groupByBin ?? false;
+
+  /// Reload group by bin from shared preferences.
+  void _reloadGroupByBin() {
+    _groupByBin = SharedPreferencesManager.getGroupByBin();
+    notifyListeners();
+  }
+
+  /// Set group by bin in shared preferences.
+  Future<void> setGroupByBin(bool groupByBin) async {
+    _groupByBin = groupByBin;
+    await SharedPreferencesManager.setGroupByBin(groupByBin);
     notifyListeners();
   }
 }
