@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Internal Imports
 import 'package:bindays_app/misc/issue_type.dart';
 import 'package:bindays_app/pages/bin_days_page.dart';
+import 'package:bindays_app/pages/collector_no_longer_supported_page.dart';
 import 'package:bindays_app/pages/collector_outdated_page.dart';
 import 'package:bindays_app/pages/report_issue_page.dart';
 import 'package:bindays_app/pages/troubleshooting_page.dart';
@@ -122,6 +123,18 @@ void navigateToCollectorOutdatedPage(
   _navigateToPage(
     context,
     const CollectorOutdatedPage(),
+    pushReplacement: pushReplacement,
+  );
+}
+
+/// Navigates to the CollectorNoLongerSupportedPage.
+void navigateToCollectorNoLongerSupportedPage(
+  BuildContext context, {
+  bool pushReplacement = false,
+}) {
+  _navigateToPage(
+    context,
+    const CollectorNoLongerSupportedPage(),
     pushReplacement: pushReplacement,
   );
 }

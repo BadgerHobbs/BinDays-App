@@ -11,7 +11,7 @@ native_libs.version) into this directory and vendored as a local pod.
   s.homepage         = 'https://github.com/BadgerHobbs/BinDays-Client'
   s.license          = { :type => 'MIT' }
   s.author           = 'lexiforest'
-  s.platform         = :ios, '13.0'
+  s.platform         = :ios, '15.0'
   # Not used (consumed as a local :path pod); required by the spec format.
   s.source           = { :git => 'https://github.com/BadgerHobbs/BinDays-Client.git' }
   s.vendored_frameworks = 'libcurl-impersonate.xcframework'
