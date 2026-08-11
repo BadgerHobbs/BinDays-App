@@ -1,10 +1,10 @@
 [
     {
         "language": "en-GB",
-        "text": "You can now group your collections by bin from the Settings page, showing each bin alongside its next collection date."
+        "text": "Added a clearer message when a council's bin day lookups become unavailable due to website changes on their end, plus an iOS minimum version update to meet Apple's upcoming App Store requirements."
     },
     {
         "language": "en-US",
-        "text": "You can now group your collections by bin from the Settings page, showing each bin alongside its next collection date."
+        "text": "Added a clearer message when a council's bin day lookups become unavailable due to website changes on their end, plus an iOS minimum version update to meet Apple's upcoming App Store requirements."
     }
 ]
