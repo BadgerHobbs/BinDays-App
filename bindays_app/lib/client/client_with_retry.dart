@@ -5,6 +5,7 @@ import 'package:bindays_client/models/bin_day.dart';
 import 'package:bindays_client/models/collector.dart';
 
 // Internal Imports
+import 'package:bindays_app/misc/collector_unsupported_error.dart';
 import 'package:bindays_app/misc/collector_version_error.dart';
 
 /// [ClientWithRetry] wraps the [Client] class methods providing additional retry mechanism on failure.
@@ -19,9 +20,13 @@ class ClientWithRetry {
       try {
         return await function.call();
       } catch (e) {
-        // A 410 means the collector version is permanently out of date —
-        // retrying will always fail until the user re-selects their address.
-        if (isCollectorVersionOutdated(e) || i == retryCount) {
+        // A 410 means the collector version is permanently out of date, and
+        // a "no longer supported" 404 means the collector has been removed
+        // entirely — both are deterministic failures, so retrying is futile
+        // until the user re-selects their address or the collector returns.
+        if (isCollectorVersionOutdated(e) ||
+            isCollectorNoLongerSupported(e) ||
+            i == retryCount) {
           rethrow;
         }
       }

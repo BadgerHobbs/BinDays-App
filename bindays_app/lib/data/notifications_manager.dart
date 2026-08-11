@@ -23,6 +23,11 @@ class NotificationsManager {
   /// fetches replace the existing notification rather than stacking new ones.
   static const int _collectorUpdateNotificationId = 0;
 
+  /// Fixed ID for the collector-no-longer-supported notification so repeated
+  /// background fetches replace the existing notification rather than
+  /// stacking new ones.
+  static const int _collectorNoLongerSupportedNotificationId = 1;
+
   /// Token for the currently active scheduling operation. Cancelled when
   /// a new scheduling call supersedes it.
   static CancellationToken? _activeCancellationToken;
@@ -237,6 +242,20 @@ class NotificationsManager {
       _collectorUpdateNotificationId,
       'Council Website Changed',
       'Your council has changed their website and your saved address is no longer compatible. Open BinDays to re-select your address and continue receiving bin collections.',
+      notificationDetails,
+    );
+  }
+
+  /// Shows an immediate notification informing the user that their council
+  /// is no longer supported because the collector has been removed.
+  ///
+  /// Uses a fixed notification ID so repeated background fetches replace the
+  /// existing notification rather than creating duplicates.
+  static Future<void> showCollectorNoLongerSupportedNotification() async {
+    await flutterLocalNotificationsPlugin.show(
+      _collectorNoLongerSupportedNotificationId,
+      'Council No Longer Supported',
+      'Your council has changed their website and automatic bin day lookups are currently unavailable. Open BinDays for more details.',
       notificationDetails,
     );
   }

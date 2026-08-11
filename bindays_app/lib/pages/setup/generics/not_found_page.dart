@@ -10,6 +10,11 @@ class NotFoundPage extends StatelessWidget {
   final String message;
   final Widget button;
   final Widget? extraButton;
+  final bool showTroubleshootingLink;
+
+  /// Widget shown above [button] in place of the troubleshooting link, e.g.
+  /// a feedback link. When set, [showTroubleshootingLink] is ignored.
+  final Widget? topLink;
 
   const NotFoundPage({
     super.key,
@@ -17,6 +22,8 @@ class NotFoundPage extends StatelessWidget {
     required this.message,
     required this.button,
     this.extraButton,
+    this.showTroubleshootingLink = true,
+    this.topLink,
   });
 
   @override
@@ -57,20 +64,25 @@ class NotFoundPage extends StatelessWidget {
             const Spacer(flex: 1),
             Column(
               children: [
-                GestureDetector(
-                  onTap: () => navigateToTroubleshootingPage(context),
-                  child: Text(
-                    "Having trouble? Visit our Troubleshooting page.",
-                    style: TextStyle(
-                      fontSize:
-                          Theme.of(context).textTheme.bodyMedium!.fontSize,
-                      decoration: TextDecoration.underline,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                if (topLink != null) ...[
+                  topLink!,
+                  const SizedBox(height: 10),
+                ] else if (showTroubleshootingLink) ...[
+                  GestureDetector(
+                    onTap: () => navigateToTroubleshootingPage(context),
+                    child: Text(
+                      "Having trouble? Visit our Troubleshooting page.",
+                      style: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium!.fontSize,
+                        decoration: TextDecoration.underline,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                ),
-                const SizedBox(height: 10),
+                  const SizedBox(height: 10),
+                ],
                 button,
                 if (extraButton != null) ...[
                   const SizedBox(height: 10),

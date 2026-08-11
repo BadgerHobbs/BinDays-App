@@ -8,6 +8,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:bindays_app/client/bindays_client.dart';
 import 'package:bindays_app/data/notifications_manager.dart';
 import 'package:bindays_app/data/shared_preferences_manager.dart';
+import 'package:bindays_app/misc/collector_unsupported_error.dart';
 import 'package:bindays_app/misc/collector_version_error.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 
@@ -78,13 +79,16 @@ class BackgroundTaskManager {
       globalStateNotifier.setBinDays(binDays);
       globalStateNotifier.setLastRefresh(DateTime.now());
     } catch (e) {
+      // init() is called here because in headless mode the notification
+      // plugin may not have been initialised by the normal app startup path.
+      // requestPermissions: false avoids triggering a permission dialog from
+      // a background context.
       if (isCollectorVersionOutdated(e)) {
-        // init() is called here because in headless mode the notification
-        // plugin may not have been initialised by the normal app startup path.
-        // requestPermissions: false avoids triggering a permission dialog from
-        // a background context.
         await NotificationsManager.init(requestPermissions: false);
         await NotificationsManager.showCollectorUpdateNotification();
+      } else if (isCollectorNoLongerSupported(e)) {
+        await NotificationsManager.init(requestPermissions: false);
+        await NotificationsManager.showCollectorNoLongerSupportedNotification();
       } else {
         rethrow;
       }

@@ -5,6 +5,7 @@ import 'package:in_app_review/in_app_review.dart';
 // Internal Imports
 import 'package:bindays_app/client/bindays_client.dart';
 import 'package:bindays_app/data/shared_preferences_manager.dart';
+import 'package:bindays_app/misc/collector_unsupported_error.dart';
 import 'package:bindays_app/misc/collector_version_error.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/misc/navigators.dart';
@@ -81,6 +82,8 @@ class _BinDaysPageState extends State<BinDaysPage> {
     } catch (e) {
       if (isCollectorVersionOutdated(e) && mounted) {
         navigateToCollectorOutdatedPage(context);
+      } else if (isCollectorNoLongerSupported(e) && mounted) {
+        navigateToCollectorNoLongerSupportedPage(context);
       } else {
         rethrow;
       }
