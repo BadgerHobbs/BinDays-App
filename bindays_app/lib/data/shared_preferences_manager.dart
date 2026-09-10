@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:bindays_client/models/address.dart';
 import 'package:bindays_client/models/bin_day.dart';
 import 'package:bindays_client/models/collector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Internal Imports
 import 'package:bindays_app/data/models/bin_collection_notification.dart';
+import 'package:bindays_app/data/models/saved_location.dart';
 import 'package:bindays_app/client/bindays_client.dart';
 import 'package:bindays_app/misc/migrate_legacy.dart';
 
@@ -17,6 +19,8 @@ class SharedPreferencesManager {
   static const _collectorKey = 'cachedCollector';
   static const _addressKey = 'cachedAddress';
   static const _binDaysKey = 'cachedBinDays';
+  static const _locationsKey = 'cachedLocations';
+  static const _selectedLocationIdKey = 'cachedSelectedLocationId';
   static const _notificationsKey = 'cachedNotifications';
   static const _lastRefreshKey = 'cachedLastRefresh';
   static const _isDarkModeKey = 'cachedIsDarkMode';
@@ -34,6 +38,13 @@ class SharedPreferencesManager {
     try {
       await _migrateLegacyData();
     } finally {}
+  }
+
+  /// Clears the cached [SharedPreferences] instance so the next
+  /// [loadSharedPreferences] call re-reads (and re-migrates) the store.
+  @visibleForTesting
+  static void resetForTesting() {
+    _sharedPreferences = null;
   }
 
   /// Migrate data from legacy 1.x version
@@ -64,6 +75,25 @@ class SharedPreferencesManager {
         final collector = await binDaysClient.getCollector(address.postcode!);
         await setCollector(collector);
         await setAddress(address);
+      }
+    }
+
+    // Migrate the single-address (2.x) data into the multi-address locations
+    // list. Only wrap when both a collector and address are present so a
+    // partially-migrated 1.x install (e.g. an offline collector lookup) does
+    // not create a broken location.
+    if (getSharedPreferenceJson(_locationsKey) == null) {
+      final collector = getCollector();
+      final address = getAddress();
+      if (collector != null && address != null) {
+        final location = SavedLocation(
+          collector: collector,
+          address: address,
+          binDays: getBinDays(),
+          lastRefresh: getLastRefresh(),
+        );
+        await setLocations([location]);
+        await setSelectedLocationId(location.id);
       }
     }
   }
@@ -122,6 +152,37 @@ class SharedPreferencesManager {
   static Future<void> setBinDays(List<BinDay> binDays) async {
     final binDaysJson = binDays.map((binDay) => binDay.toJson()).toList();
     await setSharedPreferenceJson(_binDaysKey, jsonEncode(binDaysJson));
+  }
+
+  /// Get saved locations from shared preferences json.
+  static List<SavedLocation>? getLocations() {
+    final locationsJson = getSharedPreferenceJson(_locationsKey);
+    if (locationsJson == null) return null;
+
+    return (locationsJson as List)
+        .map((locationJson) => SavedLocation.fromJson(locationJson))
+        .toList();
+  }
+
+  /// Set saved locations shared preferences json.
+  static Future<void> setLocations(List<SavedLocation> locations) async {
+    final locationsJson =
+        locations.map((location) => location.toJson()).toList();
+    await setSharedPreferenceJson(_locationsKey, jsonEncode(locationsJson));
+  }
+
+  /// Get the selected location id from shared preferences.
+  static String? getSelectedLocationId() {
+    return _sharedPreferences?.getString(_selectedLocationIdKey);
+  }
+
+  /// Set the selected location id in shared preferences.
+  static Future<void> setSelectedLocationId(String? id) async {
+    if (id == null) {
+      await _sharedPreferences?.remove(_selectedLocationIdKey);
+    } else {
+      await _sharedPreferences?.setString(_selectedLocationIdKey, id);
+    }
   }
 
   /// Get notifications from shared preferences json.

@@ -3,6 +3,7 @@ import 'package:bindays_client/models/address.dart';
 import 'package:flutter/material.dart';
 
 // Internal Imports
+import 'package:bindays_app/data/models/saved_location.dart';
 import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
@@ -32,10 +33,28 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
   }
 
   void _onConfirmSelection() {
-    // Update global state with the user selected details from setup
-    globalStateNotifier.setBinDays([]);
-    globalStateNotifier.setCollector(setupState.collector!);
-    globalStateNotifier.setAddress(selectedAddress!);
+    final editingLocationId = setupState.editingLocationId;
+
+    if (editingLocationId == null) {
+      // Add a new location (first-run setup or "add another address").
+      globalStateNotifier.addLocation(
+        SavedLocation(
+          collector: setupState.collector!,
+          address: selectedAddress!,
+          binDays: [],
+        ),
+      );
+    } else {
+      // Update an existing location in place (re-select / change address).
+      globalStateNotifier.updateLocation(
+        editingLocationId,
+        collector: setupState.collector!,
+        address: selectedAddress!,
+      );
+    }
+
+    // Clear setup state so a subsequent add does not reuse a stale edit id.
+    setupState.reset();
 
     navigateToBinDaysPage(context);
   }

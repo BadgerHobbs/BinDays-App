@@ -79,9 +79,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final setupRequired =
-        globalStateNotifier.collector == null &&
-        globalStateNotifier.address == null;
+    final setupRequired = globalStateNotifier.locations.isEmpty;
 
     return MaterialApp(
       navigatorKey: _navigatorKey,

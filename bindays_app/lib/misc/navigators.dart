@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 // Internal Imports
 import 'package:bindays_app/misc/issue_type.dart';
 import 'package:bindays_app/pages/bin_days_page.dart';
-import 'package:bindays_app/pages/collector_no_longer_supported_page.dart';
-import 'package:bindays_app/pages/collector_outdated_page.dart';
 import 'package:bindays_app/pages/report_issue_page.dart';
 import 'package:bindays_app/pages/troubleshooting_page.dart';
 import 'package:bindays_app/pages/setup/addresses/addresses_not_found_page.dart';
@@ -21,6 +19,7 @@ import 'package:bindays_app/pages/setup/enter_postcode_page.dart';
 import 'package:bindays_app/pages/bins_not_collected_page.dart';
 import 'package:bindays_app/pages/setup/how_it_works_page.dart';
 import 'package:bindays_app/pages/settings_page.dart';
+import 'package:bindays_app/pages/manage_addresses_page.dart';
 import 'package:bindays_app/pages/notifications_page.dart';
 import 'package:bindays_app/pages/verify_council_page.dart';
 
@@ -115,33 +114,13 @@ void navigateToAddressNotFoundPage(
   );
 }
 
-/// Navigates to the CollectorOutdatedPage.
-void navigateToCollectorOutdatedPage(
-  BuildContext context, {
-  bool pushReplacement = false,
-}) {
-  _navigateToPage(
-    context,
-    const CollectorOutdatedPage(),
-    pushReplacement: pushReplacement,
-  );
-}
-
-/// Navigates to the CollectorNoLongerSupportedPage.
-void navigateToCollectorNoLongerSupportedPage(
-  BuildContext context, {
-  bool pushReplacement = false,
-}) {
-  _navigateToPage(
-    context,
-    const CollectorNoLongerSupportedPage(),
-    pushReplacement: pushReplacement,
-  );
-}
-
-/// Navigates to the BinDaysPage.
+/// Navigates to the BinDaysPage, clearing the setup/navigation stack so
+/// returning from an add or edit flow lands on a single BinDaysPage root.
 void navigateToBinDaysPage(BuildContext context) {
-  _navigateToPage(context, const BinDaysPage());
+  Navigator.of(context).pushAndRemoveUntil(
+    MaterialPageRoute(builder: (_) => const BinDaysPage()),
+    (route) => false,
+  );
 }
 
 /// Navigate to SettingsPage.
@@ -152,6 +131,11 @@ void navigateToSettingsPage(BuildContext context) {
 /// Navigate to NotificationsPage.
 void navigateToNotificationsPage(BuildContext context) {
   _navigateToPage(context, const NotificationsPage());
+}
+
+/// Navigate to ManageAddressesPage.
+void navigateToManageAddressesPage(BuildContext context) {
+  _navigateToPage(context, const ManageAddressesPage());
 }
 
 /// Navigate to TroubleshootingPage.

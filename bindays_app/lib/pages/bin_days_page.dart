@@ -1,17 +1,13 @@
 // External Imports
 import 'package:flutter/material.dart';
-import 'package:in_app_review/in_app_review.dart';
 
 // Internal Imports
-import 'package:bindays_app/client/bindays_client.dart';
-import 'package:bindays_app/data/shared_preferences_manager.dart';
-import 'package:bindays_app/misc/collector_unsupported_error.dart';
-import 'package:bindays_app/misc/collector_version_error.dart';
+import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
-import 'package:bindays_app/widgets/bin_days/bin_days_found.dart';
-import 'package:bindays_app/widgets/bin_days/bin_days_not_found.dart';
+import 'package:bindays_app/widgets/bin_days/location_bin_days_view.dart';
+import 'package:bindays_app/widgets/primary_button.dart';
 
 class BinDaysPage extends StatefulWidget {
   const BinDaysPage({super.key});
@@ -21,36 +17,34 @@ class BinDaysPage extends StatefulWidget {
 }
 
 class _BinDaysPageState extends State<BinDaysPage> {
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
-  bool _isRefreshing = false;
-  final InAppReview _inAppReview = InAppReview.instance;
+  late final PageController _pageController;
+  int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _isRefreshing =
-        globalStateNotifier.binDays == null ||
-        globalStateNotifier.binDays!.isEmpty;
+    _currentIndex = _selectedIndex();
+    _pageController = PageController(initialPage: _currentIndex);
+    globalStateNotifier.addListener(_onStateChanged);
+
+    // Guarantee the page lands on the selected location once laid out. This
+    // ensures that after adding an address (which selects it) the screen opens
+    // on the new address, even if the freshly-pushed route didn't honour
+    // initialPage.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Only refresh on load if hasn't been refreshed today
-      // and and no bin days have been previously found.
-      final binDays = globalStateNotifier.binDays;
-      final lastRefresh = globalStateNotifier.lastRefresh;
-      final binDaysFound = binDays != null && binDays.isNotEmpty;
-      final lastRefreshToday =
-          lastRefresh != null && lastRefresh.day == DateTime.now().day;
-      if (!binDaysFound || !lastRefreshToday) {
-        _refreshIndicatorKey.currentState?.show();
-      }
-      // Check/request review if bin days loaded from cache
-      else {
-        _checkAndRequestReview();
+      final index = _selectedIndex();
+      if (_pageController.hasClients && _pageController.page?.round() != index) {
+        _pageController.jumpToPage(index);
+        setState(() => _currentIndex = index);
       }
     });
-    globalStateNotifier.addListener(() {
-      setState(() {});
-    });
+  }
+
+  @override
+  void dispose() {
+    globalStateNotifier.removeListener(_onStateChanged);
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -60,68 +54,124 @@ class _BinDaysPageState extends State<BinDaysPage> {
     }
   }
 
-  Future<void> _getBinDays() async {
-    setState(() {
-      _isRefreshing = true;
-    });
-    try {
-      final binDays = await binDaysClient.getBinDays(
-        globalStateNotifier.collector!,
-        globalStateNotifier.address!,
-      );
-      globalStateNotifier.setBinDays(binDays);
-
-      // If this is the first successful fetch, schedule a review request.
-      final reviewAfter = SharedPreferencesManager.getRequestReviewAfter();
-      if (reviewAfter == null && binDays.isNotEmpty) {
-        final twoWeeksFromNow = DateTime.now().add(const Duration(days: 14));
-        await SharedPreferencesManager.setRequestReviewAfter(twoWeeksFromNow);
-      }
-      _checkAndRequestReview();
-      globalStateNotifier.setLastRefresh(DateTime.now());
-    } catch (e) {
-      if (isCollectorVersionOutdated(e) && mounted) {
-        navigateToCollectorOutdatedPage(context);
-      } else if (isCollectorNoLongerSupported(e) && mounted) {
-        navigateToCollectorNoLongerSupportedPage(context);
-      } else {
-        rethrow;
-      }
-    } finally {
-      setState(() {
-        _isRefreshing = false;
-      });
-    }
+  /// Index of the selected location in the list (0 if none/unknown).
+  int _selectedIndex() {
+    final selectedId = globalStateNotifier.selectedLocation?.id;
+    final index = globalStateNotifier.locations.indexWhere(
+      (location) => location.id == selectedId,
+    );
+    return index < 0 ? 0 : index;
   }
 
-  Future<void> _checkAndRequestReview() async {
-    final requestReviewAfter = SharedPreferencesManager.getRequestReviewAfter();
-
-    if (requestReviewAfter?.isBefore(DateTime.now()) ?? false) {
-      if (await _inAppReview.isAvailable()) {
-        _inAppReview.requestReview();
-        await SharedPreferencesManager.setRequestReviewAfter(DateTime(9999));
-      }
+  /// Keep the page in sync when the selection changes elsewhere (e.g. from the
+  /// manage addresses page, or after adding/removing an address).
+  void _onStateChanged() {
+    final selectedIndex = _selectedIndex();
+    if (selectedIndex != _currentIndex && _pageController.hasClients) {
+      _currentIndex = selectedIndex;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_pageController.hasClients) {
+          _pageController.jumpToPage(selectedIndex);
+        }
+      });
     }
+    setState(() {});
+  }
+
+  void _onPageChanged(int index) {
+    final locations = globalStateNotifier.locations;
+    if (index < 0 || index >= locations.length) return;
+    _currentIndex = index;
+    globalStateNotifier.setSelectedLocation(locations[index].id);
+  }
+
+  void _startAddAddress() {
+    setupState.reset();
+    navigateToEnterPostcodePage(context);
+  }
+
+  /// Shown when the user has removed all of their saved addresses.
+  Widget _buildEmptyState(BuildContext context) {
+    return SafeBasePage(
+      child: Column(
+        children: [
+          const Spacer(flex: 1),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 200),
+            child: Image.asset(
+              'assets/illustrations/Recycling_Two_Color.png',
+              fit: BoxFit.contain,
+            ),
+          ),
+          const SizedBox(height: 25),
+          Text(
+            'No addresses',
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Add an address to start seeing its bin collections.',
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const Spacer(flex: 1),
+          PrimaryButton(text: 'Add Address', onPressed: _startAddAddress),
+        ],
+      ),
+    );
+  }
+
+  /// Row of page dots shown when more than one address is saved.
+  Widget _buildPageDots(BuildContext context, int count, int current) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(count, (index) {
+        final isActive = index == current;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          margin: const EdgeInsets.symmetric(horizontal: 3),
+          width: isActive ? 18 : 6,
+          height: 6,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(3),
+            color:
+                isActive
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurfaceVariant
+                        .withValues(alpha: 0.35),
+          ),
+        );
+      }),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Sort bin days by date asc
-    final binDays = globalStateNotifier.binDays;
-    binDays?.sort((a, b) => a.date.compareTo(b.date));
-
-    final lastRefresh = globalStateNotifier.lastRefresh;
-
-    final binDaysFound =
-        binDays != null && binDays.isNotEmpty && lastRefresh != null;
+    final locations = globalStateNotifier.locations;
+    final title = globalStateNotifier.selectedLocation?.shortName ?? 'BinDays';
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.help_outline),
           onPressed: () => navigateToTroubleshootingPage(context),
+        ),
+        title: InkWell(
+          onTap: () => navigateToManageAddressesPage(context),
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Text(title, overflow: TextOverflow.ellipsis),
+          ),
         ),
         actions: [
           IconButton(
@@ -129,28 +179,35 @@ class _BinDaysPageState extends State<BinDaysPage> {
             onPressed: () => navigateToSettingsPage(context),
           ),
         ],
-      ),
-      body: RefreshIndicator(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        color: Theme.of(context).colorScheme.onPrimary,
-        key: _refreshIndicatorKey,
-        onRefresh: () => _getBinDays(),
-        child: SafeBasePage(
-          child:
-              _isRefreshing && !binDaysFound
-                  ? const SizedBox()
-                  : SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    child:
-                        binDaysFound
-                            ? BinDaysFound(
-                              binDays: binDays,
-                              lastRefresh: lastRefresh,
-                            )
-                            : const BinDaysNotFound(),
+        bottom:
+            locations.length > 1
+                ? PreferredSize(
+                  preferredSize: const Size.fromHeight(16),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: _buildPageDots(
+                      context,
+                      locations.length,
+                      _currentIndex,
+                    ),
                   ),
-        ),
+                )
+                : null,
       ),
+      body:
+          locations.isEmpty
+              ? _buildEmptyState(context)
+              : PageView.builder(
+                controller: _pageController,
+                onPageChanged: _onPageChanged,
+                itemCount: locations.length,
+                itemBuilder: (context, index) {
+                  return LocationBinDaysView(
+                    key: ValueKey(locations[index].id),
+                    locationId: locations[index].id,
+                  );
+                },
+              ),
     );
   }
 }
