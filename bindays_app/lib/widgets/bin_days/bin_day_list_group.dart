@@ -16,20 +16,30 @@ class BinDayListGroup extends StatelessWidget {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              binDay.date.toLongDateString(),
-              style: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-                fontWeight: FontWeight.bold,
+            // Both texts take a share of the row and wrap if needed, so large
+            // fonts never push the countdown off the right edge. The date gets
+            // the larger share as it is the longer, primary text.
+            Expanded(
+              flex: 3,
+              child: Text(
+                binDay.date.toLongDateString(),
+                style: TextStyle(
+                  fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            Text(
-              binDay.date.daysUntilString(),
-              style: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+            const SizedBox(width: 12),
+            Flexible(
+              child: Text(
+                binDay.date.daysUntilString(),
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                  fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Internal Imports
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
+import 'package:bindays_app/widgets/scrollable_fill_column.dart';
 
 class NotFoundPage extends StatelessWidget {
   final String headline;
@@ -31,7 +32,7 @@ class NotFoundPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: SafeBasePage(
-        child: Column(
+        child: ScrollableFillColumn(
           children: [
             const Spacer(flex: 1),
             Flexible(

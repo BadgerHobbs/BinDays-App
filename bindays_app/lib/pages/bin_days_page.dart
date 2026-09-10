@@ -8,6 +8,7 @@ import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/bin_days/location_bin_days_view.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
+import 'package:bindays_app/widgets/scrollable_fill_column.dart';
 
 class BinDaysPage extends StatefulWidget {
   const BinDaysPage({super.key});
@@ -93,7 +94,7 @@ class _BinDaysPageState extends State<BinDaysPage> {
   /// Shown when the user has removed all of their saved addresses.
   Widget _buildEmptyState(BuildContext context) {
     return SafeBasePage(
-      child: Column(
+      child: ScrollableFillColumn(
         children: [
           const Spacer(flex: 1),
           ConstrainedBox(
