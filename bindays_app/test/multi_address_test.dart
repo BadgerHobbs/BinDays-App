@@ -146,6 +146,47 @@ void main() {
       );
     });
 
+    test('shortName falls back nickname -> town -> address -> postcode', () {
+      // Nickname wins.
+      expect(
+        SavedLocation(
+          name: 'Rental',
+          collector: _collector(),
+          address: _address(),
+        ).shortName,
+        'Rental',
+      );
+
+      // Town preferred when present.
+      expect(
+        SavedLocation(collector: _collector(), address: _address()).shortName,
+        'Leeds',
+      );
+
+      // No town: fall back to the formatted address (incl. property), not the
+      // postcode. Regression test for property-only addresses.
+      expect(
+        SavedLocation(
+          collector: _collector(),
+          address: _address(
+            property: '9 Metherall Field',
+            street: null,
+            town: null,
+          ),
+        ).shortName,
+        '9 Metherall Field',
+      );
+
+      // Nothing but a postcode.
+      expect(
+        SavedLocation(
+          collector: _collector(),
+          address: _address(property: null, street: null, town: null),
+        ).shortName,
+        'LS1 1AA',
+      );
+    });
+
     test('dedupeKey combines collector gov id and address uid', () {
       final a = SavedLocation(collector: _collector(), address: _address());
       final b = SavedLocation(

@@ -79,8 +79,9 @@ class SavedLocation {
   }
 
   /// A short label for compact places like the app bar title. Prefers the
-  /// nickname, then the town, then the street, then the postcode, so the top
-  /// of the screen never shows the full multi-part address.
+  /// nickname, then the town (kept short when available), then the formatted
+  /// address (property/street/town), then the postcode - so it stays concise
+  /// but never falls through to the postcode when a usable address exists.
   String get shortName {
     final trimmedName = name?.trim();
     if (trimmedName != null && trimmedName.isNotEmpty) {
@@ -92,9 +93,9 @@ class SavedLocation {
       return town.capitaliseEveryWord();
     }
 
-    final street = address.street?.trim();
-    if (street != null && street.isNotEmpty) {
-      return street.capitaliseEveryWord();
+    final formatted = address.toFormattedStringNoPostcode();
+    if (formatted.trim().isNotEmpty) {
+      return formatted;
     }
 
     final postcode = address.postcode?.trim();
