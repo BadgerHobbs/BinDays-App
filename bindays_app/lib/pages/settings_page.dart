@@ -57,17 +57,19 @@ class _SettingsPageState extends State<SettingsPage> {
             Text('General', style: Theme.of(context).textTheme.titleMedium),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Change Address'),
+              title: const Text('Manage Addresses'),
               subtitle: Text(
-                "Change the address to get the latest bin collections for. Your current address is '${globalStateNotifier.address!.toFormattedString()}'.",
+                "Add, rename, remove, and switch between your saved addresses. "
+                "You have ${globalStateNotifier.locations.length} saved.",
               ),
-              onTap: () => navigateToEnterPostcodePage(context),
+              onTap: () => navigateToManageAddressesPage(context),
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('Manage Notifications'),
               subtitle: const Text(
-                'Configure notifications for upcoming bin collections.',
+                'Configure notifications for upcoming bin collections. The '
+                'schedule applies to all of your saved addresses.',
               ),
               onTap: () => navigateToNotificationsPage(context),
             ),

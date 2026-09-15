@@ -8,6 +8,8 @@ import 'package:timezone/data/latest.dart' as tz;
 // Internal Imports
 import 'package:bindays_app/data/models/bin_collection_notification.dart';
 import 'package:bindays_app/data/models/cancellation_token.dart';
+import 'package:bindays_app/data/shared_preferences_manager.dart';
+import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 
 /// Manages the scheduling and handling of local notifications.
@@ -18,15 +20,6 @@ class NotificationsManager {
   /// iOS limits scheduled notifications to 64. Reserve 1 slot for the
   /// "no more notifications" reminder.
   static const int _maxBinCollectionNotifications = 63;
-
-  /// Fixed ID for the collector-update notification so repeated background
-  /// fetches replace the existing notification rather than stacking new ones.
-  static const int _collectorUpdateNotificationId = 0;
-
-  /// Fixed ID for the collector-no-longer-supported notification so repeated
-  /// background fetches replace the existing notification rather than
-  /// stacking new ones.
-  static const int _collectorNoLongerSupportedNotificationId = 1;
 
   /// Token for the currently active scheduling operation. Cancelled when
   /// a new scheduling call supersedes it.
@@ -64,12 +57,54 @@ class NotificationsManager {
     // Initialize timezones
     tz.initializeTimeZones();
 
-    // Initialize the plugin
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    // Initialize the plugin, routing notification taps to the associated
+    // address.
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: _onNotificationTap,
+    );
 
     if (requestPermissions) {
       _requestPermissions();
     }
+  }
+
+  /// Handles a notification tap while the app is running: selects the
+  /// associated address (carried in the payload) and shows the bin days
+  /// screen for it.
+  static void _onNotificationTap(NotificationResponse response) {
+    _openLocation(response.payload);
+  }
+
+  /// Selects the location [locationId] (if it exists) and navigates to the
+  /// bin days screen so it is shown.
+  static void _openLocation(String? locationId) {
+    if (locationId == null || locationId.isEmpty) return;
+
+    final exists = globalStateNotifier.locations.any((l) => l.id == locationId);
+    if (!exists) return;
+
+    globalStateNotifier.setSelectedLocation(locationId);
+
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      navigateToBinDaysPage(context);
+    }
+  }
+
+  /// If the app was launched by tapping a notification, persist the associated
+  /// address as the selected one so the first bin days screen opens on it.
+  /// Call after shared preferences are loaded and before the app is built.
+  static Future<void> applyLaunchSelection() async {
+    final details =
+        await flutterLocalNotificationsPlugin
+            .getNotificationAppLaunchDetails();
+    if (!(details?.didNotificationLaunchApp ?? false)) return;
+
+    final payload = details!.notificationResponse?.payload;
+    if (payload == null || payload.isEmpty) return;
+
+    await SharedPreferencesManager.setSelectedLocationId(payload);
   }
 
   /// Request device permissions
@@ -86,10 +121,22 @@ class NotificationsManager {
   /// Generates a random notification ID.
   static int _generateNotificationId() => _random.nextInt(1 << 31);
 
+  /// Generates a stable, deterministic notification ID from [seed] so repeated
+  /// background fetches (in fresh isolates) replace the existing notification
+  /// rather than stacking new ones.
+  static int _stableNotificationId(String seed) {
+    var hash = 0;
+    for (final unit in seed.codeUnits) {
+      hash = (hash * 31 + unit) & 0x7FFFFFFF;
+    }
+    return hash;
+  }
+
   /// Gets the notification body for the given bin day and notification.
   static String _getNotificationBody(
     BinDay binDay,
     BinCollectionNotification binCollectionNotification,
+    String locationName,
   ) {
     // Join bin names together by ',' except the last one which is 'and'
     String binsToCollect = binDay.bins
@@ -109,7 +156,8 @@ class NotificationsManager {
 
     final plurality = binDay.bins.length == 1 ? "" : "s";
 
-    return "Collection of your $binsToCollect bin$plurality is $timeframe.";
+    return "Collection of your $binsToCollect bin$plurality "
+        "at $locationName is $timeframe.";
   }
 
   /// Schedules all bin collection notifications.
@@ -118,7 +166,7 @@ class NotificationsManager {
   /// early and lets the newer call take over.
   static Future<void> _scheduleBinCollectionNotifications(
     List<BinCollectionNotification> binCollectionNotifications,
-    List<BinDay> binDays,
+    List<({String id, String name, List<BinDay> binDays})> locationBinDays,
     CancellationToken cancellationToken,
   ) async {
     // Cancel only pending (not yet delivered) notifications, preserving
@@ -133,43 +181,55 @@ class NotificationsManager {
     if (cancellationToken.isCancelled) return;
 
     final now = DateTime.now();
-    final enabledNotifications =
+    final activeNotifications =
         binCollectionNotifications.where((n) => n.enabled).toList();
 
-    if (enabledNotifications.isEmpty || binDays.isEmpty) {
+    // Flatten all bin days across every location for the reminder anchor.
+    final allBinDates = locationBinDays
+        .expand((location) => location.binDays)
+        .map((binDay) => binDay.date)
+        .toList();
+
+    if (activeNotifications.isEmpty || allBinDates.isEmpty) {
       return;
     }
 
-    // Build all candidate (dateTime, binDay, notification) tuples,
-    // filtering out past notifications, then sort by date ascending.
+    // Build all candidate tuples across every location, filtering out past
+    // notifications, then sort by date ascending.
     final candidates =
         <
           ({
             DateTime dateTime,
             BinDay binDay,
             BinCollectionNotification notification,
+            String locationId,
+            String locationName,
           })
         >[];
 
-    for (final binCollectionNotification in enabledNotifications) {
-      for (final binDay in binDays) {
-        final notificationDate = binDay.date.subtract(
-          binCollectionNotification.durationBeforeCollection,
-        );
-        final notificationDateTime = DateTime(
-          notificationDate.year,
-          notificationDate.month,
-          notificationDate.day,
-          binCollectionNotification.time.hour,
-          binCollectionNotification.time.minute,
-        );
+    for (final binCollectionNotification in activeNotifications) {
+      for (final location in locationBinDays) {
+        for (final binDay in location.binDays) {
+          final notificationDate = binDay.date.subtract(
+            binCollectionNotification.durationBeforeCollection,
+          );
+          final notificationDateTime = DateTime(
+            notificationDate.year,
+            notificationDate.month,
+            notificationDate.day,
+            binCollectionNotification.time.hour,
+            binCollectionNotification.time.minute,
+          );
 
-        if (notificationDateTime.isAfter(now)) {
-          candidates.add((
-            dateTime: notificationDateTime,
-            binDay: binDay,
-            notification: binCollectionNotification,
-          ));
+          if (notificationDateTime.isAfter(now)) {
+            candidates.add((
+              dateTime: notificationDateTime,
+              binDay: binDay,
+              notification: binCollectionNotification,
+              locationId: location.id,
+              locationName: location.name,
+            ));
+          }
         }
       }
     }
@@ -186,6 +246,7 @@ class NotificationsManager {
       final notificationBody = _getNotificationBody(
         candidate.binDay,
         candidate.notification,
+        candidate.locationName,
       );
       final plurality = candidate.binDay.bins.length == 1 ? "" : "s";
 
@@ -196,6 +257,7 @@ class NotificationsManager {
         tz.TZDateTime.from(candidate.dateTime, tz.local),
         notificationDetails,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        payload: candidate.locationId,
       );
     }
 
@@ -203,15 +265,13 @@ class NotificationsManager {
 
     // Anchor for the reminder: the last scheduled notification's bin day if
     // any were scheduled (earlier, since we cap at 63), otherwise the last
-    // bin collection day overall. Whichever is earlier ensures the reminder
-    // fires as soon as notifications run out.
-    final lastBinDate = binDays
-        .map((d) => d.date)
-        .reduce((a, b) => a.isAfter(b) ? a : b);
+    // bin collection day across all locations. Whichever is earlier ensures
+    // the reminder fires as soon as notifications run out.
+    final lastBinDate = allBinDates.reduce((a, b) => a.isAfter(b) ? a : b);
     final anchorDate =
         toSchedule.isNotEmpty ? toSchedule.last.binDay.date : lastBinDate;
 
-    final reminderNotification = enabledNotifications.first;
+    final reminderNotification = activeNotifications.first;
     final reminderDateTime = DateTime(
       anchorDate.year,
       anchorDate.month,
@@ -232,42 +292,65 @@ class NotificationsManager {
     }
   }
 
-  /// Shows an immediate notification informing the user that their address
-  /// must be re-selected because the council's data format has changed.
+  /// Shows an immediate notification informing the user that a specific
+  /// saved address must be re-selected because the council's data format has
+  /// changed.
   ///
-  /// Uses a fixed notification ID so repeated background fetches replace the
-  /// existing notification rather than creating duplicates.
-  static Future<void> showCollectorUpdateNotification() async {
+  /// Uses a stable per-location notification ID so repeated background fetches
+  /// replace the existing notification rather than creating duplicates.
+  static Future<void> showCollectorUpdateNotification(
+    String locationId,
+    String locationName,
+  ) async {
     await flutterLocalNotificationsPlugin.show(
-      _collectorUpdateNotificationId,
+      _stableNotificationId('outdated:$locationId'),
       'Council Website Changed',
-      'Your council has changed their website and your saved address is no longer compatible. Open BinDays to re-select your address and continue receiving bin collections.',
+      "Your council for '$locationName' has changed their website and your "
+          "saved address is no longer compatible. Open BinDays to re-select "
+          "your address and continue receiving bin collections.",
       notificationDetails,
+      payload: locationId,
     );
   }
 
-  /// Shows an immediate notification informing the user that their council
-  /// is no longer supported because the collector has been removed.
+  /// Shows an immediate notification informing the user that a specific saved
+  /// address's council is no longer supported because the collector has been
+  /// removed.
   ///
-  /// Uses a fixed notification ID so repeated background fetches replace the
-  /// existing notification rather than creating duplicates.
-  static Future<void> showCollectorNoLongerSupportedNotification() async {
+  /// Uses a stable per-location notification ID so repeated background fetches
+  /// replace the existing notification rather than creating duplicates.
+  static Future<void> showCollectorNoLongerSupportedNotification(
+    String locationId,
+    String locationName,
+  ) async {
     await flutterLocalNotificationsPlugin.show(
-      _collectorNoLongerSupportedNotificationId,
+      _stableNotificationId('unsupported:$locationId'),
       'Council No Longer Supported',
-      'Your council has changed their website and automatic bin day lookups are currently unavailable. Open BinDays for more details.',
+      "Your council for '$locationName' has changed their website and "
+          "automatic bin day lookups are currently unavailable. Open BinDays "
+          "for more details.",
       notificationDetails,
+      payload: locationId,
     );
   }
 
-  /// Schedules all bin collection notifications from global state.
+  /// Schedules all bin collection notifications from global state, merging the
+  /// bin days of every saved location into one shared schedule.
   ///
   /// If a scheduling operation is already in progress, it is cancelled
   /// and a new one begins immediately.
   static Future<void> scheduleBinCollectionNotifications() async {
-    // Fetch bin collections and notifications from global state
-    final binDays = globalStateNotifier.binDays ?? [];
+    // Fetch notifications and the bin days of every saved location.
     final binCollectionNotifications = globalStateNotifier.notifications ?? [];
+    final locationBinDays = globalStateNotifier.locations
+        .map(
+          (location) => (
+            id: location.id,
+            name: location.displayName,
+            binDays: location.binDays ?? <BinDay>[],
+          ),
+        )
+        .toList();
 
     // Cancel any in-flight scheduling operation
     _activeCancellationToken?.cancel();
@@ -276,7 +359,7 @@ class NotificationsManager {
 
     await _scheduleBinCollectionNotifications(
       binCollectionNotifications,
-      binDays,
+      locationBinDays,
       cancellationToken,
     );
   }

@@ -11,6 +11,7 @@ import 'package:bindays_app/data/notifications_manager.dart';
 import 'package:bindays_app/data/shared_preferences_manager.dart';
 import 'package:bindays_app/pages/bin_days_page.dart';
 import 'package:bindays_app/widgets/debug/desktop_navigation_listener.dart';
+import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 import 'package:bindays_app/pages/setup/welcome_page.dart';
 
@@ -23,6 +24,10 @@ void main() async {
 
   // Load shared preferences
   await SharedPreferencesManager.loadSharedPreferences();
+
+  // If the app was launched by tapping a notification, select its address so
+  // the initial bin days screen opens on the associated location.
+  await NotificationsManager.applyLaunchSelection();
 
   // Initialise background task manager
   BackgroundTaskManager.init();
@@ -52,8 +57,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> with WidgetsBindingObserver {
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-
   @override
   void initState() {
     super.initState();
@@ -79,12 +82,10 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final setupRequired =
-        globalStateNotifier.collector == null &&
-        globalStateNotifier.address == null;
+    final setupRequired = globalStateNotifier.locations.isEmpty;
 
     return MaterialApp(
-      navigatorKey: _navigatorKey,
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'BinDays',
       theme: ThemeData(
@@ -108,7 +109,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       builder: (BuildContext innerContext, Widget? child) {
         if (_isDebugAndDesktop()) {
           return DesktopNavigationListener(
-            navigatorKey: _navigatorKey,
+            navigatorKey: navigatorKey,
             child: child!,
           );
         } else {
