@@ -23,6 +23,10 @@ import 'package:bindays_app/pages/manage_addresses_page.dart';
 import 'package:bindays_app/pages/notifications_page.dart';
 import 'package:bindays_app/pages/verify_council_page.dart';
 
+/// Global navigator key so non-widget code (e.g. notification taps) can drive
+/// navigation.
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 /// Navigates to the HowItWorksPage.
 void navigateToHowItWorksPage(BuildContext context) {
   _navigateToPage(context, const HowItWorksPage());

@@ -27,17 +27,29 @@ class _BinDaysPageState extends State<BinDaysPage> {
     _pageController = PageController(initialPage: _currentIndex);
     globalStateNotifier.addListener(_onStateChanged);
 
-    // Guarantee the page lands on the selected location once laid out. This
-    // ensures that after adding an address (which selects it) the screen opens
-    // on the new address, even if the freshly-pushed route didn't honour
-    // initialPage.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final index = _selectedIndex();
-      if (_pageController.hasClients && _pageController.page?.round() != index) {
-        _pageController.jumpToPage(index);
-        setState(() => _currentIndex = index);
-      }
-    });
+    // Guarantee the page lands on the selected location once laid out, so that
+    // after adding an address (which selects it) or tapping a notification the
+    // screen opens on the associated address even if the freshly-pushed route
+    // didn't honour initialPage.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _jumpToSelected());
+  }
+
+  /// Ensure the page view shows the selected location, retrying until the
+  /// PageView has attached (it may not be laid out on the first frame of a
+  /// freshly-pushed route).
+  void _jumpToSelected() {
+    if (!mounted) return;
+    final index = _selectedIndex();
+    if (!_pageController.hasClients) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _jumpToSelected());
+      return;
+    }
+    if (_pageController.page?.round() != index) {
+      _pageController.jumpToPage(index);
+    }
+    if (_currentIndex != index) {
+      setState(() => _currentIndex = index);
+    }
   }
 
   @override

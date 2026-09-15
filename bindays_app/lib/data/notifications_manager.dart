@@ -8,6 +8,8 @@ import 'package:timezone/data/latest.dart' as tz;
 // Internal Imports
 import 'package:bindays_app/data/models/bin_collection_notification.dart';
 import 'package:bindays_app/data/models/cancellation_token.dart';
+import 'package:bindays_app/data/shared_preferences_manager.dart';
+import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/notifiers/global_notifiers.dart';
 
 /// Manages the scheduling and handling of local notifications.
@@ -55,12 +57,54 @@ class NotificationsManager {
     // Initialize timezones
     tz.initializeTimeZones();
 
-    // Initialize the plugin
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    // Initialize the plugin, routing notification taps to the associated
+    // address.
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: _onNotificationTap,
+    );
 
     if (requestPermissions) {
       _requestPermissions();
     }
+  }
+
+  /// Handles a notification tap while the app is running: selects the
+  /// associated address (carried in the payload) and shows the bin days
+  /// screen for it.
+  static void _onNotificationTap(NotificationResponse response) {
+    _openLocation(response.payload);
+  }
+
+  /// Selects the location [locationId] (if it exists) and navigates to the
+  /// bin days screen so it is shown.
+  static void _openLocation(String? locationId) {
+    if (locationId == null || locationId.isEmpty) return;
+
+    final exists = globalStateNotifier.locations.any((l) => l.id == locationId);
+    if (!exists) return;
+
+    globalStateNotifier.setSelectedLocation(locationId);
+
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      navigateToBinDaysPage(context);
+    }
+  }
+
+  /// If the app was launched by tapping a notification, persist the associated
+  /// address as the selected one so the first bin days screen opens on it.
+  /// Call after shared preferences are loaded and before the app is built.
+  static Future<void> applyLaunchSelection() async {
+    final details =
+        await flutterLocalNotificationsPlugin
+            .getNotificationAppLaunchDetails();
+    if (!(details?.didNotificationLaunchApp ?? false)) return;
+
+    final payload = details!.notificationResponse?.payload;
+    if (payload == null || payload.isEmpty) return;
+
+    await SharedPreferencesManager.setSelectedLocationId(payload);
   }
 
   /// Request device permissions
@@ -122,7 +166,7 @@ class NotificationsManager {
   /// early and lets the newer call take over.
   static Future<void> _scheduleBinCollectionNotifications(
     List<BinCollectionNotification> binCollectionNotifications,
-    List<({String name, List<BinDay> binDays})> locationBinDays,
+    List<({String id, String name, List<BinDay> binDays})> locationBinDays,
     CancellationToken cancellationToken,
   ) async {
     // Cancel only pending (not yet delivered) notifications, preserving
@@ -158,6 +202,7 @@ class NotificationsManager {
             DateTime dateTime,
             BinDay binDay,
             BinCollectionNotification notification,
+            String locationId,
             String locationName,
           })
         >[];
@@ -181,6 +226,7 @@ class NotificationsManager {
               dateTime: notificationDateTime,
               binDay: binDay,
               notification: binCollectionNotification,
+              locationId: location.id,
               locationName: location.name,
             ));
           }
@@ -211,6 +257,7 @@ class NotificationsManager {
         tz.TZDateTime.from(candidate.dateTime, tz.local),
         notificationDetails,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        payload: candidate.locationId,
       );
     }
 
@@ -262,6 +309,7 @@ class NotificationsManager {
           "saved address is no longer compatible. Open BinDays to re-select "
           "your address and continue receiving bin collections.",
       notificationDetails,
+      payload: locationId,
     );
   }
 
@@ -282,6 +330,7 @@ class NotificationsManager {
           "automatic bin day lookups are currently unavailable. Open BinDays "
           "for more details.",
       notificationDetails,
+      payload: locationId,
     );
   }
 
@@ -296,6 +345,7 @@ class NotificationsManager {
     final locationBinDays = globalStateNotifier.locations
         .map(
           (location) => (
+            id: location.id,
             name: location.displayName,
             binDays: location.binDays ?? <BinDay>[],
           ),
