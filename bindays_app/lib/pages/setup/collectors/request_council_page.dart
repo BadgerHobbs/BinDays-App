@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:bindays_app/data/setup_state.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
+import 'package:bindays_app/widgets/scrollable_fill_column.dart';
 import 'package:bindays_app/widgets/secondary_button.dart';
 
 class RequestCouncilPage extends StatelessWidget {
@@ -29,7 +30,7 @@ class RequestCouncilPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeBasePage(
-      child: Column(
+      child: ScrollableFillColumn(
         children: [
           const Spacer(flex: 1),
           Flexible(

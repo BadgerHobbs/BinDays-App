@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:bindays_app/misc/navigators.dart';
 import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/primary_button.dart';
+import 'package:bindays_app/widgets/scrollable_fill_column.dart';
 import 'package:bindays_app/widgets/url_link.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -14,7 +15,7 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeBasePage(
-      child: Column(
+      child: ScrollableFillColumn(
         children: [
           const Spacer(flex: 1),
           Flexible(

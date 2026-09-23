@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Internal Imports
 import 'package:bindays_app/pages/safe_base_page.dart';
 import 'package:bindays_app/widgets/animated_ellipsis.dart';
+import 'package:bindays_app/widgets/scrollable_fill_column.dart';
 
 class LoadingPage extends StatelessWidget {
   final String titleText;
@@ -18,7 +19,7 @@ class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeBasePage(
-      child: Column(
+      child: ScrollableFillColumn(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
